@@ -1,0 +1,20 @@
+CASIA_Dataset_Creator has all the codes which are required to extract masks for the CASIA dataset. 
+extractmask.py has to be run first and followed by fillmask.py. Please set proper paths. 
+
+
+COCO_Dataset_Creator has all codes related to creating masks for coco images. 
+For handling COCO images you have to install their python API. 
+You have to download their annotations and the dataset separately. 
+Change the annotation file path in the cococreation.py. This code will create masks for random objects in images and store them in a folder.
+I used cocomaskadded.py to add those masks to the images to remove specified regions.
+
+Inpainting_codes has codes which I used for Inpainting. These donot inpaint large regions. I also used some deep learning based methods but I donot have the model right now.
+
+For feathering I have an adobe dataset which I can share offline. They have their own codes to create the dataset.
+
+In patch_creator folder, there are codes for extracting patches from images. Though this should be done in a better way in my experience than what I have written. 
+
+TF_Codes/Testing has codes for testing.
+TF_Codes/Training has codes for training.
+
+

@@ -1,65 +1,50 @@
 import os
 import numpy as np
 from PIL import Image
-import matplotlib.pyplot as plt
-import scipy.io
 import torch
 from torchvision.transforms import transforms
-from options import TrainOptions,TestOptions
-
+from torch.utils.data.sampler import SubsetRandomSampler
 
 class DataSet(torch.utils.data.Dataset):
 	"""
 		Our dataset loader for each training, testing, val dataset
 
 	"""
-	def __init__(self,opt):
+	def __init__(self,opt,true_images, fake_images):
 		super().__init__()
-		self.sample_dir = opt.sample_dir
-		self.target_dir = opt.target_dir
+		# Directories
+		self.true_dir = true_images
+		self.fake_dir = fake_images
 		
-		# Calculate dir images 
-		self.sample_list = []		
-		self.target_list = []		
+		# Calculate filename list 
+		self.true_list = [ filename for filename in os.listdir(self.true_dir)]		
+		self.fake_list = [ filename for filename in os.listdir(self.fake_dir)]		
+
 		self.opt = opt
 
-
 	def __getitem__(self,idx):
-		data_point = self.data[idx]
 
-		# Get Image path
-		filename = data_point[0][0]
-		dir_name = data_point[1][0]
-		path = os.path.join(dir_name,filename)
-		path = os.path.join(self.dataset_path,path)
-		
+		"""
+			Given an index it returns the image and its ground truth (fake: 1, true: 0)
+		"""
+		# idx = idx % 100 
+		# if np.random.random() > 0.5:
+		# 	idx = idx +  len(self.true_list)
+		if idx >= len(self.true_list):
+			path = os.path.join(self.fake_dir, self.fake_list[idx - len(self.true_list)])
+			y = 1
+		else:
+			path = os.path.join(self.true_dir, self.true_list[idx])
+			y = 0
+
 		# Load image as rgb
-		im = Image.open(path).convert('RGB')
+		im = Image.open(path).convert('RGB').resize((self.opt.load_size,self.opt.load_size))
 
-		# Offset for not training set
-		r = 2 if self.data_type != "train" else 0
-		# Get all the informations about users 
-		# and store them in a dict 
-		persons = []
-		for elem in data_point[4][0]:
-			details = {}  
-			box = elem[0][0].astype(int)
-			details['image'] = im.crop((box[0],box[1],box[2],box[3])).resize((self.opt.load_size,self.opt.load_size))
-			details['image'] = emotic_transform(details['image'])
-			details['box'] = elem[0][0]
-			details['emotions'] = [ emotion_dict[e[0]] -1 for e in elem[1][0][0][0][0] ] 
-			details['VAD'] = [ e[0][0]/10 for e in elem[r + 2][0][0] ]
-			details['gender'] = gender_dict[elem[r + 3][0]] -1
-			details['age'] = age_dict[elem[r + 4][0]] -1
-			
-			persons.append(details)
-
-		im = im.resize((self.opt.load_size,self.opt.load_size))
-		im = emotic_transform(im)
-		return (im,persons)
+		im = transforms.ToTensor()(im)
+		return im,y
 
 	def __len__(self):
-		return self.data.shape[0]
+		return len(self.true_list) + len(self.fake_list)
 
 def collate_fn(data):
 	"""
@@ -75,47 +60,25 @@ def collate_fn(data):
 		target_ind = image_index of original for each person_image's output
 	"""
 	# Sort a data list by caption length (descending order).
-	im, multi_persons = zip(*data)
+	im, y = zip(*data)
 	# Merge images (from tuple of 3D tensor to 4D tensor).
 	im = torch.stack(im, 0)
-	target_ind = []
-	person_images = []
-	person_emotions = []
-	person_VAD = []
-	person_gender = []
-	person_age = []
-	# Take all the person images and labels to make a single 4D tensor
+	y = torch.LongTensor(y)
 
-	for i,persons in enumerate(multi_persons):
-		for j,person in enumerate(persons):
-			target_ind.append(i)
-			person_images.append(person['image'])
+	return im,y
 
-			person_emotion_list  = torch.zeros((26,))
-			person_emotion_list[person['emotions']]  = 1
-			person_emotions.append(person_emotion_list)
-			person_VAD.append(person['VAD'])
-			person_age.append(person['age'])
-			person_gender.append([person['gender']])
 
-	person_images = torch.stack(person_images,0)
-	true_emotions = torch.stack(person_emotions,0)
-	target_ind = torch.LongTensor(target_ind)
-	true_VAD = torch.FloatTensor(person_VAD)
-	true_age = torch.LongTensor(person_age)
-	true_gender = torch.FloatTensor(person_gender)
+def create_samplers(length,split):
+	val_max_size = np.floor(length*split).astype('uint8')
+	idx = range(length)
+	validation_idx = np.random.choice(idx, size=val_max_size, replace=False)
+	train_idx = list( set(idx)  - set(validation_idx))
 
-	return im,person_images,target_ind,(true_emotions,true_VAD,true_age,true_gender)
+	train_sampler = SubsetRandomSampler(train_idx)
+	val_sampler = SubsetRandomSampler(validation_idx)
+
+	return train_sampler,val_sampler
+
 
 if __name__ == "__main__":
-	train_opt = TrainOptions().parse()
-	train_data = DataSet('train',train_opt)
-	train_loader = torch.utils.data.DataLoader(train_data,collate_fn=collate_fn,
-					batch_size=train_opt.batch_size,shuffle=True,num_workers=2)
-	test_opt = TestOptions().parse()	
-	test_loader =  DataSet('test',test_opt)
-	val_loader =   DataSet('val',test_opt)
-
-	
-	for im,person_images,target_ind,labels in train_loader:
-		print(labels)
+	pass

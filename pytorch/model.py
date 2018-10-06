@@ -13,30 +13,29 @@ class Model(nn.Module):
 	def __init__(self,opt):
 		super(Model,self).__init__()
 		
-		self.conv_list = []
-		last_size = 3
-		for i in range(opt.num_layers):
-			if last_size == 3:
-				last_size = 16
-				conv_layer1 = nn.Conv2d(3,last_size,kernel_size=5,padding=2)
-			else:
-				last_size = min(256,last_size*2)
-				conv_layer1 = nn.Conv2d(last_size//2,last_size,kernel_size=5,padding=2)
-
-			self.conv_list.append(conv_layer1)
-			conv_layer2 = nn.Conv2d(last_size,last_size,kernel_size=5,padding=2)
-			self.conv_list.append(conv_layer2)
-			
-			# Instead of pooling strided conv
-			conv_layer3 = nn.Conv2d(last_size,last_size,kernel_size=5,stride=opt.stride,padding=2)
-			self.conv_list.append(conv_layer3)
+		self.conv_list = []	
+		self.conv_list.append(nn.Conv2d(3,32,kernel_size=5,stride=2,padding=2))
+		self.conv_list.append(nn.BatchNorm2d(32))
+		self.conv_list.append(nn.Conv2d(32,64,kernel_size=3,stride=2,padding=1))
+		self.conv_list.append(nn.BatchNorm2d(64))
+		self.conv_list.append(nn.Conv2d(64,128,kernel_size=3,stride=2,padding=1))
+		self.conv_list.append(nn.BatchNorm2d(128))
+		self.conv_list.append(nn.Conv2d(128,128,kernel_size=3,stride=2,padding=1))
+		self.conv_list.append(nn.BatchNorm2d(128))
+		self.conv_list.append(nn.Conv2d(128,128,kernel_size=3,stride=2,padding=1))
+		self.conv_list.append(nn.BatchNorm2d(128))
 	
 		self.conv_list = nn.ModuleList(self.conv_list)
 
-		self.fc0 = nn.Linear(128,64)
+		self.fc0 = nn.Linear(512,256)
+		
+		self.fcs1 = nn.Linear(256,32)
+		self.fcs2 = nn.Linear(32,2)
 
-		self.fcf = nn.Linear(64,2)
-		self.fct = nn.Linear(64,2)
+		self.fct1 = nn.Linear(256,32)
+		self.fct2 = nn.Linear(32,2)
+		# self.fct2 = self.fcs2		
+		# self.fct1 = self.fcs1		
 
 
 	def conv_forward(self,images):
@@ -46,10 +45,10 @@ class Model(nn.Module):
 			return: Nx16x16 torch tensor, features of images
 		"""
 		for conv_layer in self.conv_list:
-			images = conv_layer(images)
+			images = torch.relu(conv_layer(images))
+
 
 		images = images.view(images.shape[0],-1)	
-
 		images = torch.relu(self.fc0(images))
 		return images
 		
@@ -71,13 +70,22 @@ class Model(nn.Module):
 		tmain_features = self.conv_forward(tampered_image)
 		
 		# Run an MLP on sample images for getting predictions
-		features1 = torch.relu(self.fct(main_features))
+		features1 = torch.relu(self.fcs1(main_features))
+		pred_sample = torch.sigmoid(self.fcs2(features1))
 
-		# Run an MLP on sample images for getting predictions
-		tfeatures1 = torch.relu(self.fct(tmain_features))
+		# Run an MLP on target images for getting predictions
+		tfeatures1 = torch.relu(self.fcs1(tmain_features))
+		pred_target = torch.sigmoid(self.fcs2(tfeatures1))
 
 
+		# Compute the mmd loss
+		main_norm = main_features.norm(p=2, dim=1, keepdim=True)
+		main_features = main_features/main_norm
 
-		return features1,tfeatures1,torch.mean(main_features - tmain_features)
+		tmain_norm = tmain_features.norm(p=2, dim=1, keepdim=True)
+		tmain_features = tmain_features/tmain_norm
+
+		mmd = torch.mean((main_features -  tmain_features)**2)
+		return pred_sample,pred_target,mmd
 
 

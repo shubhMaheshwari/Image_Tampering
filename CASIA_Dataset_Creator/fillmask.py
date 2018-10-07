@@ -4,7 +4,7 @@ import numpy as np
 import os
 import glob
 
-masked_path = "../CASIA/CASIA1/CASIA1/Masks/"
+masked_path = "../CASIA/CASIA2/Masks/"
 
 for img_from_folder in glob.glob(masked_path+"/*.tif"):
 	I = cv2.imread(img_from_folder)

@@ -5,6 +5,13 @@ import torch
 from torchvision.transforms import transforms
 from torch.utils.data.sampler import SubsetRandomSampler
 
+train_transforms =  transforms.Compose([
+    transforms.RandomCrop(64),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+])
+
+
 class DataSet(torch.utils.data.Dataset):
 	"""
 		Our dataset loader for each training, testing, val dataset
@@ -21,7 +28,7 @@ class DataSet(torch.utils.data.Dataset):
 		self.fake_list = [ filename for filename in os.listdir(self.fake_dir)]		
 
 		self.opt = opt
-
+		print("Dataset size:",self.__len__())
 	def __getitem__(self,idx):
 
 		"""
@@ -30,6 +37,7 @@ class DataSet(torch.utils.data.Dataset):
 		# idx = idx % 100 
 		# if np.random.random() > 0.5:
 		# 	idx = idx +  len(self.true_list)
+
 		if idx >= len(self.true_list):
 			path = os.path.join(self.fake_dir, self.fake_list[idx - len(self.true_list)])
 			y = 1
@@ -39,8 +47,10 @@ class DataSet(torch.utils.data.Dataset):
 
 		# Load image as rgb
 		im = Image.open(path).convert('RGB').resize((self.opt.load_size,self.opt.load_size))
+		im = train_transforms(im)	
 
-		im = transforms.ToTensor()(im)
+
+
 		return im,y
 
 	def __len__(self):
@@ -69,11 +79,24 @@ def collate_fn(data):
 
 
 def create_samplers(length,split):
-	val_max_size = np.floor(length*split).astype('uint8')
-	idx = range(length)
-	validation_idx = np.random.choice(idx, size=val_max_size, replace=False)
-	train_idx = list( set(idx)  - set(validation_idx))
+	"""
+		To make a train and validation split 
+		we must know out of which indices should
+		the dataloader load for training images and validation images
+	"""
 
+	# Validation dataset size
+	val_max_size = np.floor(length*split).astype('int')
+
+	# List of Randomly sorted indices
+	idx = np.arange(length)
+	idx = np.random.permutation(idx)
+
+	# Make a split
+	train_idx = idx[0:val_max_size]
+	validation_idx = idx[val_max_size:length]
+
+	# Create the sampler required by dataloaders
 	train_sampler = SubsetRandomSampler(train_idx)
 	val_sampler = SubsetRandomSampler(validation_idx)
 

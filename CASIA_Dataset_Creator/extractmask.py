@@ -2,9 +2,9 @@ import cv2
 import os
 import glob
 import numpy as np
-pristine_path = "../CASIA/CASIA1/CASIA1/Au/"
-tampered_path = "../CASIA/CASIA1/CASIA1/Sp"
-masked_path = "../CASIA/CASIA1/CASIA1/Masks/"
+pristine_path = "../CASIA/CASIA2/Au/"
+tampered_path = "../CASIA/CASIA2/Tp"
+masked_path = "../CASIA/CASIA2/Masks/"
 os.mkdir(masked_path)
 for img_from_folder in glob.glob(tampered_path+"/*.tif"):
 	I = cv2.imread(img_from_folder)

@@ -34,8 +34,6 @@ class Model(nn.Module):
 
 		self.fct1 = nn.Linear(256,32)
 		self.fct2 = nn.Linear(32,2)
-		# self.fct2 = self.fcs2		
-		# self.fct1 = self.fcs1		
 
 
 	def conv_forward(self,images):
@@ -70,22 +68,19 @@ class Model(nn.Module):
 		tmain_features = self.conv_forward(tampered_image)
 		
 		# Run an MLP on sample images for getting predictions
-		features1 = torch.relu(self.fcs1(main_features))
-		pred_sample = torch.sigmoid(self.fcs2(features1))
+		features = torch.relu(self.fcs1(main_features))
+		pred_sample = torch.softmax(self.fcs2(features),dim=1)
 
 		# Run an MLP on target images for getting predictions
-		tfeatures1 = torch.relu(self.fcs1(tmain_features))
-		pred_target = torch.sigmoid(self.fcs2(tfeatures1))
-
+		tfeatures = torch.relu(self.fcs1(tmain_features))
+		pred_target = torch.softmax(self.fcs2(tfeatures),dim=1)
 
 		# Compute the mmd loss
-		main_norm = main_features.norm(p=2, dim=1, keepdim=True)
-		main_features = main_features/main_norm
+		sample_norm = features.norm(p=2, dim=1, keepdim=True)
 
-		tmain_norm = tmain_features.norm(p=2, dim=1, keepdim=True)
-		tmain_features = tmain_features/tmain_norm
+		target_norm = tfeatures.norm(p=2, dim=1, keepdim=True)
 
-		mmd = torch.mean((main_features -  tmain_features)**2)
+		mmd = torch.mean((features/sample_norm-  tfeatures/target_norm)**2)
 		return pred_sample,pred_target,mmd
 
 

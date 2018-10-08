@@ -7,6 +7,7 @@ import torch
 from torchvision.transforms import *
 import numpy as np 
 import os
+from sklearn.metrics import confusion_matrix
 # Get the Hyperparaeters 
 opt = TestOptions().parse()
 
@@ -29,6 +30,7 @@ if opt.use_gpu:
 	model = torch.nn.DataParallel(model, device_ids=opt.gpus)
 
 # Load the weights and make predictions
+print(opt.epoch)
 model.load_state_dict(torch.load('./checkpoints/' + 'model_{}.pt'.format(opt.epoch)))
 
 # Print our model 
@@ -42,13 +44,14 @@ target_images, target_labels = next(iter(target_loader))
 pred_sample,pred_target,loss_mmd = model(sample_images.cuda(),target_images.cuda())	
 
 pred_sample = np.argmax(pred_sample.cpu().data.numpy(),axis=1 )
-
-sample_acc = np.mean(pred_sample == sample_labels.cpu().data.numpy())
+sample_acc = np.mean(pred_sample == sample_labels.data.numpy())
 
 pred_target = np.argmax(pred_target.cpu().data.numpy(),axis=1)
 target_acc = np.mean(pred_target == target_labels.data.numpy())
+conf_target = confusion_matrix(target_labels.data.numpy(),pred_target)
 
 print("==============Best results======================")
-print(pred_sample)
-print(sample_labels)
+print(confusion_matrix)
+print(pred_target)
+print(target_labels)
 print("Validation Sample_Acc:{} Target_Acc:{}".format(sample_acc,target_acc))

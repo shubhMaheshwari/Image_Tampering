@@ -36,9 +36,9 @@ target_val_loader = torch.utils.data.DataLoader(target_dataset,collate_fn=collat
 
 # Load the model and send it to gpu
 model = Model(opt)
+device = torch.device("cuda" if (torch.cuda.is_available() and opt.use_gpu) else "cpu")
 if opt.use_gpu:
-	device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-	model = model.cuda()	
+	model = model.to(device)	
 	model = torch.nn.DataParallel(model, device_ids=opt.gpus)
 
 # Print our model 
@@ -90,11 +90,11 @@ for epoch in range(opt.epoch):
 		target_images, target_labels = next(iter(target_loader))
 
 		# Do a prediction
-		pred_sample,pred_target,loss_mmd = model(sample_images.cuda(),target_images.cuda())
+		pred_sample,pred_target,loss_mmd = model(sample_images.to(device),target_images.to(device))
 
 		# Calculate loss
-		loss_sample = criterion(pred_sample,sample_labels.cuda())
-		loss_target = criterion(pred_target,target_labels.cuda())
+		loss_sample = criterion(pred_sample,sample_labels.to(device))
+		loss_target = criterion(pred_target,target_labels.to(device))
 
 		# Combine loss
 		loss = opt.lambda_sample*loss_sample + opt.lambda_target*loss_target + opt.lambda_mmd*loss_mmd
@@ -144,7 +144,7 @@ for epoch in range(opt.epoch):
 	sample_images, sample_labels = next(iter(sample_val_loader))
 	target_images, target_labels = next(iter(target_val_loader))
 
-	pred_sample,pred_target,loss_mmd = model(sample_images.cuda(),target_images.cuda())	
+	pred_sample,pred_target,loss_mmd = model(sample_images.to(device),target_images.to(device))	
 
 	pred_sample = np.argmax(pred_sample.cpu().data.numpy(),axis=1 )
 	sample_acc = np.mean(pred_sample == sample_labels.cpu().data.numpy())
@@ -158,7 +158,7 @@ for epoch in range(opt.epoch):
 	if epoch == 0:
 		save_model(model,epoch)
 		best_epoch = epoch
-	elif (target_acc >= max(target_acc_list) and sample_acc >= max(sample_acc_list)):
+	elif target_acc >= target_acc_list[best_epoch]:
 		save_model(model,epoch)
 		best_epoch = epoch
 

@@ -3,9 +3,12 @@ import cv2
 import glob
 import os
 
-maskedpath = "mask2014normal/"
-maskaddedpath = "train2014MA"
-savepath = "normalIP/"
+
+maskedpath = "../coco/images/CVIPmasktrain2014/"
+maskaddedpath = "../coco/images/CVIPmaskaddedtrain2014/"
+savepath = "../coco/images/Inpaintingtrain2014/"
+
+os.mkdir(savepath)
 cnt = 0
 for img_from_folder in glob.glob(maskaddedpath+"/*.jpg"):
 	I = cv2.imread(img_from_folder)

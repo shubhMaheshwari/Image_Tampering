@@ -29,6 +29,7 @@ class DataSet(torch.utils.data.Dataset):
 
 		self.opt = opt
 		print("Dataset size:",self.__len__())
+	
 	def __getitem__(self,idx):
 
 		"""

@@ -50,9 +50,10 @@ np.savez_compressed(savedir+'fakeset_IEEE.npz', images=totalarray, labels=totall
 totalarray =np.zeros([MAX_size,patch_dimension,patch_dimension, 3], dtype=np.uint8)
 totallabels = np.zeros([MAX_size, 2], dtype=np.uint8)
 
-savedir = ""
-imagedir = "/home/rudrabha/IIITH/ImageTampering/CASIA2/Tp/"
-maskdir = "/home/rudrabha/IIITH/ImageTampering/CASIA2/Masks"
+maskdir = "../coco/images/mask2014/"
+imagedir = "../coco/images/new_train2014/"
+savedir = "../coco/images/patch2014"
+os.mkdir(savedir)
 totalcnt = 0
 c = 0
 for img_from_folder in glob.glob(maskdir+"/*.tif"):

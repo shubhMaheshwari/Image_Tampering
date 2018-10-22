@@ -34,9 +34,12 @@ target_loader = torch.utils.data.DataLoader(target_dataset,collate_fn=collate_fn
 target_val_loader = torch.utils.data.DataLoader(target_dataset,collate_fn=collate_fn,sampler=val_target_sampler,
 				batch_size=opt.val_batch_size,num_workers=2)
 
+# Check if gpu available or not
+device = torch.device("cuda" if (torch.cuda.is_available() and opt.use_gpu) else "cpu")
+opt.device = device
+
 # Load the model and send it to gpu
 model = Model(opt)
-device = torch.device("cuda" if (torch.cuda.is_available() and opt.use_gpu) else "cpu")
 if opt.use_gpu:
 	model = model.to(device)	
 	model = torch.nn.DataParallel(model, device_ids=opt.gpus)
@@ -168,6 +171,12 @@ for epoch in range(opt.epoch):
 	vis.plot_graph(None,[target_acc_list,sample_acc_list],["Target ACC","Sample ACC"] ,display_id=3)
 	print(pred_sample)
 	print(sample_labels)
+
+	# # Update lr 
+	if epoch > opt.lr_decay_iter:
+		for g in optimizer.param_groups:
+			g['lr'] = 0.99*g['lr']
+
 
 
 print("Finished Training, best epoch:",best_epoch)

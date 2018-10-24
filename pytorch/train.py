@@ -15,24 +15,24 @@ opt = TrainOptions().parse()
 
 
 # Load the sample dataset(COCO)
-sample_dataset = DataSet(opt,opt.sample_true_dir,opt.sample_fake_dir)
+sample_dataset = DataSet(opt,opt.sample_true_dir,opt.sample_fake_dir,opt.sample_fake_dir_mask,opt.sample_dataset)
 
 # Do a dataset split for validation and train
 train_sample_sampler,val_sample_sampler = create_samplers(sample_dataset.__len__(),opt.split_ratio)
 
-sample_loader = torch.utils.data.DataLoader(sample_dataset,collate_fn=collate_fn,sampler=train_sample_sampler,
-				batch_size=opt.batch_size,num_workers=2)
+sample_loader = torch.utils.data.DataLoader(sample_dataset,collate_fn= lambda x: collate_fn(x, opt.num_crops),sampler=train_sample_sampler,
+				batch_size=opt.batch_size,num_workers=5)
 
-sample_val_loader = torch.utils.data.DataLoader(sample_dataset,collate_fn=collate_fn,sampler=val_sample_sampler,
-				batch_size=opt.val_batch_size,num_workers=2)
+sample_val_loader = torch.utils.data.DataLoader(sample_dataset,collate_fn=lambda x: collate_fn(x, -1),sampler=val_sample_sampler,
+				batch_size=1,num_workers=5)
 
 # Same method for target dataset(CASIA V2)
-target_dataset = DataSet(opt,opt.target_true_dir,opt.target_fake_dir)
+target_dataset = DataSet(opt,opt.target_true_dir,opt.target_fake_dir,opt.target_fake_dir_mask,opt.target_dataset)
 train_target_sampler,val_target_sampler = create_samplers(target_dataset.__len__(),opt.split_ratio)
-target_loader = torch.utils.data.DataLoader(target_dataset,collate_fn=collate_fn,sampler=train_target_sampler,
+target_loader = torch.utils.data.DataLoader(target_dataset,collate_fn=lambda x: collate_fn(x,  opt.num_crops),sampler=train_target_sampler,
 				batch_size=opt.batch_size,num_workers=2)
-target_val_loader = torch.utils.data.DataLoader(target_dataset,collate_fn=collate_fn,sampler=val_target_sampler,
-				batch_size=opt.val_batch_size,num_workers=2)
+target_val_loader = torch.utils.data.DataLoader(target_dataset,collate_fn=lambda x: collate_fn(x, -1),sampler=val_target_sampler,
+				batch_size=1,num_workers=2)
 
 # Check if gpu available or not
 device = torch.device("cuda" if (torch.cuda.is_available() and opt.use_gpu) else "cpu")
@@ -53,6 +53,10 @@ print('-------------- End ----------------')
 # Make checkpoint dir to save best models
 if not os.path.exists('./checkpoints'):
     os.mkdir('./checkpoints')
+
+# If require load old weights
+if opt.load_epoch > 0:
+	model.load_state_dict(torch.load('./checkpoints/' + 'model_{}.pt'.format(opt.load_epoch)))
 
 # Visualizer using visdom
 vis = Visualizer(opt)
@@ -79,12 +83,13 @@ def save_model(model,epoch):
 	filename = './checkpoints/' + 'model_{}.pt'.format(epoch)
 	torch.save(model.state_dict(), filename)
 
+# If K patches are detected tampered then the image is tampered(Only during testing and validating)
+K = np.arange((opt.load_size//opt.crop_size)**2)
 
 
 # Training loop
 for epoch in range(opt.epoch):
 	model.train()
-
 	# In each epoch first trained on images and then perform validation
 	for i in range(opt.iter):
 
@@ -92,6 +97,7 @@ for epoch in range(opt.epoch):
 		sample_images, sample_labels = next(iter(sample_loader))
 		target_images, target_labels = next(iter(target_loader))
 
+		# print(sample_labels)
 		# Do a prediction
 		pred_sample,pred_target,loss_mmd = model(sample_images.to(device),target_images.to(device))
 
@@ -134,48 +140,88 @@ for epoch in range(opt.epoch):
 			train_sample_acc_list.append(sample_acc)
 
 			# Using visdom to visualize the model
-			vis.plot_graph(None,[loss_list,loss_sample_list,loss_target_list,loss_mmd_list],["Loss","Sample Loss", "Target Loss", "Mmd Loss"] ,display_id=1)
-			vis.plot_graph(None,[train_target_acc_list,train_sample_acc_list],["Train Target ACC","Train Sample ACC"] ,display_id=4)
+			vis.plot_graph(None,[loss_list,loss_sample_list,loss_target_list,loss_mmd_list],["Loss","Sample Loss", "Target Loss", "Mmd Loss"] ,display_id=1,title=' loss over time',axis=['Epoch','Loss'])
+			vis.plot_graph(None,[train_target_acc_list,train_sample_acc_list],["Train Target ACC","Train Sample ACC"] ,display_id=4,title='Training Accuracy',axis=['Epoch','Acc'])
 
 			# Also show images with their prediction and ground truth
-			vis.show_image(sample_images.cpu().data.numpy()[0,:,:,:],pred_sample[0],sample_labels.cpu().data.numpy()[0],display_id=2)
-			vis.show_image(target_images.cpu().data.numpy()[0,:,:,:],pred_target[0],target_labels.cpu().data.numpy()[0],display_id=5)
+			vis.show_image(sample_images.cpu().data.numpy()[0,:,:,:],pred_sample[0],sample_labels.cpu().data.numpy()[0],display_id=2,title="Sample Dataset")
+			# vis.show_image(target_images.cpu().data.numpy()[0,:,:,:],pred_target[0],target_labels.cpu().data.numpy()[0],display_id=5,title= "Target Dataset")
 
+
+			# print("Sample dataset:")
+			# print(pred_sample)
+			# print(sample_labels)
+			# print("Target Dataset:")
+			# print(pred_target)
+			# print(target_labels)
 
 	# Validate model using the validation set
 	model.eval()
-	sample_images, sample_labels = next(iter(sample_val_loader))
-	target_images, target_labels = next(iter(target_val_loader))
 
-	pred_sample,pred_target,loss_mmd = model(sample_images.to(device),target_images.to(device))	
+	sample_val_list = []
+	pred_sample_val_list = []
+	target_val_list = []
+	pred_target_val_list = []
+	for i in range(opt.val_batch_size):
+		sample_images, sample_labels = next(iter(sample_val_loader))
+		target_images, target_labels = next(iter(target_val_loader))
 
-	pred_sample = np.argmax(pred_sample.cpu().data.numpy(),axis=1 )
-	sample_acc = np.mean(pred_sample == sample_labels.cpu().data.numpy())
+		pred_sample,pred_target,loss_mmd = model(sample_images.to(device),target_images.to(device))	
+		pred_sample = np.argmax(pred_sample.cpu().data.numpy(),axis=1 )
+		pred_target = np.argmax(pred_target.cpu().data.numpy(),axis=1)
 
-	pred_target = np.argmax(pred_target.cpu().data.numpy(),axis=1)
-	target_acc = np.mean(pred_target == target_labels.data.numpy())
+		print(pred_target)
 
-	print("Validation:{}th epoch Sample_Acc:{} Target_Acc:{}".format(epoch,sample_acc,target_acc))
+		sample_labels = np.sum(sample_labels.numpy(),0) 
+		pred_sample = np.sum(pred_sample,0)
+		# print("Misclassied {} from Sample Image ".format(abs(pred_sample-sample_labels)))
+
+		target_labels = np.sum(target_labels.numpy(),0)
+		pred_target = np.sum(pred_target,0)
+		# print("Misclassied {} from Target Image ".format(abs(pred_target-target_labels)))
+
+		sample_val_list.append(np.sign(sample_labels))
+		pred_sample_val_list.append( (( pred_sample - K) > 0).astype('int'))
+		target_val_list.append(np.sign(target_labels - K))
+		pred_target_val_list.append(( (K - pred_target) > 0).astype('int'))
+
+	sample_val_list = np.array(sample_val_list)
+	pred_sample_val_list = np.array(pred_sample_val_list).T
+
+	sample_acc = np.mean(sample_val_list == pred_sample_val_list,axis=1)
+
+	target_val_list = np.array(target_val_list)
+	pred_target_val_list = np.array(pred_target_val_list).T
+
+	target_acc = np.mean(target_val_list == pred_target_val_list,axis=1)
+
+
+	best_sample_K = np.argmax(sample_acc)
+	best_sample_acc = target_acc[best_sample_K]
+
+	best_target_K = np.argmax(target_acc)
+	best_target_acc = target_acc[best_target_K]
+
+	print("Validation:{}th epoch Sample_Acc:{} Target_Acc:{} Best_K(Sample):{} Best_K(target) :{}".format(epoch,best_sample_acc,best_target_acc,best_sample_K,best_target_K))
 
 
 	if epoch == 0:
 		save_model(model,epoch)
 		best_epoch = epoch
-	elif target_acc >= target_acc_list[best_epoch]:
+	elif best_target_acc >= target_acc_list[best_epoch]:
 		save_model(model,epoch)
 		best_epoch = epoch
 
-	target_acc_list.append(target_acc)
-	sample_acc_list.append(sample_acc)
+	target_acc_list.append(best_target_acc)
+	sample_acc_list.append(best_sample_acc)
 
-	vis.plot_graph(None,[target_acc_list,sample_acc_list],["Target ACC","Sample ACC"] ,display_id=3)
-	print(pred_sample)
-	print(sample_labels)
+	vis.plot_graph(None,[target_acc_list,sample_acc_list],labels=["Target ACC","Sample ACC"],axis=['Epoch','Acc'] ,display_id=3,title='validation accuracy')
+
 
 	# # Update lr 
 	if epoch > opt.lr_decay_iter:
 		for g in optimizer.param_groups:
-			g['lr'] = 0.99*g['lr']
+			g['lr'] = opt.lr_decay_param*g['lr']
 
 
 

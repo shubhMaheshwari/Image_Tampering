@@ -9,9 +9,8 @@ class Visualizer():
         self.opt = opt
         self.vis = visdom.Visdom()
         self.vis = visdom.Visdom(server=opt.display_server, port=opt.display_port)
-    # errors: dictionary of error labels and values
-    def plot_graph(self,X,Y,labels,display_id):
-        
+    # errors: dictionary of error labels and values        
+    def plot_graph(self,X,Y,labels,display_id,title,axis=['x','y']):
         Y = np.array(Y).T
         if X == None: 
             X = np.arange(0,Y.shape[0])
@@ -21,20 +20,21 @@ class Visualizer():
             Y=Y,
             win = display_id,
             opts={
-            'title': ' loss over time',
+            'title': title,
             'legend': labels,
-            'xlabel': 'epoch',
-            'ylabel': 'loss'}
+            'xlabel': axis[0],
+            'ylabel': axis[1]}
             )
 
         return
 
-    def show_image(self,img,y,y_pred,display_id):
+    def show_image(self,img,y,y_pred,display_id,title):
 
         
         self.vis.image(
             img,
             win=display_id,
             opts={
-            'caption': "Y:{} Y_pred:{}".format(y,y_pred)
+            'caption': "Y:{} Y_pred:{}".format(y,y_pred),
+            'title': title
             })

@@ -11,15 +11,17 @@ from sklearn.metrics import confusion_matrix
 # Get the Hyperparaeters 
 opt = TestOptions().parse()
 
-# Load the sample dataset(COCO)
-sample_dataset = DataSet(opt,opt.sample_true_dir,opt.sample_fake_dir,opt.sample_fake_dir_mask,opt.sample_dataset)
-sample_loader = torch.utils.data.DataLoader(sample_dataset,collate_fn=lambda x: collate_fn(x, -1),
-				batch_size=1,num_workers=2,shuffle=True)
+target_path_list = [("IEEE","../IEEE/training/phase-01/training/pristine/","../IEEE/training/phase-01/training/masks/","../IEEE/training/phase-01/training/fake/")]
 
-# Same method for target dataset(CASIA V2)
-target_dataset = DataSet(opt,opt.target_true_dir,opt.target_fake_dir,opt.target_fake_dir_mask,opt.target_dataset)
-target_loader = torch.utils.data.DataLoader(target_dataset,collate_fn=lambda x: collate_fn(x, -1),
-				batch_size=1,num_workers=2,shuffle=True)
+target_loaders =[]
+for paths in target_path_list:
+	dataset_name,true_path,mask_path,fake_path = paths
+	dataset = DataSet(opt,true_path,fake_path,mask_path,dataset_name)
+
+	loader = torch.utils.data.DataLoader(dataset,collate_fn= lambda x: collate_fn(x, -1),batch_size=1,num_workers=1)
+
+	target_loaders.append(loader)	
+
 
 
 # Load the model and send it to gpu
@@ -41,47 +43,36 @@ print(model)
 print('-------------- End ----------------')
 
 model.eval()
-
 K = opt.best_k
 
 
-sample_test_list = []
-pred_sample_test_list = []
 target_test_list = []
 pred_target_test_list = []
-for i in range(opt.test_cases):
-	sample_images, sample_labels = next(iter(sample_loader))
-	target_images, target_labels = next(iter(target_loader))
 
-	pred_sample,pred_target,loss_mmd = model(sample_images.to(device),target_images.to(device))	
-	pred_sample = np.argmax(pred_sample.cpu().data.numpy(),axis=1 )
-	pred_target = np.argmax(pred_target.cpu().data.numpy(),axis=1)
+for target_loader in target_loaders:
+	for i in range(opt.test_cases):
+		target_images, target_labels,percent_list = next(iter(target_loader))
+
+		_,pred_target,loss_mmd = model(target_images.to(device),target_images.to(device))	
+		pred_target = np.argmax(pred_target.cpu().data.numpy(),axis=1)
 
 
-	sample_labels = np.sum(sample_labels.numpy(),0) 
-	pred_sample = np.sum(pred_sample,0)
-	print("Misclassied {} from Sample Image ".format(abs(pred_sample-sample_labels)))
 
-	target_labels = np.sum(target_labels.numpy(),0)
-	pred_target = np.sum(pred_target,0)
-	print("Misclassied {} from Target Image ".format(abs(pred_target-target_labels)))
+		target_labels = np.sum(target_labels.numpy(),0)
+		pred_target = np.sum(pred_target,0)
+		print("Misclassied {} from Target Image ".format(abs(pred_target-target_labels)))
 
-	sample_test_list.append(np.sign(sample_labels))
-	pred_sample_test_list.append( ((pred_sample - K) > 0).astype('int'))
-	target_test_list.append(np.sign(target_labels))
-	pred_target_test_list.append(( (pred_target -K) > 0).astype('int'))
+		target_test_list.append(np.sign(target_labels))
+		pred_target_test_list.append(( (pred_target -K) > 0).astype('int'))
 
-sample_test_list = np.array(sample_test_list)
-pred_sample_test_list = np.array(pred_sample_test_list).T
-sample_acc = np.mean(sample_test_list == pred_sample_test_list)
 
-target_test_list = np.array(target_test_list)
-pred_target_test_list = np.array(pred_target_test_list).T
+	target_test_list = np.array(target_test_list)
+	pred_target_test_list = np.array(pred_target_test_list).T
 
-target_acc = np.mean(target_test_list == pred_target_test_list)
+	target_acc = np.mean(target_test_list == pred_target_test_list)
 
-conf_target = confusion_matrix(target_test_list,pred_target_test_list)
+	conf_target = confusion_matrix(target_test_list,pred_target_test_list)
 
-print("==============Best results======================")
-print(conf_target)
-print("Validation Sample_Acc:{} Target_Acc:{}".format(sample_acc,target_acc))
+	print("==============Best results======================")
+	print(conf_target)
+	print("Validation Target_Acc:{}".format(target_acc))

@@ -28,7 +28,7 @@ class Visualizer():
 
         return
 
-    def show_image(self,img,y,y_pred,display_id,title):
+    def show_image(self,img,y_pred,y,display_id,title):
 
         
         self.vis.image(

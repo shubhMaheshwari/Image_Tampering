@@ -113,7 +113,7 @@ def mmd_loss(source_samples, target_samples, weight, name='mmd_loss'):
 		barrier = tf.no_op(tag)
 	return loss_value
 
-def optimizeAdam(cost, learning_rate = 0.0001):
+def optimizeAdam(cost, learning_rate = 0.001):
 	return tf.train.AdamOptimizer(learning_rate).minimize(cost)
 
 def optimizeMomentum(cost, learning_rate = 0.01, momentum = 0.9):

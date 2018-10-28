@@ -18,32 +18,35 @@ ll1 = 0
 ll2 = 0
 
 
-source = np.load("../source.npz")
-sourceimages = source['images']
-sourcelabels = source['labels']
+source = np.load("Test_file.npz")
+sourceimages = source['arr_0']
+sourcelabels = source['arr_1']
 
-target = np.load("../target1.npz")
-targetimages = target['images']
-targetlabels = target['labels']
-
+targetimages = source['arr_2']
+targetlabels = source['arr_3']
 
 maxpatches = max(targetimages.shape[0], sourceimages.shape[0])
+
 
 
 def nextbatch():
 	global ll1
 	global ll2
 	global incr
-	im = sourceimages[ll1:ll1+incr]
-	lb = sourcelabels[ll1:ll1+incr]
+	im = np.transpose((sourceimages[ll1:ll1+incr,...]), (0, 3, 2, 1))
+	lb = sourcelabels[ll1:ll1+incr,...]
 	batch_xs = im
-	batch_ys = lb
+
+	batch_ys = np.zeros((incr,2))
+	batch_ys[np.arange(incr),lb.astype('int')] =1
 
 
-	im = targetimages[ll2:ll2+incr]
-	lb = targetlabels[ll2:ll2+incr]
+	im = np.transpose((targetimages[ll2:ll2+incr,...]), (0, 3, 2, 1))
+	lb = targetlabels[ll2:ll2+incr,...]
 	batch_xt = im
-	batch_yt = lb
+
+	batch_yt = np.zeros((incr,2))
+	batch_yt[np.arange(incr),lb.astype('int')] =1
 
 
 	ll1 = ll1+incr
@@ -51,7 +54,7 @@ def nextbatch():
 	
 
 
-	return batch_xs/255.0, batch_ys, batch_xt/255.0, batch_yt
+	return batch_xs, batch_ys, batch_xt, batch_yt
 
 
 
@@ -181,7 +184,7 @@ soucl_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=sourc
 tarcl_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=targethead, labels=y_t))
 
 loss = tarcl_loss + l1*soucl_loss + l2*mmdloss
-optm = tfutil.optimizeAdam(loss, 0.0001)
+optm = tfutil.optimizeAdam(loss)
 
 # Checking accuracy
 targetheadtest = targetpath(targetcom, weights, biases, keepprob)
@@ -191,11 +194,12 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
 init = tf.global_variables_initializer()
 saver = tf.train.Saver()
-sess = tf.Session()
-saver.restore(sess, "Models/try.ckpt")
-#sess.run(init)
 
-for nepochs in range(100):
+sess = tf.Session()
+saver.restore(sess, "./Models/try2.ckpt")
+sess.run(init)
+
+for nepochs in range(200):
 	
 	for numbatch in range(maxpatches/incr):
 		batch_xs, batch_ys, batch_xt, batch_yt = nextbatch()
@@ -210,6 +214,8 @@ for nepochs in range(100):
 		saver.save(sess, "Models/try2.ckpt")	
 	print nepochs
         print "Test Accuracy: ", sess.run(accuracy, feed_dict={x_t:batch_xt, y_t:batch_yt, keepprob:1.})	
+        # print "Test Accuracy: ", sess.run(targethead, feed_dict={x_t:batch_xt, y_t:batch_yt, keepprob:1.})	
+	
 	ll1 = 0
 	ll2 = 0
 	

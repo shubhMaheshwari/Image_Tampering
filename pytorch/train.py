@@ -12,27 +12,55 @@ import os
 # Get the Hyperparaeters 
 opt = TrainOptions().parse()
 
+import matplotlib.pyplot as plt
+
+# Load the sample datasets
+sample_path_list = [
+					("Inpainting","../coco/images/new_train2014/","../coco/images/CVIPmasktrain2014/","../coco/images/Inpaintingtrain2014/"),
+					("Segment","../coco/images/new_train2014/","../coco/images/mask2014/","../coco/images/train2014semantics/"),
+					# ("Adobe_Featuring","../coco/images/new_train2014/","../featuring_dataset/alpha/","../featuring_dataset/merged/"),
+					# ("IEEE","../IEEE/training/phase-01/training/pristine/","../IEEE/training/phase-01/training/masks/","../IEEE/training/phase-01/training/fake/")
+
+					]
+target_path_list = [("IEEE","../IEEE/training/phase-01/training/pristine/","../IEEE/training/phase-01/training/masks/","../IEEE/training/phase-01/training/fake/")]
+
+# Load all the sample datasets
+sample_loaders =[]
+for paths in sample_path_list:
+	dataset_name,true_path,mask_path,fake_path = paths
+	dataset = DataSet(opt,true_path,fake_path,mask_path,dataset_name)
 
 
-# Load the sample dataset(COCO)
-sample_dataset = DataSet(opt,opt.sample_true_dir,opt.sample_fake_dir,opt.sample_fake_dir_mask,opt.sample_dataset)
+	# Do a dataset split for validation and train
+	train_sampler,val_sampler = create_samplers(dataset.__len__(),opt.split_ratio)
 
-# Do a dataset split for validation and train
-train_sample_sampler,val_sample_sampler = create_samplers(sample_dataset.__len__(),opt.split_ratio)
+	loader = torch.utils.data.DataLoader(dataset,collate_fn= lambda x: collate_fn(x, opt.num_crops),sampler=train_sampler,
+				batch_size=opt.batch_size,num_workers=10)
 
-sample_loader = torch.utils.data.DataLoader(sample_dataset,collate_fn= lambda x: collate_fn(x, opt.num_crops),sampler=train_sample_sampler,
-				batch_size=opt.batch_size,num_workers=5)
+	val_loader = torch.utils.data.DataLoader(dataset,collate_fn=lambda x: collate_fn(x, -1),sampler=val_sampler,
+				batch_size=1,num_workers=10)
 
-sample_val_loader = torch.utils.data.DataLoader(sample_dataset,collate_fn=lambda x: collate_fn(x, -1),sampler=val_sample_sampler,
-				batch_size=1,num_workers=5)
+	sample_loaders.append((loader,val_loader))
 
-# Same method for target dataset(CASIA V2)
-target_dataset = DataSet(opt,opt.target_true_dir,opt.target_fake_dir,opt.target_fake_dir_mask,opt.target_dataset)
-train_target_sampler,val_target_sampler = create_samplers(target_dataset.__len__(),opt.split_ratio)
-target_loader = torch.utils.data.DataLoader(target_dataset,collate_fn=lambda x: collate_fn(x,  opt.num_crops),sampler=train_target_sampler,
-				batch_size=opt.batch_size,num_workers=2)
-target_val_loader = torch.utils.data.DataLoader(target_dataset,collate_fn=lambda x: collate_fn(x, -1),sampler=val_target_sampler,
-				batch_size=1,num_workers=2)
+# Load all the target datasets
+target_loaders =[]
+for paths in target_path_list:
+	dataset_name,true_path,mask_path,fake_path = paths
+	dataset = DataSet(opt,true_path,fake_path,mask_path,dataset_name)
+
+
+	# Do a dataset split for validation and train
+	train_sampler,val_sampler = create_samplers(dataset.__len__(),opt.split_ratio)
+
+	loader = torch.utils.data.DataLoader(dataset,collate_fn= lambda x: collate_fn(x, opt.num_crops),sampler=train_sampler,
+				batch_size=opt.batch_size,num_workers=1)
+
+	val_loader = torch.utils.data.DataLoader(dataset,collate_fn=lambda x: collate_fn(x, -1),sampler=val_sampler,
+				batch_size=1,num_workers=1)
+
+	target_loaders.append((loader,val_loader))	
+
+
 
 # Check if gpu available or not
 device = torch.device("cuda" if (torch.cuda.is_available() and opt.use_gpu) else "cpu")
@@ -52,18 +80,27 @@ print('-------------- End ----------------')
 
 # Make checkpoint dir to save best models
 if not os.path.exists('./checkpoints'):
-    os.mkdir('./checkpoints')
+	os.mkdir('./checkpoints')
 
 # If require load old weights
 if opt.load_epoch > 0:
 	model.load_state_dict(torch.load('./checkpoints/' + 'model_{}.pt'.format(opt.load_epoch)))
-
+else:
+	def init_weights(m):
+		if type(m) == torch.nn.Linear:
+			torch.nn.init.xavier_uniform_(m.weight)
+			m.bias.data.fill_(0.01)
+		elif isinstance(m,torch.nn.Conv2d):
+			torch.nn.init.xavier_uniform_(m.weight,gain=np.sqrt(2))
+	model.apply(init_weights)
+	
 # Visualizer using visdom
 vis = Visualizer(opt)
 
 # Loss functons(Cross Entropy)
 # Adam optimizer
-criterion = torch.nn.CrossEntropyLoss().to(device)
+criterion_sample = torch.nn.CrossEntropyLoss().to(device)
+criterion_target = torch.nn.CrossEntropyLoss().to(device)
 optimizer = optim.Adam(model.parameters(), lr=opt.lr,weight_decay=opt.weight_decay)
 
 
@@ -77,7 +114,7 @@ target_acc_list = []
 train_target_acc_list = []
 sample_acc_list = []
 train_sample_acc_list = []
-
+best_K_list = []
 
 def save_model(model,epoch):
 	filename = './checkpoints/' + 'model_{}.pt'.format(epoch)
@@ -89,140 +126,163 @@ K = np.arange((opt.load_size//opt.crop_size)**2)
 
 # Training loop
 for epoch in range(opt.epoch):
-	model.train()
 	# In each epoch first trained on images and then perform validation
-	for i in range(opt.iter):
 
-		# Load images
-		sample_images, sample_labels = next(iter(sample_loader))
-		target_images, target_labels = next(iter(target_loader))
+	for sample_loader, sample_val_loader in sample_loaders:
+		for target_loader, target_val_loader in target_loaders:
+			
+			model.train()
+			for i in range(opt.iter):
+				sample_images, sample_labels,spercent_list = next(iter(sample_loader))
+				target_images, target_labels,tpercent_list = next(iter(target_loader))
+				# Do a prediction
+				optimizer.zero_grad()
+				try:
+					pred_sample,pred_target,loss_mmd = model(sample_images.to(device),target_images.to(device))
+				except RuntimeError  as r:
+					print("Error:",r)
+					torch.cuda.empty_cache()
+					continue
+				# Calculate loss
+				loss_sample = criterion_sample(pred_sample,sample_labels.to(device))
+				loss_target = criterion_target(pred_target,target_labels.to(device))
 
-		# print(sample_labels)
-		# Do a prediction
-		pred_sample,pred_target,loss_mmd = model(sample_images.to(device),target_images.to(device))
+				# Combine loss
+				loss =  opt.lambda_sample*loss_sample + opt.lambda_target*loss_target + opt.lambda_mmd*loss_mmd
 
-		# Calculate loss
-		loss_sample = criterion(pred_sample,sample_labels.to(device))
-		loss_target = criterion(pred_target,target_labels.to(device))
+				# Do backpropogation followed by a gradient descent step
+				loss.backward()
+				optimizer.step()	
 
-		# Combine loss
-		loss = opt.lambda_sample*loss_sample + opt.lambda_target*loss_target + opt.lambda_mmd*loss_mmd
+				
 
-		# Do backpropogation followed by a gradient descent step
-		optimizer.zero_grad()
-		loss.backward()
-		optimizer.step()	
+				# Once in a while print losses and accuracy
+				if i % opt.print_iter == 0:
 
-		# Once in a while print losses and accuracy
-		if i % opt.print_iter == 0:
+					print(pred_sample)
 
-			# As we are using softmax, class with highest probality is predicted
-			pred_sample = np.argmax(pred_sample.cpu().data.numpy(),axis=1 )
+					# As we are using softmax, class with highest probality is predicted
+					pred_sample = np.argmax(pred_sample.cpu().data.numpy(),axis=1 )
 
-			# Getting accuracy on sample images
-			sample_acc = np.mean(pred_sample == sample_labels.cpu().data.numpy())
+					# Getting accuracy on sample images
+					sample_acc = np.mean(pred_sample == sample_labels.cpu().data.numpy())
 
-			# Similarly for target images
-			pred_target = np.argmax(pred_target.cpu().data.numpy(),axis=1)
-			target_acc = np.mean(pred_target == target_labels.data.numpy())
+					# Similarly for target images
+					pred_target = np.argmax(pred_target.cpu().data.numpy(),axis=1)
+					target_acc = np.mean(pred_target == target_labels.data.numpy())
 
-			# Print loss
-			print("Iter:{}/{} Loss:{} MMD_Loss:{} Sample_Acc:{} Target_Acc:{}".format(i,opt.iter, loss.data[0],loss_mmd.data[0],sample_acc,target_acc))
-
-
-			# Upate the loss list and plot it
-			loss_list.append(loss.data)
-			loss_sample_list.append(loss_sample.data)
-			loss_target_list.append(loss_target.data)
-			loss_mmd_list.append(loss_mmd.data)
-
-			train_target_acc_list.append(target_acc)
-			train_sample_acc_list.append(sample_acc)
-
-			# Using visdom to visualize the model
-			vis.plot_graph(None,[loss_list,loss_sample_list,loss_target_list,loss_mmd_list],["Loss","Sample Loss", "Target Loss", "Mmd Loss"] ,display_id=1,title=' loss over time',axis=['Epoch','Loss'])
-			vis.plot_graph(None,[train_target_acc_list,train_sample_acc_list],["Train Target ACC","Train Sample ACC"] ,display_id=4,title='Training Accuracy',axis=['Epoch','Acc'])
-
-			# Also show images with their prediction and ground truth
-			vis.show_image(sample_images.cpu().data.numpy()[0,:,:,:],pred_sample[0],sample_labels.cpu().data.numpy()[0],display_id=2,title="Sample Dataset")
-			# vis.show_image(target_images.cpu().data.numpy()[0,:,:,:],pred_target[0],target_labels.cpu().data.numpy()[0],display_id=5,title= "Target Dataset")
+					# Print loss
+					print("Iter:{}/{} Loss:{} MMD_Loss:{} Sample_Acc:{} Target_Acc:{}".format(i,opt.iter, loss.data[0],loss_mmd.data[0],sample_acc,target_acc))
 
 
-			# print("Sample dataset:")
-			# print(pred_sample)
-			# print(sample_labels)
-			# print("Target Dataset:")
-			# print(pred_target)
-			# print(target_labels)
+					# Upate the loss list and plot it
+					loss_list.append(loss.data)
+					loss_sample_list.append(loss_sample.data)
+					loss_target_list.append(loss_target.data)
+					loss_mmd_list.append(loss_mmd.data)
 
-	# Validate model using the validation set
-	model.eval()
+					train_target_acc_list.append(target_acc)
+					train_sample_acc_list.append(sample_acc)
 
-	sample_val_list = []
-	pred_sample_val_list = []
-	target_val_list = []
-	pred_target_val_list = []
-	for i in range(opt.val_batch_size):
-		sample_images, sample_labels = next(iter(sample_val_loader))
-		target_images, target_labels = next(iter(target_val_loader))
+					# Using visdom to visualize the model
+					vis.plot_graph(None,[loss_list,loss_sample_list,loss_target_list,loss_mmd_list],["Loss","Sample Loss", "Target Loss", "Mmd Loss"] ,display_id=1,title=' loss over time',axis=['Epoch','Loss'])
+					vis.plot_graph(None,[train_target_acc_list,train_sample_acc_list],["Train Target ACC","Train Sample ACC"] ,display_id=4,title='Training Accuracy',axis=['Epoch','Acc'])
 
-		pred_sample,pred_target,loss_mmd = model(sample_images.to(device),target_images.to(device))	
-		pred_sample = np.argmax(pred_sample.cpu().data.numpy(),axis=1 )
-		pred_target = np.argmax(pred_target.cpu().data.numpy(),axis=1)
-
-		print(pred_target)
-
-		sample_labels = np.sum(sample_labels.numpy(),0) 
-		pred_sample = np.sum(pred_sample,0)
-		# print("Misclassied {} from Sample Image ".format(abs(pred_sample-sample_labels)))
-
-		target_labels = np.sum(target_labels.numpy(),0)
-		pred_target = np.sum(pred_target,0)
-		# print("Misclassied {} from Target Image ".format(abs(pred_target-target_labels)))
-
-		sample_val_list.append(np.sign(sample_labels))
-		pred_sample_val_list.append( (( pred_sample - K) > 0).astype('int'))
-		target_val_list.append(np.sign(target_labels - K))
-		pred_target_val_list.append(( (K - pred_target) > 0).astype('int'))
-
-	sample_val_list = np.array(sample_val_list)
-	pred_sample_val_list = np.array(pred_sample_val_list).T
-
-	sample_acc = np.mean(sample_val_list == pred_sample_val_list,axis=1)
-
-	target_val_list = np.array(target_val_list)
-	pred_target_val_list = np.array(pred_target_val_list).T
-
-	target_acc = np.mean(target_val_list == pred_target_val_list,axis=1)
+					# Also show images with their prediction and ground truth
+					for i in range(min(4,opt.batch_size)):
+						vis.show_image(sample_images.cpu().data.numpy()[i,:,:,:],pred_sample[i],sample_labels.cpu().data.numpy()[i],display_id=i + 10,title="Sample Dataset:{}".format(spercent_list[i]))
+						vis.show_image(target_images.cpu().data.numpy()[i,:,:,:],pred_target[i],target_labels.cpu().data.numpy()[i],display_id=15 + i,title="Target Dataset:{}".format(tpercent_list[i]))
 
 
-	best_sample_K = np.argmax(sample_acc)
-	best_sample_acc = target_acc[best_sample_K]
+			# Validate model using the validation set
+			model.eval()
 
-	best_target_K = np.argmax(target_acc)
-	best_target_acc = target_acc[best_target_K]
+			sample_val_list = []
+			pred_sample_val_list = []
+			target_val_list = []
+			pred_target_val_list = []
+			for i in range(opt.val_batch_size):
 
-	print("Validation:{}th epoch Sample_Acc:{} Target_Acc:{} Best_K(Sample):{} Best_K(target) :{}".format(epoch,best_sample_acc,best_target_acc,best_sample_K,best_target_K))
+				sample_images, sample_labels,_ = next(iter(sample_val_loader))
+				target_images, target_labels,_ = next(iter(target_val_loader))
 
+				try:
+					pred_sample,pred_target,loss_mmd = model(sample_images.to(device),target_images.to(device))	
+					
+				except RuntimeError  as r:
+					torch.cuda.empty_cache()
+					continue
+				# print(pred_target)
+				# print(sample_images.shape)
+				# print(target_images.shape)
 
-	if epoch == 0:
-		save_model(model,epoch)
-		best_epoch = epoch
-	elif best_target_acc >= target_acc_list[best_epoch]:
-		save_model(model,epoch)
-		best_epoch = epoch
+				pred_sample = np.argmax(pred_sample.cpu().data.numpy(),axis=1 )
+				pred_target = np.argmax(pred_target.cpu().data.numpy(),axis=1)
 
-	target_acc_list.append(best_target_acc)
-	sample_acc_list.append(best_sample_acc)
+				sample_labels = np.sum(sample_labels.numpy(),0) 
+				pred_sample = np.sum(pred_sample,0)
+				print("Misclassied {} from Sample Image ".format(abs(pred_sample-sample_labels)))
 
-	vis.plot_graph(None,[target_acc_list,sample_acc_list],labels=["Target ACC","Sample ACC"],axis=['Epoch','Acc'] ,display_id=3,title='validation accuracy')
+				target_labels = np.sum(target_labels.numpy(),0)
+				pred_target = np.sum(pred_target,0)
+				# print(pred_target)
+				print("Misclassied {} from Target Image ".format(abs(pred_target-target_labels)))
 
+				sample_val_list.append(np.sign(sample_labels))
+				pred_sample_val_list.append( (( pred_sample - K) > 0).astype('int'))
+				target_val_list.append(np.sign(target_labels))
+				pred_target_val_list.append(( ( pred_target - K) > 0).astype('int'))
 
+			if len(sample_val_list) == 0:
+				continue
+			
+			sample_val_list = np.array(sample_val_list)
+			pred_sample_val_list = np.array(pred_sample_val_list).T
+	
+
+			sample_acc = np.mean(sample_val_list == pred_sample_val_list,axis=1)
+
+			if len(target_val_list) == 0:
+				continue
+
+			target_val_list = np.array(target_val_list)
+			pred_target_val_list = np.array(pred_target_val_list).T
+
+			target_acc = np.mean(target_val_list == pred_target_val_list,axis=1)
+
+			best_sample_K = np.argmax(sample_acc)
+			best_sample_acc = sample_acc[best_sample_K]
+
+			best_target_K = np.argmax(target_acc)
+			best_target_acc = target_acc[best_target_K]
+
+			best_K_list.append(best_target_K)
+
+			print("Validation:{}th epoch Sample_Acc:{} Target_Acc:{} Best_K(Sample):{} Best_K(target) :{}".format(epoch,best_sample_acc,best_target_acc,best_sample_K,best_target_K))
+
+			target_acc_list.append(best_target_acc)
+			sample_acc_list.append(best_sample_acc)
+
+			vis.plot_graph(None,[target_acc_list,sample_acc_list],labels=["Target ACC","Sample ACC"],axis=['Epoch','Acc'] ,display_id=3,title='validation accuracy')
+
+	save_model(model,epoch)
+	try:
+		if epoch == 0:
+			best_epoch = epoch
+		elif best_target_acc >= target_acc_list[best_epoch]:
+			save_model(model,epoch)
+			best_epoch = epoch
+	except Exception as e:
+		best_epoch = np.argmax(np.array(target_acc_list))
+		print("Error:",e)
+		continue
 	# # Update lr 
 	if epoch > opt.lr_decay_iter:
 		for g in optimizer.param_groups:
 			g['lr'] = opt.lr_decay_param*g['lr']
 
-
+# np.savez("/media/shubh/Pratik (120GB)/Train_file",sample_numpy_images,sample_numpy_y,target_numpy_images,target_numpy_y)
 
 print("Finished Training, best epoch:",best_epoch)
+plt.hist(best_K_list)
+plt.show()

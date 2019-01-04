@@ -2,10 +2,13 @@ import cv2
 import os
 import glob
 import numpy as np
+import matplotlib.pyplot as plt
+from skimage.measure import compare_ssim
+
 pristine_path = "../CASIA/CASIA2/Au/"
 tampered_path = "../CASIA/CASIA2/Tp"
 masked_path = "../CASIA/CASIA2/Masks/"
-os.mkdir(masked_path)
+# os.mkdir(masked_path)
 for img_from_folder in glob.glob(tampered_path+"/*.tif"):
 	I = cv2.imread(img_from_folder)
 	filename = os.path.basename(img_from_folder)
@@ -22,11 +25,16 @@ for img_from_folder in glob.glob(tampered_path+"/*.tif"):
 		
 	if I.shape != Ib.shape:
 		continue
-	Id = cv2.subtract(I,Ib)
-	Id = cv2.cvtColor(Id, cv2.COLOR_RGB2GRAY)
-	ret,thresh1 = cv2.threshold(Id,20,255,cv2.THRESH_BINARY)
-	cv2.imwrite(masked_path+filename, thresh1)
-	
+
+	# Id = cv2.subtract(I,Ib)
+	# Id = cv2.cvtColor(Id, cv2.COLOR_RGB2GRAY)
+	# ret,Id = cv2.threshold(Id,20,255,cv2.THRESH_OTSU)
+
+	(score, diff) = compare_ssim(cv2.cvtColor(I, cv2.COLOR_RGB2GRAY), cv2.cvtColor(Ib, cv2.COLOR_RGB2GRAY), full=True)
+	diff = (255*diff).astype('uint8')
+	ret,diff = cv2.threshold(diff,0,255,cv2.THRESH_OTSU)
+
+	cv2.imwrite(masked_path+filename, diff)
 for img_from_folder in glob.glob(tampered_path+"/*.bmp"):
 	I = cv2.imread(img_from_folder)
 	filename = os.path.basename(img_from_folder)

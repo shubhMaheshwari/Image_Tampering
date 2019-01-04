@@ -18,3 +18,16 @@ TF_Codes/Testing has codes for testing.
 TF_Codes/Training has codes for training.
 
 
+We have to improve on your work:
+	Median Filters
+	CNN
+
+[Yashas Paper]
+	How to use K effectively: what about small tampered regions(hence not good for localization)
+
+Localization:
+	[Learning Rich Features for Image Manipulation Detection]
+	Using 2 streams of Image one RGB and one noisy.
+	Robust to compression and Resizing 
+
+What happens on resizing images

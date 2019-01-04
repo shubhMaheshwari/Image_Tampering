@@ -136,7 +136,7 @@ def testImgtype(x):
 
 	saver = tf.train.Saver()
 	sess = tf.Session()
-	saver.restore(sess, "fm/try.ckpt")
+	saver.restore(sess, "../Training/Models/try2.ckpt")
 	accrr =  sess.run(targetheadtest, feed_dict={x_t:x, keepprob:1.})
 	sess.close()
 	tf.reset_default_graph()

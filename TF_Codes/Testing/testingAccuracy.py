@@ -8,7 +8,7 @@ import random
 
 patch_dimension = 64
 MAX_size = 50000
-imagedir = "/home/rudrabha/IIITH/ImageTampering/CASIA2/Au/"
+imagedir = "../../CASIA/CASIA1/CASIA1/Au/"
 
 def getRandomFile(path):
 	"""

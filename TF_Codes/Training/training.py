@@ -17,15 +17,13 @@ incr = batchsize
 ll1 = 0
 ll2 = 0
 
+source = np.load("/media/shubh/PranayHDD/numpy_npz/training_data_0.npz")
+sourceimages = None
+sourcelabels = None
+targetimages = None
+targetlabels = None
 
-source = np.load("Test_file.npz")
-sourceimages = source['arr_0']
-sourcelabels = source['arr_1']
-
-targetimages = source['arr_2']
-targetlabels = source['arr_3']
-
-maxpatches = max(targetimages.shape[0], sourceimages.shape[0])
+maxpatches = None
 
 
 
@@ -59,31 +57,31 @@ def nextbatch():
 
 
 weights = {
-    "wc1": tf.Variable(tf.random_normal([5, 5, 3, 32], stddev=0.1), name="wc1"),
-    "wc2": tf.Variable(tf.random_normal([3, 3, 32, 64], stddev=0.1), name="wc2"),
-    "wc3": tf.Variable(tf.random_normal([3, 3, 64, 192], stddev=0.1), name="wc3"),
-    "wc4": tf.Variable(tf.random_normal([3, 3, 192, 128], stddev=0.1), name="wc4"),
-    "wc5": tf.Variable(tf.random_normal([3, 3, 128, 128], stddev=0.1), name="wc5"),
-    "wf1": tf.Variable(tf.random_normal([6272, 512], stddev=0.1), name="wf1"),
-    "wdas": tf.Variable(tf.random_normal([512, 256], stddev=0.1), name="wdas"),
-    "wdat": tf.Variable(tf.random_normal([512, 256], stddev=0.1), name="wdat"),
-    "wcs": tf.Variable(tf.random_normal([256, n_classes],   stddev=0.1), name="wcs"),
-    "wct": tf.Variable(tf.random_normal([256, n_classes],   stddev=0.1), name="wct")
+	"wc1": tf.Variable(tf.random_normal([5, 5, 3, 32], stddev=0.1), name="wc1"),
+	"wc2": tf.Variable(tf.random_normal([3, 3, 32, 64], stddev=0.1), name="wc2"),
+	"wc3": tf.Variable(tf.random_normal([3, 3, 64, 192], stddev=0.1), name="wc3"),
+	"wc4": tf.Variable(tf.random_normal([3, 3, 192, 128], stddev=0.1), name="wc4"),
+	"wc5": tf.Variable(tf.random_normal([3, 3, 128, 128], stddev=0.1), name="wc5"),
+	"wf1": tf.Variable(tf.random_normal([6272, 512], stddev=0.1), name="wf1"),
+	"wdas": tf.Variable(tf.random_normal([512, 256], stddev=0.1), name="wdas"),
+	"wdat": tf.Variable(tf.random_normal([512, 256], stddev=0.1), name="wdat"),
+	"wcs": tf.Variable(tf.random_normal([256, n_classes],   stddev=0.1), name="wcs"),
+	"wct": tf.Variable(tf.random_normal([256, n_classes],   stddev=0.1), name="wct")
 
 }
 
 # Bias parameters as devised in the original research paper
 biases = {
-    "bc1": tf.Variable(tf.random_normal([32], stddev=0.1), name="bc1"),
-    "bc2": tf.Variable(tf.random_normal([64], stddev=0.1), name="bc2"),
-    "bc3": tf.Variable(tf.random_normal([192], stddev=0.1), name="bc3"),
-    "bc4": tf.Variable(tf.random_normal([128], stddev=0.1), name="bc4"),
-    "bc5": tf.Variable(tf.random_normal([128], stddev=0.1), name="bc5"),
-    "bf1": tf.Variable(tf.random_normal([512], stddev=0.1), name="bf1"),
-    "bdas": tf.Variable(tf.random_normal([256], stddev=0.1), name="bdas"),
-    "bdat": tf.Variable(tf.random_normal([256], stddev=0.1), name="bdat"),
-    "bcs": tf.Variable(tf.random_normal([n_classes], stddev=0.1), name="bcs"),
-    "bct": tf.Variable(tf.random_normal([n_classes], stddev=0.1), name="bct")
+	"bc1": tf.Variable(tf.random_normal([32], stddev=0.1), name="bc1"),
+	"bc2": tf.Variable(tf.random_normal([64], stddev=0.1), name="bc2"),
+	"bc3": tf.Variable(tf.random_normal([192], stddev=0.1), name="bc3"),
+	"bc4": tf.Variable(tf.random_normal([128], stddev=0.1), name="bc4"),
+	"bc5": tf.Variable(tf.random_normal([128], stddev=0.1), name="bc5"),
+	"bf1": tf.Variable(tf.random_normal([512], stddev=0.1), name="bf1"),
+	"bdas": tf.Variable(tf.random_normal([256], stddev=0.1), name="bdas"),
+	"bdat": tf.Variable(tf.random_normal([256], stddev=0.1), name="bdat"),
+	"bcs": tf.Variable(tf.random_normal([n_classes], stddev=0.1), name="bcs"),
+	"bct": tf.Variable(tf.random_normal([n_classes], stddev=0.1), name="bct")
 
 }
 
@@ -199,24 +197,38 @@ sess = tf.Session()
 saver.restore(sess, "./Models/try2.ckpt")
 sess.run(init)
 
+GG = 40
+source_list = [ np.load("/media/shubh/PranayHDD/numpy_npz/training_data_{}.npz".format(i)) for i in range(GG)]
+
 for nepochs in range(200):
 	
-	for numbatch in range(maxpatches/incr):
-		batch_xs, batch_ys, batch_xt, batch_yt = nextbatch()
-		#print "Batch loaded"
-		if ll1+incr>=sourceimages.shape[0]:
-			ll1 = 0
-		if ll2+incr>=targetimages.shape[0]:
-			ll2 = 0
-	
-		sess.run(optm, feed_dict = {x_s:batch_xs, y_s:batch_ys, x_t:batch_xt, y_t:batch_yt, keepprob:.5})
-        	#print "Test Accuracy: ", sess.run(accuracy, feed_dict={x_t:batch_xt, y_t:batch_yt, keepprob:1.})	
+	print(nepochs)
+	for i in range(0,200,2):
+		print("Npz file:",i)
+
+		source = source_list[i%GG]
+		sourceimages = source['arr_0']
+		sourcelabels = source['arr_1']
+		targetimages = source['arr_2']
+		targetlabels = source['arr_3']
+		maxpatches  = max(targetimages.shape[0], sourceimages.shape[0])
+		for numbatch in range(maxpatches/incr):
+
+			batch_xs, batch_ys, batch_xt, batch_yt = nextbatch()
+			#print "Batch loaded"
+			if ll1+incr>=sourceimages.shape[0]:
+				ll1 = 0
+			if ll2+incr>=targetimages.shape[0]:
+				ll2 = 0
+		
+			sess.run(optm, feed_dict = {x_s:batch_xs, y_s:batch_ys, x_t:batch_xt, y_t:batch_yt, keepprob:.5})
+				#print "Test Accuracy: ", sess.run(accuracy, feed_dict={x_t:batch_xt, y_t:batch_yt, keepprob:1.})	
+			
+		
+		ll1 = 0
+		ll2 = 0
+		print "Test Accuracy: ", sess.run(accuracy, feed_dict={x_t:batch_xt, y_t:batch_yt, keepprob:1.})	
+		# print "Test Accuracy: ", sess.run(targethead, feed_dict={x_t:batch_xt, y_t:batch_yt, keepprob:1.})	
 		saver.save(sess, "Models/try2.ckpt")	
-	print nepochs
-        print "Test Accuracy: ", sess.run(accuracy, feed_dict={x_t:batch_xt, y_t:batch_yt, keepprob:1.})	
-        # print "Test Accuracy: ", sess.run(targethead, feed_dict={x_t:batch_xt, y_t:batch_yt, keepprob:1.})	
-	
-	ll1 = 0
-	ll2 = 0
 	
 

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Image Tampering</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <nav class="white" role="navigation">
+    <div class="nav-wrapper container">
+
+      <ul class="center hide-on-med-and-down">
+        <li><a href="#intorduction">Intorduction</a></li>
+        <li><a href="#method">Method</a></li>
+        <li><a href="#experiment">Experiment</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#improvements">Improvements</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="sidenav">
+        <li><a href="#intorduction">Intorduction</a></li>
+        <li><a href="#method">Method</a></li>
+        <li><a href="#experiment">Experiment</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#improvements">Improvements</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+      </ul>
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+  <div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center teal-text text-lighten-2">Image Tampering Detection using Domain Adaptation</h1>
+
+      </div>
+    </div>
+    <div class="parallax"><img src="background1.jpg1" alt="Unsplashed background img 1"></div>
+  </div>
+
+
+  <div class="container" id="introduction">
+    <div class="section">
+
+      <!--   Icon Section   -->
+      <div class="row" style="font-size: 19px">
+        <h4 class="center brown-text">Introduction</h4>
+            <p class="center light" style="margin: 0em">Image Tampering can be defined as manipulating an digital image. Image Tampering detection is the task to identify if the image was tampered or not.Convolution networks provide good results on detection of tampering but these network require large amount of training data.In this work, a simple method is proposed to address this problem by augmenting data using inpainting and compositing schemesDomain Adaptation technique is used to reduce domain shift between augmented data and real datasetReults are shown on 2 image tamepring datasets. 
+            (IEEE and CASIAv2)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" id="method">
+
+      <!--   Icon Section   -->
+      <div class="row" style="font-size: 19px">
+        <h4 class="center brown-text">Method</h4>
+          
+          <div class="row">
+          <h5 class="center black-text">Model</h5>
+            <p class="center light"> 
+              Images are coverted to 64x64 patches. Using the mask provided by the dataset we determine is the patch was tampered or not. If the tampered region is more than 20% of the patch, it is considered tampered.
+              <br>
+              <img src="./images/model.png">
+              <br>
+              The model comprises of 5 conv layers followed by 3 fully connected layers(including output layer)
+              For detection on augmented and the target dataset, the conv layers and the first fully connected layer are shared. Other layers are forked and classification is provided separatly on both datasets.  
+            </p>
+          </div>
+
+          <div class="row">
+          <h5 class="center black-text">Augmenting Data<h5>
+              <ul class="collapsible">
+                <li>
+                  <div class="collapsible-header">1. Instance Removal</div>
+                  <div class="collapsible-body">
+                    <p>1. For each image a patch is taken and is set to 0 using a mask.</p>
+                    <p>2. We are using inpainting algorithms provided by opencv ( cv.INPAINT_TELEA.)</p>
+                    <div class="row">
+                      <div class="col s6">
+                        <p>Patch Inpainting: Random Patch is taken with area > 30% of image and is inpainted.</p>
+                        <br/>
+                        <img style="width: 45%;" src="./images/COCO_train2014_000000001527.png" > 
+                        <img style="width: 45%;" src="./images/COCO_train2014_000000002693.png" > 
+                        <img style="width: 45%;" src="./images/COCO_train2014_000000003048.png" > 
+                        <img style="width: 45%;" src="./images/COCO_train2014_000000003118.png" >
+                      </div>
+                      <div class="col s6">
+                        <p>Semantic Inpainting: Very similiar to patch impainting but the mask is already provided to us. Coco dataset is used to get the semantic mask</p>
+                        <img style="width: 45%" src="./images/COCO_train2014_000000005198.png" > 
+                        <img style="width: 45%" src="./images/COCO_train2014_000000004714.png" > 
+                        <img style="width: 45%" src="./images/COCO_train2014_000000005083.png" > 
+                        <img style="width: 45%" src="./images/COCO_train2014_000000005165.png" >
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header">2. Copy paste and Splicing</div>
+                  <div class="collapsible-body">
+                    <p>Feathering: We feather an image over another image. Feathering is carried out by I = α · F + (1 − α) · B. Where F in the foreground image and the B is the background image.  </p>
+                    <img style="width: 15%;" src="./images/035A4302_51.png" > 
+                    <img style="width: 15%" src="./images/035A4302_52.png" >
+                    <img style="width: 25%" src="./images/035A4340_9.png" > 
+                    <img style="width: 20%" src="./images/035A4340_10.png" > 
+                  </div>
+                </li>
+              </ul>
+
+          </div>
+
+          <div class="row">
+          <h5 class="center black-text">Domian Adaptation<h5>
+
+            <p class="center light" style="margin: 0em">Cues present in one dataset are very different then the one provided by some another dataset. Hence the augmented and the synthetic data can be of different domains. To take in account of discrepancy, domain adaption is performed using Maximum Mean Discrepancy.MMD loss is defined as:
+            <img align="center" src="./images/mmd.png">
+              <br>
+            Let the features for image patches obtained from source domain data Xs be X̂s and the target domain Xt be X̂t. Here Φ(x̂) is a RKBF kernel used to convert the features to gaussian to calculate similiarity. </p>
+          </div>
+      </div>
+  </div>
+
+  <div class="container" id="experiment">
+    <div class="section">
+
+      <!--   Icon Section   -->
+      <div class="row" style="font-size: 19px">
+        <h4 class="center brown-text">Experiment</h4>
+          <div class="row">
+            <h5 class="center black-text">Datasets</h5>
+              <p class="center light" style="margin: 0em">2 Datasets CASIA-V2 and IEE are used </p>
+              <ul class="collapsible">
+                <li>
+                  <div class="collapsible-header">1. CASIA</div>
+                  <div class="collapsible-body">
+                    <p> We are using 1250 fake image and only 200 pristine image. Other wise we get stuck due to class imbalance  </p>
+                    <img style="width: 40%;" src="./images/IEEE1.png" > 
+                    <img style="width: 40%" src="./images/IEEE1_mask.png" >
+                    <img style="width: 40%" src="./images/IEEE2.png" > 
+                    <img style="width: 40%" src="./images/IEEE2_mask.png" > 
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header">2. IEEE</div>
+                  <div class="collapsible-body">
+                    <p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
+                    <img style="width: 40%;" src="./images/IEEE1.png" > 
+                    <img style="width: 40%" src="./images/IEEE1_mask.png" >
+                    <img style="width: 40%" src="./images/IEEE2.png" > 
+                    <img style="width: 40%" src="./images/IEEE2_mask.png" > 
+                  </div>
+                </li>
+              </ul>
+        </div>
+
+        <!-- Losses -->
+        <div class="row">
+          <h5 class="center black-text">Losses</h5>
+          <p class="center light" style="margin: 0em"> Adam Optimizer is used with weight decay at 0.0005</p>          
+          <p class="center light" style="margin: 0em"> We use 3 losses. 2 Cross entropy losses for source and targer (L1&L2) and 1 MMD Loss defined above L. Parameter for each loss is λ1:0.3 λ2:0.7 λ3:0.001. 
+              <br>
+              L =  λ1*Lcs +λ2*Lct + λ3*LM </p>
+        </div>
+      </div>
+    </div>
+  </div>  
+
+  <div class="container" id="results">
+    <div class="section">
+
+      <!--   Icon Section   -->
+      <div class="row" style="font-size: 19px">
+        <div class="row">
+          <h4 class="center brown-text">Results (CASIA)</h4>
+          <div class="col s6"> 
+            <h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
+            <img src="./images/CASIA_2.png">
+          </div>
+
+          <div class="col s6"> 
+            <h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
+            <img src="./images/CASIA_1.png">
+          </div>
+        </div>
+        
+        <h4 class="black-text">Confusion Matrix (Patch Level)</h4>
+        <p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
+        <div class="row">
+          <div class="col s6">
+            <h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
+            <img  src="./images/casia_acc_patches.png" >
+            <p class="light" style="margin: 0em">Accuracy:  0.875 </p>
+            <p class="light" style="margin: 0em">Precision: 0.8618 </p>
+            <p class="light" style="margin: 0em">Recall: 0.6598 </p>
+            <p class="light" style="margin: 0em">F1 score: 0.7473 </p>
+          </div>
+
+        <div class="col s6">
+          <h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
+          <img  src="./images/casia_xxx_images.png" >
+          <p class="light" style="margin: 0em">Accuracy:  0.75135 </p>
+          <p class="light" style="margin: 0em">Precision: 0.8108 </p>
+          <p class="light" style="margin: 0em">Recall: 0.8397 </p>
+          <p class="light" style="margin: 0em">F1 score: 0.862 </p>
+        </div>
+
+        </div>
+
+        <div class="row">
+          <h4 class="center black-text">Visual Results</h4>        
+          <ul class="collapsible">
+            <li>
+              <div class="collapsible-header"> True Negative </div>
+              <div class="collapsible-body">
+                <p> More images at:  </p>
+                <img style="width: 100%;" src="./images/CASIAtn1.png" > 
+                <img style="width: 100%" src="./images/CASIAtn2.png" >
+                <img style="width: 100%" src="./images/CASIAtn4.png" > 
+                <img style="width: 100%" src="./images/CASIAtn5.png" > 
+              </div>
+            </li>
+            <li>
+              <div class="collapsible-header"> False Negative</div>
+              <div class="collapsible-body">
+                <p> More images at: </p>
+                <img style="width: 100%;" src="./images/CASIAfn1.png" > 
+                <img style="width: 100%" src="./images/CASIAfn2.png" >
+                <img style="width: 100%" src="./images/CASIAfn3.png" > 
+                <img style="width: 100%" src="./images/CASIAfn4.png" > 
+              </div>
+            </li>
+          </ul>
+          
+          <ul class="collapsible">
+            <li>
+              <div class="collapsible-header">True Postive</div>
+              <div class="collapsible-body">
+                <p> More images at: </p>
+                <img style="width: 100%;" src="./images/CASIAtp1.png" > 
+                <img style="width: 100%" src="./images/CASIAtp2.png" >
+                <img style="width: 100%" src="./images/CASIAtp3.png" > 
+                <img style="width: 100%" src="./images/CASIAtp4.png" > 
+                <img style="width: 100%" src="./images/CASIAtp5.png" > 
+              </div>
+            </li>
+            <li>
+              <div class="collapsible-header">False Positive</div>
+              <div class="collapsible-body">
+                <p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
+                <img style="width: 100%;" src="./images/CASIAfp1.png" > 
+                <img style="width: 100%" src="./images/CASIAfp2.png" >
+                <img style="width: 100%" src="./images/CASIAfp3.png" > 
+                <img style="width: 100%" src="./images/CASIAfp4.png" > 
+                <img style="width: 100%" src="./images/CASIAfp5.png" >  
+              </div>
+            </li>
+          </ul>
+
+        </div>
+
+      </div>
+
+      <div class="row" style="font-size: 19px">
+        <div class="row">
+          <h4 class="center brown-text">Results (IEEE)</h4>
+          <div class="col s6"> 
+            <h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
+            <img src="./images/rel_acc_patches.png">
+          </div>
+
+          <div class="col s6"> 
+            <h5 class="center black-text">Accuracy Chart(Image Level) </h5>        
+            <img src="./images/rel_acc_image.png">
+          </div>
+        </div>
+        <h4 class="black-text">Confusion Matrix (Patch Level)</h4>
+        <p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
+        <div class="row">
+          <div class="col s6">
+            <h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
+            <img  src="./images/ieee_conf_matrix_patches.png" >
+            <p class="light" style="margin: 0em">Accuracy:  0.864 </p>
+            <p class="light" style="margin: 0em">Precision: 0.8618 </p>
+            <p class="light" style="margin: 0em">Recall: 0.6598 </p>
+            <p class="light" style="margin: 0em">F1 score: 0.7473 </p>
+          </div>
+
+        <div class="col s6">
+          <h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
+          <img  src="./images/IEEE_acc_images.png" >
+          <p class="light" style="margin: 0em">Accuracy:  0.8742 </p>
+          <p class="light" style="margin: 0em">Precision: 0.9057 </p>
+          <p class="light" style="margin: 0em">Recall: 0.8397 </p>
+          <p class="light" style="margin: 0em">F1 score: 0.862 </p>
+        </div>
+
+        </div>
+
+        <div class="row">
+          <h4 class="center black-text">Visual Results</h4>        
+          <ul class="collapsible">
+            <li>
+              <div class="collapsible-header"> True Negative </div>
+              <div class="collapsible-body">
+                <p> More images at:  </p>
+                <img style="width: 100%;" src="./images/IEEEtn1.png" > 
+                <img style="width: 100%" src="./images/IEEEtn2.png" >
+                <img style="width: 100%" src="./images/IEEEtn3.png" > 
+                <img style="width: 100%" src="./images/IEEEtn4.png" > 
+                <img style="width: 100%" src="./images/IEEEtn5.png" > 
+                <img style="width: 100%" src="./images/IEEEtn6.png" > 
+              </div>
+            </li>
+            <li>
+              <div class="collapsible-header"> False Negative</div>
+              <div class="collapsible-body">
+                <p> More images at: </p>
+                <img style="width: 100%;" src="./images/IEEEfn1.png" > 
+                <img style="width: 100%" src="./images/IEEEfn2.png" >
+                <img style="width: 100%" src="./images/IEEEfn3.png" > 
+                <img style="width: 100%" src="./images/IEEEfn4.png" > 
+              </div>
+            </li>
+          </ul>
+          
+          <ul class="collapsible">
+            <li>
+              <div class="collapsible-header">True Postive</div>
+              <div class="collapsible-body">
+                <p> More images at: </p>
+                <img style="width: 100%;" src="./images/IEEEtp1.png" > 
+                <img style="width: 100%" src="./images/IEEEtp2.png" >
+                <img style="width: 100%" src="./images/IEEEtp3.png" > 
+                <img style="width: 100%" src="./images/IEEEtp4.png" > 
+                <img style="width: 100%" src="./images/IEEEtp5.png" > 
+                <img style="width: 100%" src="./images/IEEEtp6.png" > 
+                <img style="width: 100%" src="./images/IEEEtp7.png" > 
+              </div>
+            </li>
+            <li>
+              <div class="collapsible-header">False Positive</div>
+              <div class="collapsible-body">
+                <p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
+                <img style="width: 100%;" src="./images/IEEEfp1.png" > 
+                <img style="width: 100%" src="./images/IEEEfp2.png" >
+                <img style="width: 100%" src="./images/IEEEfp3.png" > 
+                <img style="width: 100%" src="./images/IEEEfp4.png" > 
+              </div>
+            </li>
+          </ul>
+
+        </div>
+
+      </div>
+
+
+
+    </div>
+  </div>
+
+  <div class="container" id="improvements">
+    <div class="section">
+
+      <!--   Icon Section   -->
+      <div class="row" style="font-size: 19px">
+        <h4 class="center brown-text">Improvements</h4>
+            <p class="center light" style="margin: 0em">1. Not use patches: Patches casuses class imabalance as more elements are non-tampered than tampered. Hence even we achieve good accuracy at patch level, results are poor for image as a whole. Similiarly K(hyper-parameter) should vary from image to image. </p>
+            <br>
+            <p class="center light" style="margin: 0em">2. Adversarial loss like written in the paper. We felt using mmd loss as regualizer not the best approach. It was harder to train. </p>
+      </div> 
+    </div>
+  </div>
+  </div>
+
+  <footer class="page-footer teal">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">References</h5>
+          <p class="grey-text text-lighten-4">We would like to thank Yashas sir and Rudrabha sir for their inputs</p>
+        </div>
+        <div class="col l6 s12">
+          <ul>
+            <li><a class="white-text" href="#!">Reference 1</a></li>
+            <li><a class="white-text" href="#!">Reference 4</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Made by <a class="brown-text text-lighten-3" href="#">Shubh and Devansh</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+
+  </body>
+</html>

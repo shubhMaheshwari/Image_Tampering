@@ -43,7 +43,7 @@
 
       </div>
     </div>
-    <div class="parallax"><img src="background1.jpg1" alt="Unsplashed background img 1"></div>
+    <div class="parallax"></div>
   </div>
 
 
@@ -373,9 +373,9 @@
       <!--   Icon Section   -->
       <div class="row" style="font-size: 19px">
         <h4 class="center brown-text">Improvements</h4>
-            <p class="center light" style="margin: 0em">1. Not use patches: Patches casuses class imabalance as more elements are non-tampered than tampered. Hence even we achieve good accuracy at patch level, results are poor for image as a whole. Similiarly K(hyper-parameter) should vary from image to image. </p>
+            <p class="center light" style="margin: 0em">1. Not use patches: Using patches causes class imabalance as their are more elements thar are tampered than non-tampered images. Hence even though we achieve good accuracy at patch level, we won't be able to provide exact segmentation of the tampered region. </p>
             <br>
-            <p class="center light" style="margin: 0em">2. Adversarial loss like written in the paper. We felt using mmd loss as regualizer not the best approach. It was harder to train. </p>
+            <p class="center light" style="margin: 0em">2. Adversarial loss and using knowledge distillation loss. We felt using mmd loss as regualizer is not the best approach. It was harder to train. </p>
       </div> 
     </div>
   </div>
@@ -389,10 +389,13 @@
           <p class="grey-text text-lighten-4">We would like to thank Yashas sir and Rudrabha sir for their inputs</p>
         </div>
         <div class="col l6 s12">
-          <ul>
-            <li><a class="white-text" href="#!">Reference 1</a></li>
-            <li><a class="white-text" href="#!">Reference 4</a></li>
-          </ul>
+          <p>
+            Augment and Adapt: A Simple Approach to Image Tampering Detection
+            <br>
+            Y Annadani, CV Jawahar
+            <br>
+            2018 24th International Conference on Pattern Recognition (ICPR), 2983-2988 2018
+          </p>
         </div>
       </div>
     </div>

@@ -139,8 +139,8 @@
 			</tr>
 			<tr>
 				<td>Fusion + CMFD + Splicebuster</td>
-				<td>0.972</td>
-				<td>0.81</td>
+				<td>0.982</td>
+				<td>0.79</td>
 				<td>0.91</td>
  
  
@@ -352,8 +352,6 @@
 					</div>
 				</div>
 				
-				<h4 class="black-text">Confusion Matrix (Patch Level)</h4>
-				<p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
 				<div class="row">
 					<div class="col s6">
 						<h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
@@ -461,7 +459,6 @@
 						<li>
 							<div class="collapsible-header"> True Negative </div>
 							<div class="collapsible-body">
-								<p> More images at:  </p>
 								<img style="width: 100%;" src="./images/IEEEtn1.png" > 
 								<img style="width: 100%" src="./images/IEEEtn2.png" >
 								<img style="width: 100%" src="./images/IEEEtn3.png" > 
@@ -473,7 +470,6 @@
 						<li>
 							<div class="collapsible-header"> False Negative</div>
 							<div class="collapsible-body">
-								<p> More images at: </p>
 								<img style="width: 100%;" src="./images/IEEEfn1.png" > 
 								<img style="width: 100%" src="./images/IEEEfn2.png" >
 								<img style="width: 100%" src="./images/IEEEfn3.png" > 
@@ -486,7 +482,6 @@
 						<li>
 							<div class="collapsible-header">True Postive</div>
 							<div class="collapsible-body">
-								<p> More images at: </p>
 								<img style="width: 100%;" src="./images/IEEEtp1.png" > 
 								<img style="width: 100%" src="./images/IEEEtp2.png" >
 								<img style="width: 100%" src="./images/IEEEtp3.png" > 
@@ -499,7 +494,6 @@
 						<li>
 							<div class="collapsible-header">False Positive</div>
 							<div class="collapsible-body">
-								<p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
 								<img style="width: 100%;" src="./images/IEEEfp1.png" > 
 								<img style="width: 100%" src="./images/IEEEfp2.png" >
 								<img style="width: 100%" src="./images/IEEEfp3.png" > 
@@ -577,42 +571,44 @@
 						<h4 class="center brown-text">Findit</h4>
 					</div>
 
-									<ul class="collapsible">
-					<li>
-						<div class="collapsible-header"> True Negative </div>
-						<div class="collapsible-body">
-							<img style="width: 100%;" src="./images/CASIAtn1.png" > 
-							<img style="width: 100%" src="./images/CASIAtn2.png" >
-							<img style="width: 100%" src="./images/CASIAtn4.png" > 
-							<img style="width: 100%" src="./images/CASIAtn5.png" > 
-						</div>
-					</li>
-					<li>
-						<div class="collapsible-header"> False Negative</div>
-						<div class="collapsible-body">
-							<img style="width: 100%" src="./images/CASIAfn2.png" >
-							<img style="width: 100%" src="./images/CASIAfn3.png" > 
-						</div>
-					</li>
-				</ul>
-				
+
+		
+				<p class="light" style="margin: 0em">Accuracy: 0.982 </p>
+				<p class="light" style="margin: 0em">Precision: 0.972 </p>
+				<p class="light" style="margin: 0em">Recall: 0.938 </p>
+				<p class="light" style="margin: 0em">F1 score: 0.954 </p>
+
 				<ul class="collapsible">
 					<li>
 						<div class="collapsible-header">True Postive</div>
 						<div class="collapsible-body">
-							<img style="width: 100%;" src="./images/CASIAtp1.png" > 
-							<img style="width: 100%" src="./images/CASIAtp2.png" >
-							<img style="width: 100%" src="./images/CASIAtp3.png" > 
-							<img style="width: 100%" src="./images/CASIAtp4.png" > 
-							<img style="width: 100%" src="./images/CASIAtp5.png" > 
+							<img style="width: 100%;" src="./images/all_findit_tp1.png" > 
+							<img style="width: 100%;" src="./images/all_findit_tp2.png" > 
+							<img style="width: 100%;" src="./images/all_findit_tp3.png" > 
 						</div>
 					</li>
 					<li>
 						<div class="collapsible-header">False Positive</div>
 						<div class="collapsible-body">
-							<img style="width: 100%" src="./images/CASIAfp2.png" >
-							<img style="width: 100%" src="./images/CASIAfp3.png" > 
-							<img style="width: 100%" src="./images/CASIAfp4.png" > 
+							<img style="width: 100%;" src="./images/all_findit_fp1.png" > 
+							<img style="width: 100%;" src="./images/all_find_fp2.png" > 
+						</div>
+					</li>
+				</ul>
+
+
+				<ul class="collapsible">
+					<li>
+						<div class="collapsible-header"> True Negative </div>
+						<div class="collapsible-body">
+							<img style="width: 100%;" src="./images/all_findit_tn1.png" > 
+							<img style="width: 100%;" src="./images/all_findit_tn2.png" > 
+						</div>
+					</li>
+					<li>
+						<div class="collapsible-header"> False Negative</div>
+						<div class="collapsible-body">
+							<img style="width: 100%;" src="./images/all_findit_fn1.png" > 
 						</div>
 					</li>
 				</ul>
@@ -622,16 +618,11 @@
 			<div class="row">
 				<h4 class="center brown-text">CASIA </h4>
 			
-			<h4 class="black-text">Confusion Matrix (Patch Level)</h4>
-			<p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
-			<div class="row">
 
-				<h6 class="black-text">Confusion Matrix </h6>        
-				<img  src="./images/casia_xxx_images.png" >
-				<p class="light" style="margin: 0em">Accuracy: 0.75135 </p>
+				<p class="light" style="margin: 0em">Accuracy: 0.79 </p>
 				<p class="light" style="margin: 0em">Precision: 0.939 </p>
-				<p class="light" style="margin: 0em">Recall: 0.736 </p>
-				<p class="light" style="margin: 0em">F1 score: 0.831 </p>
+				<p class="light" style="margin: 0em">Recall: 0.548 </p>
+				<p class="light" style="margin: 0em">F1 score: 0.67 </p>
 
 			</div>
 
@@ -639,114 +630,99 @@
 				<h4 class="center black-text">Visual Results</h4>        
 				<ul class="collapsible">
 					<li>
-						<div class="collapsible-header"> True Negative </div>
-						<div class="collapsible-body">
-							<img style="width: 100%;" src="./images/CASIAtn1.png" > 
-							<img style="width: 100%" src="./images/CASIAtn2.png" >
-							<img style="width: 100%" src="./images/CASIAtn4.png" > 
-							<img style="width: 100%" src="./images/CASIAtn5.png" > 
-						</div>
-					</li>
-					<li>
-						<div class="collapsible-header"> False Negative</div>
-						<div class="collapsible-body">
-							<img style="width: 100%" src="./images/CASIAfn2.png" >
-							<img style="width: 100%" src="./images/CASIAfn3.png" > 
-						</div>
-					</li>
-				</ul>
-				
-				<ul class="collapsible">
-					<li>
 						<div class="collapsible-header">True Postive</div>
 						<div class="collapsible-body">
-							<img style="width: 100%;" src="./images/CASIAtp1.png" > 
-							<img style="width: 100%" src="./images/CASIAtp2.png" >
-							<img style="width: 100%" src="./images/CASIAtp3.png" > 
-							<img style="width: 100%" src="./images/CASIAtp4.png" > 
-							<img style="width: 100%" src="./images/CASIAtp5.png" > 
+							<img style="width: 100%;" src="./images/all_casia_tp1.png" > 
+							<img style="width: 100%" src="./images/all_casia_tp2.png" >
+							<img style="width: 100%" src="./images/all_casia_tp3.png" > 
 						</div>
 					</li>
 					<li>
 						<div class="collapsible-header">False Positive</div>
 						<div class="collapsible-body">
-							<img style="width: 100%" src="./images/CASIAfp2.png" >
-							<img style="width: 100%" src="./images/CASIAfp3.png" > 
-							<img style="width: 100%" src="./images/CASIAfp4.png" > 
+							<img style="width: 100%" src="./images/all_casia_fp1.png" >
+							<img style="width: 100%" src="./images/all_casia_fp2.png" > 
 						</div>
 					</li>
 				</ul>
+				<ul class="collapsible">
+					<li>
+						<div class="collapsible-header"> True Negative </div>
+						<div class="collapsible-body">
+							<img style="width: 100%;" src="./images/all_casia_tn1.png" > 
+							<img style="width: 100%" src="./images/all_casia_tn2.png" >
+						</div>
+					</li>
+					<li>
+						<div class="collapsible-header"> False Negative</div>
+						<div class="collapsible-body">
+							<img style="width: 100%" src="./images/all_casia_fn1.png" >
+							<img style="width: 100%" src="./images/all_casia_fn2.png" > 
+							<img style="width: 100%" src="./images/all_casia_fn3.png" > 
+						</div>
+					</li>
+				</ul>
+				
+				
 
 			</div>
 
 			<div class="row">
 				<h4 class="center brown-text">IEEE</h4>
 			</div>
-			<h4 class="black-text">Confusion Matrix (Patch Level)</h4>
-			<p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
+
 			
-			<div class="row">
-				<h6 class="black-text">Confusion Matrix </h6>        
-				<img  src="./images/IEEE_acc_images.png" >
-				<p class="light" style="margin: 0em">Accuracy:  0.8742 </p>
+			<div class="row">        
+				<p class="light" style="margin: 0em">Accuracy:  0.9133 </p>
 				<p class="light" style="margin: 0em">Precision: 0.9057 </p>
-				<p class="light" style="margin: 0em">Recall: 0.8397 </p>
-				<p class="light" style="margin: 0em">F1 score: 0.862 </p>
+				<p class="light" style="margin: 0em">Recall: 0.842 </p>
+				<p class="light" style="margin: 0em">F1 score: 0.873 </p>
 
 			</div>
 
 			<div class="row">
 				<h4 class="center black-text">Visual Results</h4>        
-				<ul class="collapsible">
-					<li>
-						<div class="collapsible-header"> True Negative </div>
-						<div class="collapsible-body">
-							<p> More images at:  </p>
-							<img style="width: 100%;" src="./images/IEEEtn1.png" > 
-							<img style="width: 100%" src="./images/IEEEtn2.png" >
-							<img style="width: 100%" src="./images/IEEEtn3.png" > 
-							<img style="width: 100%" src="./images/IEEEtn4.png" > 
-							<img style="width: 100%" src="./images/IEEEtn5.png" > 
-							<img style="width: 100%" src="./images/IEEEtn6.png" > 
-						</div>
-					</li>
-					<li>
-						<div class="collapsible-header"> False Negative</div>
-						<div class="collapsible-body">
-							<p> More images at: </p>
-							<img style="width: 100%;" src="./images/IEEEfn1.png" > 
-							<img style="width: 100%" src="./images/IEEEfn2.png" >
-							<img style="width: 100%" src="./images/IEEEfn3.png" > 
-							<img style="width: 100%" src="./images/IEEEfn4.png" > 
-						</div>
-					</li>
-				</ul>
 				
 				<ul class="collapsible">
 					<li>
 						<div class="collapsible-header">True Postive</div>
 						<div class="collapsible-body">
 							<p> More images at: </p>
-							<img style="width: 100%;" src="./images/IEEEtp1.png" > 
-							<img style="width: 100%" src="./images/IEEEtp2.png" >
-							<img style="width: 100%" src="./images/IEEEtp3.png" > 
-							<img style="width: 100%" src="./images/IEEEtp4.png" > 
-							<img style="width: 100%" src="./images/IEEEtp5.png" > 
-							<img style="width: 100%" src="./images/IEEEtp6.png" > 
-							<img style="width: 100%" src="./images/IEEEtp7.png" > 
+							<img style="width: 100%;" src="./images/all_IEEE_tp1.png" > 
+							<img style="width: 100%;" src="./images/all_IEEE_tp2.png" > 
+							<img style="width: 100%;" src="./images/all_IEEE_tp3.png" > 
 						</div>
 					</li>
 					<li>
 						<div class="collapsible-header">False Positive</div>
 						<div class="collapsible-body">
 							<p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
-							<img style="width: 100%;" src="./images/IEEEfp1.png" > 
-							<img style="width: 100%" src="./images/IEEEfp2.png" >
-							<img style="width: 100%" src="./images/IEEEfp3.png" > 
-							<img style="width: 100%" src="./images/IEEEfp4.png" > 
+							<img style="width: 100%;" src="./images/all_IEEE_fp1.png" > 
+							<img style="width: 100%;" src="./images/all_IEEE_fp2.png" > 
+
 						</div>
 					</li>
 				</ul>
+
+				<ul class="collapsible">
+					<li>
+						<div class="collapsible-header"> True Negative </div>
+						<div class="collapsible-body">
+							<p> More images at:  </p>
+							<img style="width: 100%;" src="./images/all_IEEE_tn1.png" > 
+							<img style="width: 100%;" src="./images/all_IEEE_tn2.png" >  
+						</div>
+					</li>
+					<li>
+						<div class="collapsible-header"> False Negative</div>
+						<div class="collapsible-body">
+							<p> More images at: </p>
+							<img style="width: 100%;" src="./images/all_IEEE_fn1.png" >  
+							<img style="width: 100%;" src="./images/all_IEEE_fn2.png" >  
+						</div>
+					</li>
+				</ul>
+				
 
 			</div>
 
@@ -763,6 +739,14 @@
 			<div class="row" style="font-size: 19px">
 				<h6 class="center brown-text">A detailed presentation of these methods on Findit Challenge can be found here:
 			<a class="center" href="https://docs.google.com/presentation/d/19Bqw8Gi-_KCZqPFfU4QYq8iDeFov1cxm5Aylq1H5c3Y/edit?usp=sharing"> Link</a>
+				</h6>
+
+				<h6 class="center brown-text">Previous SRM meeting slides:
+			<a class="center" href="https://docs.google.com/presentation/d/1eG0hI_Z87aTTkho180T98dQQnNvNpnmybB-vsJp2rCQ/edit?usp=sharing"> Link</a>
+				</h6>
+
+				<h6 class="center brown-text">DRM meeting slides:
+			<a class="center" href="https://docs.google.com/presentation/d/1eG0hI_Z87aTTkho180T98dQQnNvNpnmybB-vsJp2rCQ/edit?usp=sharing"> Link</a>
 				</h6>
 				
 

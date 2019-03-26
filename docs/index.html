@@ -534,9 +534,15 @@
 					<p class="light" style="margin: 0em">1. Let us take an image I, if D00 was first lossy compression with q1 as quantization for the first compression. </p>
 					<p class="light" style="margin: 0em">2. After compression if we tamper it and compress it again with a D01 as your second loss compression with quantization as q2. </p>
 
+					<p class="light" style="margin: 0em"> Hence we can write a 8x8 double quantized region as:</p> 
 					<!-- Equation -->
+					<img align="center" src="./images/double_qaunt_equation.png">
+					
+					<p class="light" style="margin: 0em"> Upon plotting an histogram of both single quantized and double quantized image. We noitice a periodic pattern. This is helpful for estimating the first quantization.</p> 
 
-					<p class="light" style="margin: 0em">3. It has been shown that the difference significantly varies between the quantization using q1 and  q2 vs quantization using only q2. (See figure). 
+					<img align="center" style="width: 50%" src="./images/double_quant_dist.png">
+
+					<p class="light" style="margin: 0em">It has been shown that the difference significantly varies between the quantization using q1 and  q2 vs quantization using only q2. (See figure). 
 					<br />
 					<img align="center" src="./images/double_jpeg_artifacts.png">
 					</p>
@@ -565,34 +571,56 @@
 			<p class="light">5. Using expectation-maximization we can cluster pixels into 2 classes, forged or background. </p>
 
 			<div class="row" style="font-size: 19px">
+					<h4 class="center brown-text">Results (CMFD + Splicebuster + Fusion)</h4>
+
 					<div class="row">
-						<h6 class="center brown-text">Results (Findit)</h6>
+						<h4 class="center brown-text">Findit</h4>
 					</div>
 
-					<ul class="collapsible">
-						<li>
-							<div class="collapsible-header"> Augmentation </div>
-							<div class="collapsible-body">
-								<img style="width: 40%" src="./images/augment1.jpg" > 
-								<img style="width: 40%" src="./images/augment2.jpg" >
-								<img style="width: 40%" src="./images/augment3.png" > 
-								<img style="width: 40%" src="./images/augment4.png" > 
-							</div>
-						</li>
-						<li>
-							<div class="collapsible-header"> Results </div>
-							<div class="collapsible-body">
-								<img style="width: 100%" src="./images/findit_yashas1.png" > 
-								<img style="width: 100%" src="./images/findit_yashas2.png" >
-								<img style="width: 100%" src="./images/findit_yashas3.png" > 
-								<img style="width: 100%" src="./images/findit_yashas4.png" > 
-							</div>
-						</li>
-					</ul>
+									<ul class="collapsible">
+					<li>
+						<div class="collapsible-header"> True Negative </div>
+						<div class="collapsible-body">
+							<img style="width: 100%;" src="./images/CASIAtn1.png" > 
+							<img style="width: 100%" src="./images/CASIAtn2.png" >
+							<img style="width: 100%" src="./images/CASIAtn4.png" > 
+							<img style="width: 100%" src="./images/CASIAtn5.png" > 
+						</div>
+					</li>
+					<li>
+						<div class="collapsible-header"> False Negative</div>
+						<div class="collapsible-body">
+							<img style="width: 100%" src="./images/CASIAfn2.png" >
+							<img style="width: 100%" src="./images/CASIAfn3.png" > 
+						</div>
+					</li>
+				</ul>
+				
+				<ul class="collapsible">
+					<li>
+						<div class="collapsible-header">True Postive</div>
+						<div class="collapsible-body">
+							<img style="width: 100%;" src="./images/CASIAtp1.png" > 
+							<img style="width: 100%" src="./images/CASIAtp2.png" >
+							<img style="width: 100%" src="./images/CASIAtp3.png" > 
+							<img style="width: 100%" src="./images/CASIAtp4.png" > 
+							<img style="width: 100%" src="./images/CASIAtp5.png" > 
+						</div>
+					</li>
+					<li>
+						<div class="collapsible-header">False Positive</div>
+						<div class="collapsible-body">
+							<img style="width: 100%" src="./images/CASIAfp2.png" >
+							<img style="width: 100%" src="./images/CASIAfp3.png" > 
+							<img style="width: 100%" src="./images/CASIAfp4.png" > 
+						</div>
+					</li>
+				</ul>
+
 			</div>
 
 			<div class="row">
-				<h4 class="center brown-text">Results (CASIA)</h4>
+				<h4 class="center brown-text">CASIA </h4>
 			
 			<h4 class="black-text">Confusion Matrix (Patch Level)</h4>
 			<p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
@@ -652,12 +680,7 @@
 			</div>
 
 			<div class="row">
-				<h4 class="center brown-text">Results (IEEE)</h4>
-
-				<div class="col s6"> 
-					<h5 class="center black-text">Accuracy Chart(Image Level) </h5>        
-					<img src="./images/rel_acc_image.png">
-				</div>
+				<h4 class="center brown-text">IEEE</h4>
 			</div>
 			<h4 class="black-text">Confusion Matrix (Patch Level)</h4>
 			<p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>

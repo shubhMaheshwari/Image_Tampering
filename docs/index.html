@@ -1,812 +1,782 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Image Tampering</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>Image Tampering</title>
 
-  <!-- CSS  -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+	<!-- CSS  -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+	<link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
 </head>
 <body>
-  <nav class="white" role="navigation">
-    <div class="nav-wrapper container">
+	<nav class="white" role="navigation">
+		<div class="nav-wrapper container">
 
-      <ul class="center hide-on-med-and-down">
-        <li><a href="#intorduction">Intorduction</a></li>
-        <li><a href="#method">Method</a></li>
-        <li><a href="#experiment">Experiment</a></li>
-        <li><a href="#results">Results</a></li>
-        <li><a href="#improvements">Improvements</a></li>
-        <li><a href="#conclusion">Conclusion</a></li>
-      </ul>
+			<ul class="center hide-on-med-and-down">
+				<li><a href="#intorduction">Introduction</a></li>
+				<li><a href="#method">Methods</a></li>
+				<li><a href="#dataset">Datasets</a></li>
+				<li><a href="#results">Results</a></li>
+				<li><a href="#conclusion">Conclusion</a></li>
+			</ul>
 
-      <ul id="nav-mobile" class="sidenav">
-        <li><a href="#intorduction">Intorduction</a></li>
-        <li><a href="#method">Method</a></li>
-        <li><a href="#experiment">Experiment</a></li>
-        <li><a href="#results">Results</a></li>
-        <li><a href="#improvements">Improvements</a></li>
-        <li><a href="#conclusion">Conclusion</a></li>
-      </ul>
-      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
+			<ul id="nav-mobile" class="sidenav">
+				<li><a href="#intorduction">Introduction</a></li>
+				<li><a href="#method">Methods</a></li>
+				<li><a href="#dataset">Datasets</a></li>
+				<li><a href="#results">Results</a></li>
+				<li><a href="#conclusion">Conclusion</a></li>
+			</ul>
+			<a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+		</div>
+	</nav>
 
-  <div id="index-banner" class="parallax-container">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <br><br>
-        <h1 class="header center teal-text text-lighten-2">Image Tampering Detection</h1>
+	<div id="index-banner" class="parallax-container">
+		<div class="section no-pad-bot">
+			<div class="container">
+				<br><br>
+				<h1 class="header center teal-text text-lighten-2">Image Tampering Detection</h1>
 
-      </div>
-    </div>
-    <div class="parallax"></div>
-  </div>
+			</div>
+		</div>
+		<div class="parallax"></div>
+	</div>
 
-  <div class="container" id="results">
-    <div class="section">
+	<div class="container" id="results">
+		<div class="section">
 
-      <!--   Icon Section   -->
-      <div class="row" style="font-size: 19px">
-        <h4 class="center brown-text">Results</h4>
-        <h6 class="center brown-text">The tables below compare the f1 score and accuracy of different methods across various datasets </h6>
-        <table>
-		  <tr>
-		    <th>F1 Score</th>
-		    <th>ICPR Challenge</th>
-		    <th>Casia V2</th>
-		    <th>IEEE Forensic</th>
-		    <th>Payslip</th>
-		    <th>Nimble Challenge</th>
-		  </tr>
-		  <tr>
-		    <td>Yashas</td>
-		    <td>0.0</td>
-		   	<td>0.76</td>
-		    <td>0.86</td>
-		    <td>10.0</td>
-		    <td>10.0</td>
-		  </tr>
-		  <tr>
-		    <td>Fusion</td>
-		    <td>0.89</td>
-		    <td>0.43</td>
-		    <td> - </td>
-		    <td>10.0</td>
-		    <td>10.0</td>
-		  </tr>
-		  <tr>
-		    <td>CMFD</td>
-		    <td>0.36</td>
-		    <td>0.42</td>
-		    <td>0.55</td>
-		    <td>10.0</td>
-		    <td>10.0</td>
-		  </tr>
-		  <tr>
-		    <td>Splicebuster</td>
-		    <td>0.803</td>
-		    <td>0.53</td>
-		    <td>0.72</td>
-		    <td>10.0</td>
-		    <td>10.0</td>
-		  </tr>
-		  <tr>
-		    <td>Fusion + CMFD + Splicebuster</td>
-		    <td>0.954</td>
-		    <td>0.67</td>
-		    <td>0.87</td>
-		    <td>10.0</td>
-		    <td>10.0</td>
-		  </tr>
+			<!--   Icon Section   -->
+			<div class="row" style="font-size: 19px">
+				<h4 class="center brown-text">Results</h4>
+				<h6 class="center brown-text">The tables below compare the f1 score and accuracy of different methods across various datasets </h6>
+				<table>
+			<tr>
+				<th>F1 Score</th>
+				<th>ICPR Challenge</th>
+				<th>Casia V2</th>
+				<th>IEEE Forensic</th>
+		
+			</tr>
+			<tr>
+				<td>Yashas</td>
+				<td>0.0</td>
+				<td>0.76</td>
+				<td>0.86</td>
+			</tr>
+			<tr>
+				<td>Fusion</td>
+				<td>0.89</td>
+				<td>0.43</td>
+				<td> - </td>
+			</tr>
+			<tr>
+				<td>CMFD</td>
+				<td>0.36</td>
+				<td>0.42</td>
+				<td>0.55</td>
+			</tr>
+			<tr>
+				<td>Splicebuster</td>
+				<td>0.803</td>
+				<td>0.53</td>
+				<td>0.72</td>
+			</tr>
+			<tr>
+				<td>Fusion + CMFD + Splicebuster</td>
+				<td>0.954</td>
+				<td>0.67</td>
+				<td>0.87</td>
+			</tr>
 
 		</table>
-      </div>
-    </div>
-
-
-    <div class="row" style="font-size: 19px">
-        <table>
-      <tr>
-        <th>Accuracy</th>
-        <th>ICPR Challenge</th>
-        <th>Casia V2</th>
-        <th>IEEE Forensic</th>
-        <th>Payslip</th>
-        <th>Nimble Challenge</th>
-      </tr>
-      <tr>
-        <td>Yashas</td>
-        <td>0.94</td>
-        <td>0.75</td>
-        <td>0.87</td>
-        <td>10.0</td>
-        <td>10.0</td>
-      </tr>
-      <tr>
-        <td>Fusion</td>
-        <td>0.88</td>
-        <td>0.67</td>
-        <td> - </td>
-        <td>10.0</td>
-        <td>10.0</td>
-      </tr>
-      <tr>
-        <td>CMFD</td>
-        <td>0.84</td>
-        <td>0.69</td>
-        <td>0.80</td>
-        <td>10.0</td>
-        <td>10.0</td>
-      </tr>
-      <tr>
-        <td>Splicebuster</td>
-        <td>0.803</td>
-        <td>0.54</td>
-        <td>0.86</td>
-        <td>10.0</td>
-        <td>10.0</td>
-      </tr>
-      <tr>
-        <td>Fusion + CMFD + Splicebuster</td>
-        <td>0.972</td>
-        <td>0.81</td>
-        <td>0.91</td>
-        <td>10.0</td>
-        <td>10.0</td>
-      </tr>
-
-    </table>
-      </div>
-    </div>
-
-  </div>
-
-
-  <div class="container" id="introduction">
-    <div class="section">
-
-      <!--   Icon Section   -->
-      <div class="row" style="font-size: 19px">
-        <h2 class="center teal-text">Yashas Method</h4>
-        <h4 class="center brown-text">Introduction</h4>
-            <p class="center light" style="margin: 0em">Image Tampering can be defined as manipulating an digital image. Image Tampering detection is the task to identify if the image was tampered or not.Convolution networks provide good results on detection of tampering but these network require large amount of training data.In this work, a simple method is proposed to address this problem by augmenting data using inpainting and compositing schemesDomain Adaptation technique is used to reduce domain shift between augmented data and real datasetReults are shown on 2 image tamepring datasets. 
-            (IEEE and CASIAv2)</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="container" id="method">
-
-      <!--   Icon Section   -->
-      <div class="row" style="font-size: 19px">
-        <h4 class="center brown-text">Method</h4>
-          
-          <div class="row">
-          <h5 class="center black-text">Model</h5>
-            <p class="center light"> 
-              Images are coverted to 64x64 patches. Using the mask provided by the dataset we determine is the patch was tampered or not. If the tampered region is more than 20% of the patch, it is considered tampered.
-              <br>
-              <img src="./images/model.png">
-              <br>
-              The model comprises of 5 conv layers followed by 3 fully connected layers(including output layer)
-              For detection on augmented and the target dataset, the conv layers and the first fully connected layer are shared. Other layers are forked and classification is provided separatly on both datasets.  
-            </p>
-          </div>
-
-          <div class="row">
-          <h5 class="center black-text">Augmenting Data<h5>
-              <ul class="collapsible">
-                <li>
-                  <div class="collapsible-header">1. Instance Removal</div>
-                  <div class="collapsible-body">
-                    <p>1. For each image a patch is taken and is set to 0 using a mask.</p>
-                    <p>2. We are using inpainting algorithms provided by opencv ( cv.INPAINT_TELEA.)</p>
-                    <div class="row">
-                      <div class="col s6">
-                        <p>Patch Inpainting: Random Patch is taken with area > 30% of image and is inpainted.</p>
-                        <br/>
-                        <img style="width: 45%;" src="./images/COCO_train2014_000000001527.png" > 
-                        <img style="width: 45%;" src="./images/COCO_train2014_000000002693.png" > 
-                        <img style="width: 45%;" src="./images/COCO_train2014_000000003048.png" > 
-                        <img style="width: 45%;" src="./images/COCO_train2014_000000003118.png" >
-                      </div>
-                      <div class="col s6">
-                        <p>Semantic Inpainting: Very similiar to patch impainting but the mask is already provided to us. Coco dataset is used to get the semantic mask</p>
-                        <img style="width: 45%" src="./images/COCO_train2014_000000005198.png" > 
-                        <img style="width: 45%" src="./images/COCO_train2014_000000004714.png" > 
-                        <img style="width: 45%" src="./images/COCO_train2014_000000005083.png" > 
-                        <img style="width: 45%" src="./images/COCO_train2014_000000005165.png" >
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li>
-                  <div class="collapsible-header">2. Copy paste and Splicing</div>
-                  <div class="collapsible-body">
-                    <p>Feathering: We feather an image over another image. Feathering is carried out by I = α · F + (1 − α) · B. Where F in the foreground image and the B is the background image.  </p>
-                    <img style="width: 15%;" src="./images/035A4302_51.png" > 
-                    <img style="width: 15%" src="./images/035A4302_52.png" >
-                    <img style="width: 25%" src="./images/035A4340_9.png" > 
-                    <img style="width: 20%" src="./images/035A4340_10.png" > 
-                  </div>
-                </li>
-              </ul>
-
-          </div>
-
-          <div class="row">
-          <h5 class="center black-text">Domian Adaptation<h5>
-
-            <p class="center light" style="margin: 0em">Cues present in one dataset are very different then the one provided by some another dataset. Hence the augmented and the synthetic data can be of different domains. To take in account of discrepancy, domain adaption is performed using Maximum Mean Discrepancy.MMD loss is defined as:
-            <img align="center" src="./images/mmd.png">
-              <br>
-            Let the features for image patches obtained from source domain data Xs be X̂s and the target domain Xt be X̂t. Here Φ(x̂) is a RKBF kernel used to convert the features to gaussian to calculate similiarity. </p>
-          </div>
-      </div>
-  </div>
-
-  <div class="container" id="experiment">
-    <div class="section">
-
-      <!--   Icon Section   -->
-      <div class="row" style="font-size: 19px">
-        <h4 class="center brown-text">Experiment</h4>
-          <div class="row">
-            <h5 class="center black-text">Datasets</h5>
-              <p class="center light" style="margin: 0em">2 Datasets CASIA-V2 and IEE are used </p>
-              <ul class="collapsible">
-                <li>
-                  <div class="collapsible-header">1. CASIA</div>
-                  <div class="collapsible-body">
-                    <p> We are using 1250 fake image and only 200 pristine image. Other wise we get stuck due to class imbalance  </p>
-                    <img style="width: 40%;" src="./images/IEEE1.png" > 
-                    <img style="width: 40%" src="./images/IEEE1_mask.png" >
-                    <img style="width: 40%" src="./images/IEEE2.png" > 
-                    <img style="width: 40%" src="./images/IEEE2_mask.png" > 
-                  </div>
-                </li>
-                <li>
-                  <div class="collapsible-header">2. IEEE</div>
-                  <div class="collapsible-body">
-                    <p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
-                    <img style="width: 40%;" src="./images/IEEE1.png" > 
-                    <img style="width: 40%" src="./images/IEEE1_mask.png" >
-                    <img style="width: 40%" src="./images/IEEE2.png" > 
-                    <img style="width: 40%" src="./images/IEEE2_mask.png" > 
-                  </div>
-                </li>
-              </ul>
-        </div>
-
-        <!-- Losses -->
-        <div class="row">
-          <h5 class="center black-text">Losses</h5>
-          <p class="center light" style="margin: 0em"> Adam Optimizer is used with weight decay at 0.0005</p>          
-          <p class="center light" style="margin: 0em"> We use 3 losses. 2 Cross entropy losses for source and targer (L1&L2) and 1 MMD Loss defined above L. Parameter for each loss is λ1:0.3 λ2:0.7 λ3:0.001. 
-              <br>
-              L =  λ1*Lcs +λ2*Lct + λ3*LM </p>
-        </div>
-      </div>
-    </div>
-  </div>  
-
-  <div class="container" id="results">
-    <div class="section">
-
-      <!--   Icon Section   -->
-      <div class="row" style="font-size: 19px">
-        <div class="row">
-          <h4 class="center brown-text">Results (CASIA)</h4>
-          <div class="col s6"> 
-            <h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
-            <img src="./images/CASIA_2.png">
-          </div>
-
-          <div class="col s6"> 
-            <h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
-            <img src="./images/CASIA_1.png">
-          </div>
-        </div>
-        
-        <h4 class="black-text">Confusion Matrix (Patch Level)</h4>
-        <p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
-        <div class="row">
-          <div class="col s6">
-            <h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
-            <img  src="./images/casia_acc_patches.png" >
-            <p class="light" style="margin: 0em">Accuracy:  0.875 </p>
-            <p class="light" style="margin: 0em">Precision: 0.8618 </p>
-            <p class="light" style="margin: 0em">Recall: 0.6598 </p>
-            <p class="light" style="margin: 0em">F1 score: 0.7473 </p>
-          </div>
-
-        <div class="col s6">
-          <h6 class="black-text">Confusion Matrix </h6>        
-          <img  src="./images/casia_xxx_images.png" >
-          <p class="light" style="margin: 0em">Accuracy: 0.75135 </p>
-          <p class="light" style="margin: 0em">Precision: 0.939 </p>
-          <p class="light" style="margin: 0em">Recall: 0.736 </p>
-          <p class="light" style="margin: 0em">F1 score: 0.831 </p>
-        </div>
-
-        </div>
-
-        <div class="row">
-          <h4 class="center black-text">Visual Results</h4>        
-          <ul class="collapsible">
-            <li>
-              <div class="collapsible-header"> True Negative </div>
-              <div class="collapsible-body">
-                <p> More images at:  </p>
-                <img style="width: 100%;" src="./images/CASIAtn1.png" > 
-                <img style="width: 100%" src="./images/CASIAtn2.png" >
-                <img style="width: 100%" src="./images/CASIAtn4.png" > 
-                <img style="width: 100%" src="./images/CASIAtn5.png" > 
-              </div>
-            </li>
-            <li>
-              <div class="collapsible-header"> False Negative</div>
-              <div class="collapsible-body">
-                <p> More images at: </p>
-                <img style="width: 100%;" src="./images/CASIAfn1.png" > 
-                <img style="width: 100%" src="./images/CASIAfn2.png" >
-                <img style="width: 100%" src="./images/CASIAfn3.png" > 
-                <img style="width: 100%" src="./images/CASIAfn4.png" > 
-              </div>
-            </li>
-          </ul>
-          
-          <ul class="collapsible">
-            <li>
-              <div class="collapsible-header">True Postive</div>
-              <div class="collapsible-body">
-                <p> More images at: </p>
-                <img style="width: 100%;" src="./images/CASIAtp1.png" > 
-                <img style="width: 100%" src="./images/CASIAtp2.png" >
-                <img style="width: 100%" src="./images/CASIAtp3.png" > 
-                <img style="width: 100%" src="./images/CASIAtp4.png" > 
-                <img style="width: 100%" src="./images/CASIAtp5.png" > 
-              </div>
-            </li>
-            <li>
-              <div class="collapsible-header">False Positive</div>
-              <div class="collapsible-body">
-                <p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
-                <img style="width: 100%;" src="./images/CASIAfp1.png" > 
-                <img style="width: 100%" src="./images/CASIAfp2.png" >
-                <img style="width: 100%" src="./images/CASIAfp3.png" > 
-                <img style="width: 100%" src="./images/CASIAfp4.png" > 
-                <img style="width: 100%" src="./images/CASIAfp5.png" >  
-              </div>
-            </li>
-          </ul>
-
-        </div>
-
-      </div>
-
-      <div class="row" style="font-size: 19px">
-        <div class="row">
-          <h4 class="center brown-text">Results (IEEE)</h4>
-          <div class="col s6"> 
-            <h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
-            <img src="./images/rel_acc_patches.png">
-          </div>
-
-          <div class="col s6"> 
-            <h5 class="center black-text">Accuracy Chart(Image Level) </h5>        
-            <img src="./images/rel_acc_image.png">
-          </div>
-        </div>
-        <h4 class="black-text">Confusion Matrix (Patch Level)</h4>
-        <p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
-        <div class="row">
-          <div class="col s6">
-            <h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
-            <img  src="./images/ieee_conf_matrix_patches.png" >
-            <p class="light" style="margin: 0em">Accuracy:  0.864 </p>
-            <p class="light" style="margin: 0em">Precision: 0.8618 </p>
-            <p class="light" style="margin: 0em">Recall: 0.6598 </p>
-            <p class="light" style="margin: 0em">F1 score: 0.7473 </p>
-          </div>
-
-        <div class="col s6">
-          <h6 class="black-text">Confusion Matrix </h6>        
-          <img  src="./images/IEEE_acc_images.png" >
-          <p class="light" style="margin: 0em">Accuracy:  0.8742 </p>
-          <p class="light" style="margin: 0em">Precision: 0.9057 </p>
-          <p class="light" style="margin: 0em">Recall: 0.8397 </p>
-          <p class="light" style="margin: 0em">F1 score: 0.862 </p>
-        </div>
-
-        </div>
-
-        <div class="row">
-          <h4 class="center black-text">Visual Results</h4>        
-          <ul class="collapsible">
-            <li>
-              <div class="collapsible-header"> True Negative </div>
-              <div class="collapsible-body">
-                <p> More images at:  </p>
-                <img style="width: 100%;" src="./images/IEEEtn1.png" > 
-                <img style="width: 100%" src="./images/IEEEtn2.png" >
-                <img style="width: 100%" src="./images/IEEEtn3.png" > 
-                <img style="width: 100%" src="./images/IEEEtn4.png" > 
-                <img style="width: 100%" src="./images/IEEEtn5.png" > 
-                <img style="width: 100%" src="./images/IEEEtn6.png" > 
-              </div>
-            </li>
-            <li>
-              <div class="collapsible-header"> False Negative</div>
-              <div class="collapsible-body">
-                <p> More images at: </p>
-                <img style="width: 100%;" src="./images/IEEEfn1.png" > 
-                <img style="width: 100%" src="./images/IEEEfn2.png" >
-                <img style="width: 100%" src="./images/IEEEfn3.png" > 
-                <img style="width: 100%" src="./images/IEEEfn4.png" > 
-              </div>
-            </li>
-          </ul>
-          
-          <ul class="collapsible">
-            <li>
-              <div class="collapsible-header">True Postive</div>
-              <div class="collapsible-body">
-                <p> More images at: </p>
-                <img style="width: 100%;" src="./images/IEEEtp1.png" > 
-                <img style="width: 100%" src="./images/IEEEtp2.png" >
-                <img style="width: 100%" src="./images/IEEEtp3.png" > 
-                <img style="width: 100%" src="./images/IEEEtp4.png" > 
-                <img style="width: 100%" src="./images/IEEEtp5.png" > 
-                <img style="width: 100%" src="./images/IEEEtp6.png" > 
-                <img style="width: 100%" src="./images/IEEEtp7.png" > 
-              </div>
-            </li>
-            <li>
-              <div class="collapsible-header">False Positive</div>
-              <div class="collapsible-body">
-                <p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
-                <img style="width: 100%;" src="./images/IEEEfp1.png" > 
-                <img style="width: 100%" src="./images/IEEEfp2.png" >
-                <img style="width: 100%" src="./images/IEEEfp3.png" > 
-                <img style="width: 100%" src="./images/IEEEfp4.png" > 
-              </div>
-            </li>
-          </ul>
-
-        </div>
-
-      </div>
-
-
-
-    </div>
-  </div>
-
-  <div class="container" id="introduction">
-    <div class="section">
-
-      <!--   Icon Section   -->
-      <div class="row" style="font-size: 19px">
-        <h2 class="center teal-text">CMFD (Copy Paste Move Forgery Detector</h4>
-        <h5 class="center teal-text">Cozzolino, Davide & Poggi, Giovanni & Verdoliva, Luisa, ICIP 2014</h5>
-        <h4 class="center brown-text">Introduction</h4>
-            <p class="center light" style="margin: 0em">Used to detect copy-paste from same document. 
-              Patch Match algorithm finds correspondences between small square regions (or patches) of an image. It is extremely robust to rotation. Also it is faster than other methods(due to the random nature of the algorithm).  
-              Patch Match works by defining a NNF(nearest neighbour field) f: R2 -> R2  for pixel to an offset. Two regions in image with high correspondence can be concluded to be originated from the same patch. (one patch is copied to another location)  </p>
-      </div>
-    </div>
-  </div>
-
-  <div class="container" id="method">
-
-      <!--   Icon Section   -->
-      <div class="row" style="font-size: 19px">
-        <h4 class="center brown-text">Method</h4>
-          
-          <div class="row">
-          <h5 class="center black-text">Model</h5>
-            <p class="center light"> 
-              Images are coverted to 64x64 patches. Using the mask provided by the dataset we determine is the patch was tampered or not. If the tampered region is more than 20% of the patch, it is considered tampered.
-              <br>
-              <img src="./images/model.png">
-              <br>
-              The model comprises of 5 conv layers followed by 3 fully connected layers(including output layer)
-              For detection on augmented and the target dataset, the conv layers and the first fully connected layer are shared. Other layers are forked and classification is provided separatly on both datasets.  
-            </p>
-          </div>
-
-      </div>
-  </div>
-
-  <div class="container" id="experiment">
-    <div class="section">
-
-      <!--   Icon Section   -->
-      <div class="row" style="font-size: 19px">
-        <h4 class="center brown-text">Experiment</h4>
-          <div class="row">
-            <h5 class="center black-text">Datasets</h5>
-              <p class="center light" style="margin: 0em">2 Datasets CASIA-V2 and IEE are used </p>
-              <ul class="collapsible">
-                <li>
-                  <div class="collapsible-header">1. CASIA</div>
-                  <div class="collapsible-body">
-                    <p> We are using 1250 fake image and only 200 pristine image. Other wise we get stuck due to class imbalance  </p>
-                    <img style="width: 40%;" src="./images/IEEE1.png" > 
-                    <img style="width: 40%" src="./images/IEEE1_mask.png" >
-                    <img style="width: 40%" src="./images/IEEE2.png" > 
-                    <img style="width: 40%" src="./images/IEEE2_mask.png" > 
-                  </div>
-                </li>
-                <li>
-                  <div class="collapsible-header">2. IEEE</div>
-                  <div class="collapsible-body">
-                    <p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
-                    <img style="width: 40%;" src="./images/IEEE1.png" > 
-                    <img style="width: 40%" src="./images/IEEE1_mask.png" >
-                    <img style="width: 40%" src="./images/IEEE2.png" > 
-                    <img style="width: 40%" src="./images/IEEE2_mask.png" > 
-                  </div>
-                </li>
-              </ul>
-        </div>
-
-        <!-- Losses -->
-        <div class="row">
-          <h5 class="center black-text">Losses</h5>
-          <p class="center light" style="margin: 0em"> Adam Optimizer is used with weight decay at 0.0005</p>          
-          <p class="center light" style="margin: 0em"> We use 3 losses. 2 Cross entropy losses for source and targer (L1&L2) and 1 MMD Loss defined above L. Parameter for each loss is λ1:0.3 λ2:0.7 λ3:0.001. 
-              <br>
-              L =  λ1*Lcs +λ2*Lct + λ3*LM </p>
-        </div>
-      </div>
-    </div>
-  </div>  
-
-  <div class="container" id="results">
-    <div class="section">
-
-      <!--   Icon Section   -->
-      <div class="row" style="font-size: 19px">
-        <div class="row">
-          <h4 class="center brown-text">Results (CASIA)</h4>
-          <div class="col s6"> 
-            <h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
-            <img src="./images/CASIA_2.png">
-          </div>
-
-          <div class="col s6"> 
-            <h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
-            <img src="./images/CASIA_1.png">
-          </div>
-        </div>
-        
-        <h4 class="black-text">Confusion Matrix (Patch Level)</h4>
-        <p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
-        <div class="row">
-          <div class="col s6">
-            <h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
-            <img  src="./images/casia_acc_patches.png" >
-            <p class="light" style="margin: 0em">Accuracy:  0.875 </p>
-            <p class="light" style="margin: 0em">Precision: 0.8618 </p>
-            <p class="light" style="margin: 0em">Recall: 0.6598 </p>
-            <p class="light" style="margin: 0em">F1 score: 0.7473 </p>
-          </div>
-
-        <div class="col s6">
-          <h6 class="black-text">Confusion Matrix </h6>        
-          <img  src="./images/casia_xxx_images.png" >
-          <p class="light" style="margin: 0em">Accuracy: 0.75135 </p>
-          <p class="light" style="margin: 0em">Precision: 0.939 </p>
-          <p class="light" style="margin: 0em">Recall: 0.736 </p>
-          <p class="light" style="margin: 0em">F1 score: 0.831 </p>
-        </div>
-
-        </div>
-
-        <div class="row">
-          <h4 class="center black-text">Visual Results</h4>        
-          <ul class="collapsible">
-            <li>
-              <div class="collapsible-header"> True Negative </div>
-              <div class="collapsible-body">
-                <p> More images at:  </p>
-                <img style="width: 100%;" src="./images/CASIAtn1.png" > 
-                <img style="width: 100%" src="./images/CASIAtn2.png" >
-                <img style="width: 100%" src="./images/CASIAtn4.png" > 
-                <img style="width: 100%" src="./images/CASIAtn5.png" > 
-              </div>
-            </li>
-            <li>
-              <div class="collapsible-header"> False Negative</div>
-              <div class="collapsible-body">
-                <p> More images at: </p>
-                <img style="width: 100%;" src="./images/CASIAfn1.png" > 
-                <img style="width: 100%" src="./images/CASIAfn2.png" >
-                <img style="width: 100%" src="./images/CASIAfn3.png" > 
-                <img style="width: 100%" src="./images/CASIAfn4.png" > 
-              </div>
-            </li>
-          </ul>
-          
-          <ul class="collapsible">
-            <li>
-              <div class="collapsible-header">True Postive</div>
-              <div class="collapsible-body">
-                <p> More images at: </p>
-                <img style="width: 100%;" src="./images/CASIAtp1.png" > 
-                <img style="width: 100%" src="./images/CASIAtp2.png" >
-                <img style="width: 100%" src="./images/CASIAtp3.png" > 
-                <img style="width: 100%" src="./images/CASIAtp4.png" > 
-                <img style="width: 100%" src="./images/CASIAtp5.png" > 
-              </div>
-            </li>
-            <li>
-              <div class="collapsible-header">False Positive</div>
-              <div class="collapsible-body">
-                <p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
-                <img style="width: 100%;" src="./images/CASIAfp1.png" > 
-                <img style="width: 100%" src="./images/CASIAfp2.png" >
-                <img style="width: 100%" src="./images/CASIAfp3.png" > 
-                <img style="width: 100%" src="./images/CASIAfp4.png" > 
-                <img style="width: 100%" src="./images/CASIAfp5.png" >  
-              </div>
-            </li>
-          </ul>
-
-        </div>
-
-      </div>
-
-      <div class="row" style="font-size: 19px">
-        <div class="row">
-          <h4 class="center brown-text">Results (IEEE)</h4>
-          <div class="col s6"> 
-            <h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
-            <img src="./images/rel_acc_patches.png">
-          </div>
-
-          <div class="col s6"> 
-            <h5 class="center black-text">Accuracy Chart(Image Level) </h5>        
-            <img src="./images/rel_acc_image.png">
-          </div>
-        </div>
-        <h4 class="black-text">Confusion Matrix (Patch Level)</h4>
-        <p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
-        <div class="row">
-          <div class="col s6">
-            <h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
-            <img  src="./images/ieee_conf_matrix_patches.png" >
-            <p class="light" style="margin: 0em">Accuracy:  0.864 </p>
-            <p class="light" style="margin: 0em">Precision: 0.8618 </p>
-            <p class="light" style="margin: 0em">Recall: 0.6598 </p>
-            <p class="light" style="margin: 0em">F1 score: 0.7473 </p>
-          </div>
-
-        <div class="col s6">
-          <h6 class="black-text">Confusion Matrix </h6>        
-          <img  src="./images/IEEE_acc_images.png" >
-          <p class="light" style="margin: 0em">Accuracy:  0.8742 </p>
-          <p class="light" style="margin: 0em">Precision: 0.9057 </p>
-          <p class="light" style="margin: 0em">Recall: 0.8397 </p>
-          <p class="light" style="margin: 0em">F1 score: 0.862 </p>
-        </div>
-
-        </div>
-
-        <div class="row">
-          <h4 class="center black-text">Visual Results</h4>        
-          <ul class="collapsible">
-            <li>
-              <div class="collapsible-header"> True Negative </div>
-              <div class="collapsible-body">
-                <p> More images at:  </p>
-                <img style="width: 100%;" src="./images/IEEEtn1.png" > 
-                <img style="width: 100%" src="./images/IEEEtn2.png" >
-                <img style="width: 100%" src="./images/IEEEtn3.png" > 
-                <img style="width: 100%" src="./images/IEEEtn4.png" > 
-                <img style="width: 100%" src="./images/IEEEtn5.png" > 
-                <img style="width: 100%" src="./images/IEEEtn6.png" > 
-              </div>
-            </li>
-            <li>
-              <div class="collapsible-header"> False Negative</div>
-              <div class="collapsible-body">
-                <p> More images at: </p>
-                <img style="width: 100%;" src="./images/IEEEfn1.png" > 
-                <img style="width: 100%" src="./images/IEEEfn2.png" >
-                <img style="width: 100%" src="./images/IEEEfn3.png" > 
-                <img style="width: 100%" src="./images/IEEEfn4.png" > 
-              </div>
-            </li>
-          </ul>
-          
-          <ul class="collapsible">
-            <li>
-              <div class="collapsible-header">True Postive</div>
-              <div class="collapsible-body">
-                <p> More images at: </p>
-                <img style="width: 100%;" src="./images/IEEEtp1.png" > 
-                <img style="width: 100%" src="./images/IEEEtp2.png" >
-                <img style="width: 100%" src="./images/IEEEtp3.png" > 
-                <img style="width: 100%" src="./images/IEEEtp4.png" > 
-                <img style="width: 100%" src="./images/IEEEtp5.png" > 
-                <img style="width: 100%" src="./images/IEEEtp6.png" > 
-                <img style="width: 100%" src="./images/IEEEtp7.png" > 
-              </div>
-            </li>
-            <li>
-              <div class="collapsible-header">False Positive</div>
-              <div class="collapsible-body">
-                <p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
-                <img style="width: 100%;" src="./images/IEEEfp1.png" > 
-                <img style="width: 100%" src="./images/IEEEfp2.png" >
-                <img style="width: 100%" src="./images/IEEEfp3.png" > 
-                <img style="width: 100%" src="./images/IEEEfp4.png" > 
-              </div>
-            </li>
-          </ul>
-
-        </div>
-
-      </div>
-
-
-
-    </div>
-  </div>
-
-
-
-  <div class="container" id="improvements">
-    <div class="section">
-
-      <!--   Icon Section   -->
-      <div class="row" style="font-size: 19px">
-        <h4 class="center brown-text">Improvements</h4>
-            <p class="center light" style="margin: 0em">1. Not use patches: Using patches causes class imabalance as their are more elements thar are tampered than non-tampered images. Hence even though we achieve good accuracy at patch level, we won't be able to provide exact segmentation of the tampered region. </p>
-            <br>
-            <p class="center light" style="margin: 0em">2. Adversarial loss and using knowledge distillation loss. We felt using mmd loss as regualizer is not the best approach. It was harder to train. </p>
-      </div> 
-    </div>
-  </div>
-  </div>
-
-  <footer class="page-footer teal">
-    <div class="container">
-      <div class="row">
-        <div class="col l6 s12">
-          <h5 class="white-text">References</h5>
-          <p class="grey-text text-lighten-4">We would like to thank Yashas sir and Rudrabha sir for their inputs</p>
-        </div>
-        <div class="col l6 s12">
-          <p>
-            Augment and Adapt: A Simple Approach to Image Tampering Detection
-            <br>
-            Y Annadani, CV Jawahar
-            <br>
-            2018 24th International Conference on Pattern Recognition (ICPR), 2983-2988 2018
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="footer-copyright">
-      <div class="container">
-      Made by <a class="brown-text text-lighten-3" href="#">Shubh and Devansh</a>
-      </div>
-    </div>
-  </footer>
-
-
-  <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="js/materialize.js"></script>
-  <script src="js/init.js"></script>
-
-  </body>
+			</div>
+		</div>
+
+
+		<div class="row" style="font-size: 19px">
+				<table>
+			<tr>
+				<th>Accuracy</th>
+				<th>ICPR Challenge</th>
+				<th>Casia V2</th>
+				<th>IEEE Forensic</th>
+ 
+		
+			</tr>
+			<tr>
+				<td>Yashas</td>
+				<td>0.87</td>
+				<td>0.75</td>
+				<td>0.87</td>
+ 
+ 
+			</tr>
+			<tr>
+				<td>Fusion</td>
+				<td>0.88</td>
+				<td>0.67</td>
+				<td> - </td>
+ 
+ 
+			</tr>
+			<tr>
+				<td>CMFD</td>
+				<td>0.84</td>
+				<td>0.69</td>
+				<td>0.80</td>
+ 
+ 
+			</tr>
+			<tr>
+				<td>Splicebuster</td>
+				<td>0.803</td>
+				<td>0.54</td>
+				<td>0.86</td>
+ 
+ 
+			</tr>
+			<tr>
+				<td>Fusion + CMFD + Splicebuster</td>
+				<td>0.972</td>
+				<td>0.81</td>
+				<td>0.91</td>
+ 
+ 
+			</tr>
+
+		</table>
+			</div>
+		</div>
+
+	</div>
+
+
+	<div class="container" id="introduction">
+		<div class="section">
+
+			<!--   Icon Section   -->
+			<div class="row" style="font-size: 19px">
+				<h2 class="center teal-text">Introduction</h2>
+						<p class="center light" style="margin: 0em">Image Tampering can be defined as manipulating an digital image. Image Tampering detection is the task to identify if the image was tampered or not. Currently we focus on using 4 methods which are described below:</p>
+			</div>
+		</div>
+	</div>
+	
+
+	<div class="container" id="dataset">
+		<div class="section">
+
+	<!--   Icon Section   -->
+	<div class="row" style="font-size: 19px">
+		<h4 class="center teal-text">Datasets</h4>
+			<div class="row">
+					<p class="center light" style="margin: 0em">3 Datasets Findit,CASIA-V2 and IEEE Forencis are used </p>
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header">1. Findit</div>
+							<div class="collapsible-body">
+								<p> 260 tampered receipts and 1740 genuine receipts. </p>
+								<img style="width: 40%;" src="./images/findit1.jpg" > 
+								<img style="width: 40%" src="./images/findit2.jpg" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header">2. CASIA</div>
+							<div class="collapsible-body">
+								<p> 5000 fake images and 7000 pristine images. </p>
+								<img style="width: 40%;" src="./images/casia1.jpg" > 
+								<img style="width: 40%" src="./images/casia2.jpg" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header">3. IEEE</div>
+							<div class="collapsible-body">
+								<p> 451 fake images and 1000 pristine images. </p>
+								<img style="width: 40%;" src="./images/IEEE1.png" > 
+								<img style="width: 40%" src="./images/IEEE1_mask.png" >
+								<img style="width: 40%" src="./images/IEEE2.png" > 
+								<img style="width: 40%" src="./images/IEEE2_mask.png" > 
+							</div>
+						</li>
+					</ul>
+		</div>
+	</div>
+			</div>
+	</div>  
+
+
+
+	<div class="container" id="method">
+
+			<!--   Icon Section   -->
+			<div class="row" style="font-size: 19px">
+				<h4 class="center teal-text">1. Yashas Method</h4>
+				<h5 class="center brown-text">Augment and Adapt: A Simple Approach to Image Tampering Detection</h5>
+				<h5 class="center brown-text"> Yashas Annadani, C.V. Jawahar, ICPR</h5>
+					
+					<div class="row">
+						<p class="center light"> 
+						Convolution networks provide good results on detection of tampering but these network require large amount of training data.In this work, a simple method is proposed to address this problem by augmenting data using inpainting and compositing schemes.Domain Adaptation technique is used to reduce domain shift between augmented data and real datasetReults are shown on 2 image tamepring datasets. 
+						(IEEE and CASIAv2)
+
+							Images are coverted to 64x64 patches. Using the mask provided by the dataset we determine is the patch was tampered or not. If the tampered region is more than 20% of the patch, it is considered tampered.
+							<br>
+							<img src="./images/model.png">
+							<br>
+							The model comprises of 5 conv layers followed by 3 fully connected layers(including output layer)
+							For detection on augmented and the target dataset, the conv layers and the first fully connected layer are shared. Other layers are forked and classification is provided separatly on both datasets.  
+						</p>
+					</div>
+
+					<div class="row">
+					<h5 class="center black-text">Augmenting Data<h5>
+							<ul class="collapsible">
+								<li>
+									<div class="collapsible-header">1. Instance Removal</div>
+									<div class="collapsible-body">
+										<p>1. For each image a patch is taken and is set to 0 using a mask.</p>
+										<p>2. We are using inpainting algorithms provided by opencv ( cv.INPAINT_TELEA.)</p>
+										<div class="row">
+											<div class="col s6">
+												<p>Patch Inpainting: Random Patch is taken with area > 30% of image and is inpainted.</p>
+												<br/>
+												<img style="width: 45%;" src="./images/COCO_train2014_000000001527.png" > 
+												<img style="width: 45%;" src="./images/COCO_train2014_000000002693.png" > 
+												<img style="width: 45%;" src="./images/COCO_train2014_000000003048.png" > 
+												<img style="width: 45%;" src="./images/COCO_train2014_000000003118.png" >
+											</div>
+											<div class="col s6">
+												<p>Semantic Inpainting: Very similiar to patch impainting but the mask is already provided to us. Coco dataset is used to get the semantic mask</p>
+												<img style="width: 45%" src="./images/COCO_train2014_000000005198.png" > 
+												<img style="width: 45%" src="./images/COCO_train2014_000000004714.png" > 
+												<img style="width: 45%" src="./images/COCO_train2014_000000005083.png" > 
+												<img style="width: 45%" src="./images/COCO_train2014_000000005165.png" >
+											</div>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="collapsible-header">2. Copy paste and Splicing</div>
+									<div class="collapsible-body">
+										<p>Feathering: We feather an image over another image. Feathering is carried out by I = α · F + (1 − α) · B. Where F in the foreground image and the B is the background image.  </p>
+										<img style="width: 15%;" src="./images/035A4302_51.png" > 
+										<img style="width: 15%" src="./images/035A4302_52.png" >
+										<img style="width: 25%" src="./images/035A4340_9.png" > 
+										<img style="width: 20%" src="./images/035A4340_10.png" > 
+									</div>
+								</li>
+							</ul>
+
+					</div>
+
+					<div class="row">
+					<h5 class="center black-text">Domian Adaptation<h5>
+
+						<p class="center light" style="margin: 0em">Cues present in one dataset are very different then the one provided by some another dataset. Hence the augmented and the synthetic data can be of different domains. To take in account of discrepancy, domain adaption is performed using Maximum Mean Discrepancy.MMD loss is defined as:
+						<img align="center" src="./images/mmd.png">
+							<br>
+						Let the features for image patches obtained from source domain data Xs be X̂s and the target domain Xt be X̂t. Here Φ(x̂) is a RKBF kernel used to convert the features to gaussian to calculate similiarity. </p>
+					</div>
+
+				<div>
+				<!-- Losses -->
+					<div class="row">
+						<h5 class="center black-text">Losses</h5>
+						<p class="center light" style="margin: 0em"> Adam Optimizer is used with weight decay at 0.0005</p>          
+						<p class="center light" style="margin: 0em"> We use 3 losses. 2 Cross entropy losses for source and targer (L1&L2) and 1 MMD Loss defined above L. Parameter for each loss is λ1:0.3 λ2:0.7 λ3:0.001. 
+								<br>
+								L =  λ1*Lcs +λ2*Lct + λ3*LM </p>
+					</div>
+					</div>
+
+			<div class="row" style="font-size: 19px">
+
+				<div class="row" style="font-size: 19px">
+					<div class="row">
+						<h4 class="center brown-text">Results (Findit)</h4>
+						<p> We carried out the experiments multiple number of times. On training the patches, we are able to reach a decent amout of accuracy. But during testing we have there are too many false positives.</p>
+					</div>
+
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header"> Augmentation </div>
+							<div class="collapsible-body">
+								<img style="width: 40%" src="./images/augment1.jpg" > 
+								<img style="width: 40%" src="./images/augment2.jpg" >
+								<img style="width: 40%" src="./images/augment3.png" > 
+								<img style="width: 40%" src="./images/augment4.png" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header"> Results </div>
+							<div class="collapsible-body">
+								<img style="width: 100%" src="./images/findit_yashas1.png" > 
+								<img style="width: 100%" src="./images/findit_yashas2.png" >
+								<img style="width: 100%" src="./images/findit_yashas3.png" > 
+								<img style="width: 100%" src="./images/findit_yashas4.png" > 
+							</div>
+						</li>
+					</ul>
+				</div>
+
+				<div class="row">
+					<h4 class="center brown-text">Results (CASIA)</h4>
+					<div class="col s6"> 
+						<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
+						<img src="./images/CASIA_2.png">
+					</div>
+
+					<div class="col s6"> 
+						<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
+						<img src="./images/CASIA_1.png">
+					</div>
+				</div>
+				
+				<h4 class="black-text">Confusion Matrix (Patch Level)</h4>
+				<p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
+				<div class="row">
+					<div class="col s6">
+						<h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
+						<img  src="./images/casia_acc_patches.png" >
+						<p class="light" style="margin: 0em">Accuracy:  0.875 </p>
+						<p class="light" style="margin: 0em">Precision: 0.8618 </p>
+						<p class="light" style="margin: 0em">Recall: 0.6598 </p>
+						<p class="light" style="margin: 0em">F1 score: 0.7473 </p>
+					</div>
+
+					<div class="col s6">
+						<h6 class="black-text">Confusion Matrix </h6>        
+						<img  src="./images/casia_xxx_images.png" >
+						<p class="light" style="margin: 0em">Accuracy: 0.75135 </p>
+						<p class="light" style="margin: 0em">Precision: 0.939 </p>
+						<p class="light" style="margin: 0em">Recall: 0.736 </p>
+						<p class="light" style="margin: 0em">F1 score: 0.831 </p>
+					</div>
+
+				</div>
+
+				<div class="row">
+					<h4 class="center black-text">Visual Results</h4>        
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header"> True Negative </div>
+							<div class="collapsible-body">
+								<img style="width: 100%;" src="./images/CASIAtn1.png" > 
+								<img style="width: 100%" src="./images/CASIAtn2.png" >
+								<img style="width: 100%" src="./images/CASIAtn4.png" > 
+								<img style="width: 100%" src="./images/CASIAtn5.png" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header"> False Negative</div>
+							<div class="collapsible-body">
+								<img style="width: 100%" src="./images/CASIAfn2.png" >
+								<img style="width: 100%" src="./images/CASIAfn3.png" > 
+							</div>
+						</li>
+					</ul>
+					
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header">True Postive</div>
+							<div class="collapsible-body">
+								<img style="width: 100%;" src="./images/CASIAtp1.png" > 
+								<img style="width: 100%" src="./images/CASIAtp2.png" >
+								<img style="width: 100%" src="./images/CASIAtp3.png" > 
+								<img style="width: 100%" src="./images/CASIAtp4.png" > 
+								<img style="width: 100%" src="./images/CASIAtp5.png" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header">False Positive</div>
+							<div class="collapsible-body">
+								<img style="width: 100%" src="./images/CASIAfp2.png" >
+								<img style="width: 100%" src="./images/CASIAfp3.png" > 
+								<img style="width: 100%" src="./images/CASIAfp4.png" > 
+							</div>
+						</li>
+					</ul>
+
+				</div>
+
+				<div class="row">
+					<h4 class="center brown-text">Results (IEEE)</h4>
+					<div class="col s6"> 
+						<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
+						<img src="./images/rel_acc_patches.png">
+					</div>
+
+					<div class="col s6"> 
+						<h5 class="center black-text">Accuracy Chart(Image Level) </h5>        
+						<img src="./images/rel_acc_image.png">
+					</div>
+				</div>
+				<h4 class="black-text">Confusion Matrix (Patch Level)</h4>
+				<p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
+				
+				<div class="row">
+					<div class="col s6">
+						<h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
+						<img  src="./images/ieee_conf_matrix_patches.png" >
+						<p class="light" style="margin: 0em">Accuracy:  0.864 </p>
+						<p class="light" style="margin: 0em">Precision: 0.8618 </p>
+						<p class="light" style="margin: 0em">Recall: 0.6598 </p>
+						<p class="light" style="margin: 0em">F1 score: 0.7473 </p>
+					</div>
+
+				<div class="col s6">
+					<h6 class="black-text">Confusion Matrix </h6>        
+					<img  src="./images/IEEE_acc_images.png" >
+					<p class="light" style="margin: 0em">Accuracy:  0.8742 </p>
+					<p class="light" style="margin: 0em">Precision: 0.9057 </p>
+					<p class="light" style="margin: 0em">Recall: 0.8397 </p>
+					<p class="light" style="margin: 0em">F1 score: 0.862 </p>
+				</div>
+
+				</div>
+
+				<div class="row">
+					<h4 class="center black-text">Visual Results</h4>        
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header"> True Negative </div>
+							<div class="collapsible-body">
+								<p> More images at:  </p>
+								<img style="width: 100%;" src="./images/IEEEtn1.png" > 
+								<img style="width: 100%" src="./images/IEEEtn2.png" >
+								<img style="width: 100%" src="./images/IEEEtn3.png" > 
+								<img style="width: 100%" src="./images/IEEEtn4.png" > 
+								<img style="width: 100%" src="./images/IEEEtn5.png" > 
+								<img style="width: 100%" src="./images/IEEEtn6.png" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header"> False Negative</div>
+							<div class="collapsible-body">
+								<p> More images at: </p>
+								<img style="width: 100%;" src="./images/IEEEfn1.png" > 
+								<img style="width: 100%" src="./images/IEEEfn2.png" >
+								<img style="width: 100%" src="./images/IEEEfn3.png" > 
+								<img style="width: 100%" src="./images/IEEEfn4.png" > 
+							</div>
+						</li>
+					</ul>
+					
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header">True Postive</div>
+							<div class="collapsible-body">
+								<p> More images at: </p>
+								<img style="width: 100%;" src="./images/IEEEtp1.png" > 
+								<img style="width: 100%" src="./images/IEEEtp2.png" >
+								<img style="width: 100%" src="./images/IEEEtp3.png" > 
+								<img style="width: 100%" src="./images/IEEEtp4.png" > 
+								<img style="width: 100%" src="./images/IEEEtp5.png" > 
+								<img style="width: 100%" src="./images/IEEEtp6.png" > 
+								<img style="width: 100%" src="./images/IEEEtp7.png" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header">False Positive</div>
+							<div class="collapsible-body">
+								<p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
+								<img style="width: 100%;" src="./images/IEEEfp1.png" > 
+								<img style="width: 100%" src="./images/IEEEfp2.png" >
+								<img style="width: 100%" src="./images/IEEEfp3.png" > 
+								<img style="width: 100%" src="./images/IEEEfp4.png" > 
+							</div>
+						</li>
+					</ul>
+
+				</div>
+
+				</div>
+
+
+
+			</div>
+
+			<div class="row" style="font-size: 19px">
+				<h4 class="center teal-text">CMFD (Copy Paste Move Forgery Detector)</h4>
+				<h5 class="center brown-text">Cozzolino, Davide & Poggi, Giovanni & Verdoliva, Luisa, ICIP 2014</h5>
+						<p class="center light" style="margin: 0em">Used to detect copy-paste from same document. 
+							Patch Match algorithm finds correspondences between small square regions (or patches) of an image. It is extremely robust to rotation. Also it is faster than other methods(due to the random nature of the algorithm).  
+							Patch Match works by defining a NNF(nearest neighbour field) f: R2 -> R2  for pixel to an offset. Two regions in image with high correspondence can be concluded to be originated from the same patch. (one patch is copied to another location)  </p>
+			</div>
+
+
+			<div class="row" style="font-size: 19px">
+				<h4 class="center teal-text">Improved dct coefficient analysis for forgery localization in jpeg images</h4>
+				<h5 class="center brown-text">T. Bianchi, A. D. Rosa, and A. Piva, ICASSP, 2011</h5>
+						<p class="center light" style="margin: 0em">The method tries to detect forgery double jpeg artifacts in an image. It is used to detect Jpeg images that have and were compressed twice with 2 different quantizations , hence this method is used to find CPO(copy paste from other document) and imitation based on forgery. </p>
+
+				<h5 class="center brown-text"> What are double jpeg artifacts ?</h5>
+					<p class="light" style="margin: 0em">1. Let us take an image I, if D00 was first lossy compression with q1 as quantization for the first compression. </p>
+					<p class="light" style="margin: 0em">2. After compression if we tamper it and compress it again with a D01 as your second loss compression with quantization as q2. </p>
+
+					<!-- Equation -->
+
+					<p class="light" style="margin: 0em">3. It has been shown that the difference significantly varies between the quantization using q1 and  q2 vs quantization using only q2. (See figure). 
+					<br />
+					<img align="center" src="./images/double_jpeg_artifacts.png">
+					</p>
+
+				<h5 class="center brown-text"> Work Flow </h5>
+			<p class="light" style="margin: 0em">1. Let Q1 and Q2 quantization steps used in the first and second compression. </p>
+			<p class="light" style="margin: 0em">2. To estimate Q1, minimize the difference between 2 histograms of DCT coefficients, one created from the image h(x) and one predicted by using Q1 and Q2. Lets call it p(x). </p>
+			<p class="light" style="margin: 0em">3. Double jpeg artifacts cause a periodic shift in the DCT coefficient of the doubled quantized region with a period Q1/gcd(Q1, Q2). Let the periodic function be n(x).  </p>
+			<p class="light" style="margin: 0em">4. Estimate the histogram as a mixture model of single compressed region (H1) and double compressed regions (H0). Hence p(x; Q1 , α) = α · n(x; Q1 ) · h̃(x | H1) + (1 − α) · h̃(x | H1) </p>
+			<p class="light" style="margin: 0em">5. To estimate Q1, minimize the difference between 2 histogram of DCT coefficients. </p>
+			<p class="light" style="margin: 0em">6. h̃(x|H1) is histogram calculated by using only Q2 , h̃(x|H0) is calculated as h̃(x|H0 ) = n(x, Q1) · h̃(x|H1) </p>        
+			<p class="light" style="margin: 0em">7. Estimation of Q1 using L2 loss : Q̂1 = argmin sum([h(x) − p(x; Q1 , α )])2 </p>
+			<p class="light" style="margin: 0em">8. After estimating Q1 the probability of a 8x8 block being double compressed can be written as "p". "p" is given by joint distribution over all coefficients </p>
+			<img src="./images/fusion_prob_equation.png" />
+			</div>
+
+		<div class="row" style="font-size: 19px">
+				<h4 class="center teal-text">Splicebuster</h4>
+				<h5 class="center brown-text">D. Cozzolino, G. Poggi and L. Verdoliva, 2015 IEEE International Workshop on Information Forensics and Security (WIFS), 2015</h5>
+						<p class=" light" style="margin: 0em">Feature-based algorithm to detect image splicings without any prior information. Splicing and host images are assumed to be characterized by different parameters.</p>
+				<h5 class="center brown-text">Work flow</h5>
+					<p class="light">1. For splice detection, the high level noise is more important than the image content. </p>
+			<p class="light">2. Linear high pass filters is used to create “residue”. </p>
+			<p class="light">3. Co-occurrence matrix is calculated for residue. This matrix is used as features for the gaussian mixture model/SVM. </p>
+			<p class="light">4. This co-occurrence matrix is then used as a feature for GMM. </p>
+			<p class="light">5. Using expectation-maximization we can cluster pixels into 2 classes, forged or background. </p>
+
+			<div class="row" style="font-size: 19px">
+					<div class="row">
+						<h6 class="center brown-text">Results (Findit)</h6>
+					</div>
+
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header"> Augmentation </div>
+							<div class="collapsible-body">
+								<img style="width: 40%" src="./images/augment1.jpg" > 
+								<img style="width: 40%" src="./images/augment2.jpg" >
+								<img style="width: 40%" src="./images/augment3.png" > 
+								<img style="width: 40%" src="./images/augment4.png" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header"> Results </div>
+							<div class="collapsible-body">
+								<img style="width: 100%" src="./images/findit_yashas1.png" > 
+								<img style="width: 100%" src="./images/findit_yashas2.png" >
+								<img style="width: 100%" src="./images/findit_yashas3.png" > 
+								<img style="width: 100%" src="./images/findit_yashas4.png" > 
+							</div>
+						</li>
+					</ul>
+			</div>
+
+			<div class="row">
+				<h4 class="center brown-text">Results (CASIA)</h4>
+			
+			<h4 class="black-text">Confusion Matrix (Patch Level)</h4>
+			<p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
+			<div class="row">
+
+				<h6 class="black-text">Confusion Matrix </h6>        
+				<img  src="./images/casia_xxx_images.png" >
+				<p class="light" style="margin: 0em">Accuracy: 0.75135 </p>
+				<p class="light" style="margin: 0em">Precision: 0.939 </p>
+				<p class="light" style="margin: 0em">Recall: 0.736 </p>
+				<p class="light" style="margin: 0em">F1 score: 0.831 </p>
+
+			</div>
+
+			<div class="row">
+				<h4 class="center black-text">Visual Results</h4>        
+				<ul class="collapsible">
+					<li>
+						<div class="collapsible-header"> True Negative </div>
+						<div class="collapsible-body">
+							<img style="width: 100%;" src="./images/CASIAtn1.png" > 
+							<img style="width: 100%" src="./images/CASIAtn2.png" >
+							<img style="width: 100%" src="./images/CASIAtn4.png" > 
+							<img style="width: 100%" src="./images/CASIAtn5.png" > 
+						</div>
+					</li>
+					<li>
+						<div class="collapsible-header"> False Negative</div>
+						<div class="collapsible-body">
+							<img style="width: 100%" src="./images/CASIAfn2.png" >
+							<img style="width: 100%" src="./images/CASIAfn3.png" > 
+						</div>
+					</li>
+				</ul>
+				
+				<ul class="collapsible">
+					<li>
+						<div class="collapsible-header">True Postive</div>
+						<div class="collapsible-body">
+							<img style="width: 100%;" src="./images/CASIAtp1.png" > 
+							<img style="width: 100%" src="./images/CASIAtp2.png" >
+							<img style="width: 100%" src="./images/CASIAtp3.png" > 
+							<img style="width: 100%" src="./images/CASIAtp4.png" > 
+							<img style="width: 100%" src="./images/CASIAtp5.png" > 
+						</div>
+					</li>
+					<li>
+						<div class="collapsible-header">False Positive</div>
+						<div class="collapsible-body">
+							<img style="width: 100%" src="./images/CASIAfp2.png" >
+							<img style="width: 100%" src="./images/CASIAfp3.png" > 
+							<img style="width: 100%" src="./images/CASIAfp4.png" > 
+						</div>
+					</li>
+				</ul>
+
+			</div>
+
+			<div class="row">
+				<h4 class="center brown-text">Results (IEEE)</h4>
+
+				<div class="col s6"> 
+					<h5 class="center black-text">Accuracy Chart(Image Level) </h5>        
+					<img src="./images/rel_acc_image.png">
+				</div>
+			</div>
+			<h4 class="black-text">Confusion Matrix (Patch Level)</h4>
+			<p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
+			
+			<div class="row">
+				<h6 class="black-text">Confusion Matrix </h6>        
+				<img  src="./images/IEEE_acc_images.png" >
+				<p class="light" style="margin: 0em">Accuracy:  0.8742 </p>
+				<p class="light" style="margin: 0em">Precision: 0.9057 </p>
+				<p class="light" style="margin: 0em">Recall: 0.8397 </p>
+				<p class="light" style="margin: 0em">F1 score: 0.862 </p>
+
+			</div>
+
+			<div class="row">
+				<h4 class="center black-text">Visual Results</h4>        
+				<ul class="collapsible">
+					<li>
+						<div class="collapsible-header"> True Negative </div>
+						<div class="collapsible-body">
+							<p> More images at:  </p>
+							<img style="width: 100%;" src="./images/IEEEtn1.png" > 
+							<img style="width: 100%" src="./images/IEEEtn2.png" >
+							<img style="width: 100%" src="./images/IEEEtn3.png" > 
+							<img style="width: 100%" src="./images/IEEEtn4.png" > 
+							<img style="width: 100%" src="./images/IEEEtn5.png" > 
+							<img style="width: 100%" src="./images/IEEEtn6.png" > 
+						</div>
+					</li>
+					<li>
+						<div class="collapsible-header"> False Negative</div>
+						<div class="collapsible-body">
+							<p> More images at: </p>
+							<img style="width: 100%;" src="./images/IEEEfn1.png" > 
+							<img style="width: 100%" src="./images/IEEEfn2.png" >
+							<img style="width: 100%" src="./images/IEEEfn3.png" > 
+							<img style="width: 100%" src="./images/IEEEfn4.png" > 
+						</div>
+					</li>
+				</ul>
+				
+				<ul class="collapsible">
+					<li>
+						<div class="collapsible-header">True Postive</div>
+						<div class="collapsible-body">
+							<p> More images at: </p>
+							<img style="width: 100%;" src="./images/IEEEtp1.png" > 
+							<img style="width: 100%" src="./images/IEEEtp2.png" >
+							<img style="width: 100%" src="./images/IEEEtp3.png" > 
+							<img style="width: 100%" src="./images/IEEEtp4.png" > 
+							<img style="width: 100%" src="./images/IEEEtp5.png" > 
+							<img style="width: 100%" src="./images/IEEEtp6.png" > 
+							<img style="width: 100%" src="./images/IEEEtp7.png" > 
+						</div>
+					</li>
+					<li>
+						<div class="collapsible-header">False Positive</div>
+						<div class="collapsible-body">
+							<p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
+							<img style="width: 100%;" src="./images/IEEEfp1.png" > 
+							<img style="width: 100%" src="./images/IEEEfp2.png" >
+							<img style="width: 100%" src="./images/IEEEfp3.png" > 
+							<img style="width: 100%" src="./images/IEEEfp4.png" > 
+						</div>
+					</li>
+				</ul>
+
+			</div>
+
+			</div>
+
+
+
+
+
+		</div>
+			<br>
+			<br>
+			<br>
+			<div class="row" style="font-size: 19px">
+				<h6 class="center brown-text">A detailed presentation of these methods on Findit Challenge can be found here:
+			<a class="center" href="https://docs.google.com/presentation/d/19Bqw8Gi-_KCZqPFfU4QYq8iDeFov1cxm5Aylq1H5c3Y/edit?usp=sharing"> Link</a>
+				</h6>
+				
+
+			</div>
+
+	</div>
+
+	<div class="container" id="results">
+		<div class="section">
+
+			<!--   Icon Section   -->
+
+
+
+
+		</div>
+	</div>
+
+	
+
+
+
+
+
+	<footer class="page-footer teal">
+		<div class="container">
+			<div class="row">
+				<div class="col l6 s12">
+					<h5 class="white-text">References</h5>
+					<p class="grey-text text-lighten-4">We would like to thank Yashas Anandani and Rudrabha for their inputs</p>
+				</div>
+				<div class="col l6 s12">
+					<p>
+						Augment and Adapt: A Simple Approach to Image Tampering Detection
+						<br>
+						Y Annadani, CV Jawahar
+						<br>
+						2018 24th International Conference on Pattern Recognition (ICPR), 2983-2988 2018
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="footer-copyright">
+			<div class="container">
+			Made by <a class="brown-text text-lighten-3" href="#">Shubh and Devansh</a>
+			</div>
+		</div>
+	</footer>
+
+
+	<!--  Scripts-->
+	<script src="js/materialize.js"></script>
+	<script src="js/init.js"></script>
+
+	</body>
 </html>

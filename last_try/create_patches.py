@@ -4,13 +4,31 @@ import cv2
 import matplotlib.pyplot as plt
 from PIL import Image
 from random import shuffle
+import xml.etree.ElementTree as ET
 
 mode = "Testing"
-dataset_name = "CASIA"
-fake_dir = "/media/shubh/My Passport/shubh/CASIA2/Tp"
-true_dir = "/media/shubh/My Passport/shubh/CASIA2/Au"
-mask_dir = "/media/shubh/My Passport/shubh/CASIA2/Masks"
-save_dir = "./CASIA_test_patches/"
+dataset_name = "Findit"
+# fake_dir = "/media/shubh/Windows/home/shubh/findit/FindIt-Dataset-Test/T2-test/img/"
+true_dir = "/media/shubh/Windows/home/shubh/findit/T2-Train/img/"
+# mask_dir = "/media/shubh/Windows/home/shubh/findit/FindIt-Dataset-Test/T2-test-GT/img/"
+save_dir = "/media/shubh/Windows/home/shubh/findit/Find_it_pristine_patches/"
+
+def get_groundtruth_locations(xml_dir,filename,shape):
+    xml_path = os.path.join(xml_dir,filename) + '.xml'
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    tampered_region = []
+    for elem in root:
+        tampered_region.append(elem.attrib)
+
+    mask = np.zeros(shape,dtype='uint8')    
+    for region in tampered_region:
+        x = int(region['x'])
+        y = int(region['y'])
+        height = int(region['height'])
+        width = int(region['width'])
+        mask[y:y+height,x:x+width]=255
+    return mask
 
 def get_patches(img, mask,crop_size = 64): 
 	#Function to get patches of images. The patch size is 64x64
@@ -80,9 +98,15 @@ def _get_mask(image_path):
 		ret,immask = cv2.threshold(immask,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 		immask = 1 - immask//255
 
-	if 	np.mean(immask) < 0.005:
-		# print("Too small mask")
-		return None
+	elif dataset_name == "Findit":
+		immask = get_groundtruth_locations(mask_dir,filename,img_shape)
+		immask = np.array(immask).astype('uint8')
+		ret,immask = cv2.threshold(immask,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+		immask = immask//255
+
+	# if 	np.mean(immask) < 0.005:
+	# 	print("Too small mask")
+	# 	return None
 
 	# Get the mask bounding box
 	w,h = immask.shape
@@ -108,29 +132,31 @@ if not os.path.exists(save_dir):
     os.mkdir(save_dir)
 
 cnt = 0
-file_list = os.listdir(fake_dir)
+img_shape = None
+# file_list = os.listdir(fake_dir)
+file_list = []
 shuffle(file_list)
 for fileno,filename in enumerate(file_list):
 	print(filename)
 	image = cv2.imread(os.path.join(fake_dir,filename))
-
-	try:
-		mask,y_box,x_box = _get_mask(filename)
-		print(image.shape,mask.shape)
-	except:
-		continue
+	img_shape = image.shape[0:2]
+	# try:
+	mask,y_box,x_box = _get_mask(filename)
+	# print(image.shape,mask.shape)
+	# except Exception as e:
+		# print("Error:",e)
+		# continue
 	# Save sum number or elements
 	try:
 		patches, Y, patch_size = get_patches(image.T, mask.T)
-		print(patches.shape,len(Y),patch_size)
-	except:
-		print("Patch too small")
+		# print(patches.shape,len(Y),patch_size)
+	except Exception as e:
+		print("Patch too small",e)
 		continue
 	
 
 	# plt.imshow(mask)
 	# plt.show()
-
 	if mode=="Training":
 		perm = np.random.permutation(patches.shape[0])
 		patches = patches[perm,:,:,:]
@@ -141,7 +167,6 @@ for fileno,filename in enumerate(file_list):
 		white_count = 0
 		patch_cnt = 0
 		prob = np.sum(Y)
-		print(prob)
 		for k in range(patches.shape[0]):
 			if white_count < prob or Y[k] == 1: 
 				save_name = "{}_{}_{}_{}_{}_{}_{}.png".format(dataset_name,fileno,patch_cnt//h,patch_cnt%h, h,w ,Y[k])
@@ -149,21 +174,21 @@ for fileno,filename in enumerate(file_list):
 				cnt+=1
 				white_count+=1
 				patch_cnt += 1
-				print(fileno, cnt, Y[k])
 
-		if cnt > 20000:
+		if cnt > 50000:
 			break
 
 	else:
 
 		patch_cnt = 0
 		h,w = patch_size
-		print(h*w)
-		if h*w > 300:
-			continue
-
+		# print(h*w)
+		# if h*w > 300:
+		# 	continue
 
 		for k in range(patches.shape[0]):
+			# print(k)
+			# print("Hello")
 			save_name = "{}_{}_{}_{}_{}_{}_{}.png".format(dataset_name,fileno,patch_cnt//h,patch_cnt%h, h,w ,Y[k])
 			cv2.imwrite(os.path.join(save_dir,save_name),patches[k,:,:,:].T) 
 			patch_cnt+=1
@@ -188,5 +213,5 @@ for fileno,filename in enumerate(true_list):
 		cv2.imwrite(os.path.join(save_dir,save_name),patches[k,:,:,:].T) 
 		patch_cnt+=1
 		print(save_name)
-	if fileno > 100:
+	if fileno > 50:
 		break 

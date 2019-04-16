@@ -73,7 +73,6 @@ class TestOptions(BaseOptions):
 	def initialize(self):
 		BaseOptions.initialize(self)	
 		self.parser.add_argument('--mode', type=str, default="Test", help='Why are we running the model eg. Train , test, finetune etc.')
-		self.parser.add_argument('--test_cases', type=int, default=32, help='Number of images to run on test case')
 		self.parser.add_argument('--best_k', type=int, default=4, help='Number of images to run on test case')
 
 if __name__ == "__main__":

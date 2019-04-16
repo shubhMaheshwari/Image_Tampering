@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 # Get the Hyperparaeters 
 opt = TestOptions().parse()
 
-test_dir = "./CASIA_test_patches/"
+test_dir = "/media/shubh/Windows/home/shubh/findit/Find_it_pristine_patches/"
 target_dataset = DataSet(opt,test_dir)
 target_loader = torch.utils.data.DataLoader(target_dataset,batch_size=opt.val_batch_size,num_workers=30,shuffle=False)
 
@@ -70,7 +70,7 @@ for target_images, target_labels,fileno,patch_y,patch_x,total_y,total_x in targe
 		torch.cuda.empty_cache()
 		continue
 
-	target_pred,confidence = get_accuracy(pred_target,target_labels)	
+	target_pred,confidence = get_accuracy(pred_target,target_labels)
 	classified_list.extend(target_pred)
 	label_list.extend(target_labels)
 	confidence_list.extend(confidence.cpu().data.numpy())
@@ -88,7 +88,6 @@ for target_images, target_labels,fileno,patch_y,patch_x,total_y,total_x in targe
 		except Exception as e:
 			print("BT MAX:",fileno[i],patch_y[i],patch_x[i], total_y[i],total_x[i],results[fileno[i]]['pred'].shape)
 			print(e)
-
 K_list_gr = []
 K_list_pred = []
 
@@ -97,40 +96,45 @@ for fileno in results:
 
 	w,h = results[fileno]['pred'].shape
 
-	# gr_im = np.zeros((64*h,64*w,3),dtype='int')
-	# pred_im = np.zeros((64*h,64*w,3),dtype='int')
-	# xxx = False
-	# for x in range(w):
-	# 	for y in range(h):
-	# 		filename = "{}_{}_{}_{}_{}_{}_{}.png".format('CASIA',fileno,x,y, h,w ,int(results[fileno]['gr'][x][y]))
-	# 		print(filename)
-	# 		im = cv2.imread(os.path.join(test_dir,filename))
-		
-	# 		pred_im[64*y: 64*y + 64, 64*x: 64*x+64,:] = im
-	# 		gr_im[64*y: 64*y + 64, 64*x: 64*x+64,:] = im
+	gr_im = np.zeros((64*h,64*w,3),dtype='int')
+	pred_im = np.zeros((64*h,64*w,3),dtype='int')
+	xxx = False
+	for x in range(w):
+		for y in range(h):
+			filename = "{}_{}_{}_{}_{}_{}_{}.png".format('Findit',fileno,x,y, h,w ,int(results[fileno]['gr'][x][y]))
+			print(filename)
+			try:
+				im = cv2.imread(os.path.join(test_dir,filename))
+
+				pred_im[64*y: 64*y + 64, 64*x: 64*x+64,:] = im
+				gr_im[64*y: 64*y + 64, 64*x: 64*x+64,:] = im
 
 
-	# 		if results[fileno]['gr'][x][y] == 1.0:
-	# 			gr_im[64*y: 64*y + 64, 64*x: 64*x+64,0] += 127				
+				if results[fileno]['gr'][x][y] == 1.0:
+					gr_im[64*y: 64*y + 64, 64*x: 64*x+64,0] += 127				
 
-	# 		print("What??")
-	# 		if results[fileno]['pred'][x][y] == 1 and xxx == False: 
-	# 			pred_im[64*y: 64*y + 64, 64*x: 64*x+64,0] += 127	
-	# 			xxx = True
+				if results[fileno]['pred'][x][y] == 1 and xxx == False: 
+					print(x,y)
+					pred_im[64*y: 64*y + 64, 64*x: 64*x+64,0] += 127	
+					xxx = False
 
-	# fig = plt.figure()
-	# ax1 = fig.add_subplot(1,2,1)
-	# ax1.set_title('Prediction')
-	# ax1.set_axis_off()
-	# ax1.imshow(pred_im)
+			except:
+				continue
 
-	# ax2 = fig.add_subplot(1,2,2)
-	# ax2.set_title('Ground Truth')
-	# ax1.set_axis_off()
-	# ax2.imshow(gr_im)
 
-	# fig.savefig(os.path.join('/media/shubh/My Passport/shubh/CASIA2/results',"{}.png".format(fileno)))
-	# plt.close(fig)
+	fig = plt.figure()
+	ax1 = fig.add_subplot(1,2,1)
+	ax1.set_title('Prediction')
+	ax1.set_axis_off()
+	ax1.imshow(pred_im)
+
+	ax2 = fig.add_subplot(1,2,2)
+	ax2.set_title('Ground Truth')
+	ax2.set_axis_off()
+	ax2.imshow(gr_im)
+
+	fig.savefig(os.path.join('./results',"{}.png".format(fileno)))
+	plt.close(fig)
 
 	K_list_pred.append(np.sum(results[fileno]['pred']))
 	K_list_gr.append(np.sum(results[fileno]['gr']))

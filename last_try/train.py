@@ -14,13 +14,13 @@ opt = TrainOptions().parse()
 
 import matplotlib.pyplot as plt
 
-sample_dataset = DataSet(opt,"./CASIA_train_patches/")
+sample_dataset = DataSet(opt,"./Find_it_eval_patches/")
 
 train_sampler,val_sampler = create_samplers(sample_dataset.__len__(),opt.split_ratio)
 sample_loader = torch.utils.data.DataLoader(sample_dataset,sampler=train_sampler,batch_size=opt.batch_size,num_workers=15)
 sample_val_loader = torch.utils.data.DataLoader(sample_dataset,sampler=val_sampler,batch_size=opt.val_batch_size,num_workers=5,shuffle=False)
 
-target_dataset = DataSet(opt,"./total_train_patches/")
+target_dataset = DataSet(opt,"./Find_it_eval_patches/")
 
 train_sampler,val_sampler = create_samplers(target_dataset.__len__(),opt.split_ratio)
 target_loader = torch.utils.data.DataLoader(target_dataset,sampler=train_sampler,batch_size=opt.batch_size,num_workers=20)

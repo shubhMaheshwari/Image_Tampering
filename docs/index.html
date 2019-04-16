@@ -30,7 +30,7 @@
 						We tried to find out the effect of reducing the size of tampering on tampering detection. We want to see the effect on the current methods used to detect tampering. Also we would like to notice the variance in patch size across datasets and whether they handle small tampered regions.
 					</p>
 					<p>
-						We observed that Yashas' method performed the best for small tamperings, this is because it takes 64x64 patches of the images and checks if it has at least 20% region tampered(which corresponds to about 820 pixels). JPEG artifacts fails when the tampered region is less than 1500 pixels. CMFD fails when the tampered region is less than 3000 pixels. Splicebuster/Noiseprint fail when the tampered region is less than 4096 pixels. Therefore, we can see that all methods perform well when the tampering region is more than about 0.001 of the total number of pixels in the image.
+						In Yashas' architecture, image is converted to 64x64 patches and is checked if it has at least 20% region tampered(which corresponds to about 820 pixels). JPEG artifacts fails when the tampered region is less than 1500 pixels. CMFD fails when the tampered region is less than 3000 pixels. Splicebuster/Noiseprint fail when the tampered region is less than 4096 pixels. Therefore, we can see that all methods perform well when the tampering region is more than about 0.005 of the total number of pixels in an HD image or the tampered region has more than 4000 pixels.
 					</p>
 					<p>
 						We also observe that the payslip dataset has the smallest tampered regions(tampered region of 3 pixels), followed by the CASIA and Find-it challenge(around 100 or 400 pixels respectively). IEEE dataset has tampering regions larger than 1000 pixels(0.002 of the Area). 
@@ -46,21 +46,21 @@
 							<li>
 								<div class="collapsible-header">1. Yashas's Method(CNN)</div>
 								<div class="collapsible-body">
-									<p> Here we are only comparing Yashas' Architecture. He divides image into 64x64 patches. For each patch to be the classified as tampered it must have atleast 20% region tampered(about 820 pixels). </p>
+									<p> In Yashas' Architecture. He divides image into 64x64 patches. For each patch to be the classified as tampered it must have atleast 20% region tampered(about 820 pixels). </p>
 									Link: <a href="https://www.researchgate.net/publication/329314523_Augment_and_Adapt_A_Simple_Approach_to_Image_Tampering_Detection"> Yashas Anandani, ICPR 2018 </a>
 								</div>
 							</li>
 							<li>
 								<div class="collapsible-header">2. Jpeg Artifacts</div>
 								<div class="collapsible-body">
-									<p> Jpeg Artifacts show considerable results on JPEG images. But they fail to show results on tampering smaller than 0.0018% area or more precisely pixels less than 1500 pixels in HD.</p>
+									<p> Jpeg Artifacts show considerable results on JPEG images. But they fail to show results on tampering smaller than 0.0018 area or more precisely pixels less than 1500 pixels in HD.</p>
 									Link: <a href="https://www.researchgate.net/publication/220735718_Improved_DCT_coefficient_analysis_for_forgery_localization_in_JPEG_images">A.Piva(University of Florence, Italy), ICASSP 2011 </a>
 								</div>
 							</li>
 							<li>
 								<div class="collapsible-header">3. CMFD</div>
 								<div class="collapsible-body">
-									<p> CMFD show considerable results on Copy move base forgery. But they fail to show results on tampering smaller than 0.0037% area or more precisely pixels area less than 3000 pixels. </p>
+									<p> CMFD show considerable results on Copy move base forgery. But they fail to show results on tampering smaller than 0.0037 area or more precisely pixels area less than 3000 pixels. </p>
 									Link: <a href="https://www.researchgate.net/publication/279916389_Efficient_Dense-Field_Copy-Move_Forgery_Detection"> L.Verdoliva & D.Cozzolino(GRIP,Naples,Italy),ICIP 2015</a>
 								</div>
 							</li>
@@ -75,6 +75,7 @@
 					</div>
 					<div class="row" style="font-size: 19px">
 					<h5 class="center brown-text"> Dataset Level Anaysis </h5>
+					<h6 class="center brown-text"> For each dataset below we explain the dataset & show the distribuition of patch size in the dataset. </h6>
 					<div class="row">
 						<ul class="collapsible">
 							<li>

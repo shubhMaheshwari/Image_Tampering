@@ -1,968 +1,788 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<title>Image Tampering</title>
-
-	<!-- CSS  -->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-	<link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-
-</head>
-<body>
-	<nav class="white" role="navigation">
-		<div class="nav-wrapper container">
-
-			<ul class="center hide-on-med-and-down">
-				<li><a href="#introduction">Introduction</a></li>
-				<li><a href="#method">Methods</a></li>
-				<li><a href="#dataset">Datasets</a></li>
-				<li><a href="#results">Results</a></li>
-				<li><a href="#references">References</a></li>
-			</ul>
-
-			<ul id="nav-mobile" class="sidenav">
-				<li><a href="#introduction">Introduction</a></li>
-				<li><a href="#method">Methods</a></li>
-				<li><a href="#dataset">Datasets</a></li>
-				<li><a href="#results">Results</a></li>
-				<li><a href="#references">References</a></li>
-			</ul>
-			<a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-		</div>
-	</nav>
-
-	<h1 class="header center teal-text text-lighten-2">Image Tampering Detection</h1>
-	
-
-	<div class="container" id="patch_analysis">
-		<div class="section">
-			<div class="row" style="font-size: 19px">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<title>Image Tampering</title>
+		<!-- CSS  -->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+		<link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	</head>
+	<body>
+		<nav class="white" role="navigation">
+			<div class="nav-wrapper container">
+				<ul class="center hide-on-med-and-down">
+					<li><a href="#introduction">Introduction</a></li>
+					<li><a href="#method">Methods</a></li>
+					<li><a href="#dataset">Datasets</a></li>
+					<li><a href="#results">Results</a></li>
+					<li><a href="#references">References</a></li>
+				</ul>
+				<ul id="nav-mobile" class="sidenav">
+					<li><a href="#introduction">Introduction</a></li>
+					<li><a href="#method">Methods</a></li>
+					<li><a href="#dataset">Datasets</a></li>
+					<li><a href="#results">Results</a></li>
+					<li><a href="#references">References</a></li>
+				</ul>
+				<a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+			</div>
+		</nav>
+		<h1 class="header center teal-text text-lighten-2">Image Tampering Detection</h1>
+		<div class="container" id="patch_analysis">
+			<div class="section">
 				<p><b>Work done between: [02/04/19 -> 16/04/19]</b></p>
-				<h4 class="center brown-text">
-					Tiny Tampering Detection
-				</h4>
-				<p>
-					We would like to find out the effect of reducing the size of tampering on tampering detection. We want to see the effect on the current methods used to detect tampering.
-					Also we would like to notice the variance in patch size across datasets and whether they handle small tampered regions  
-				</p>
-
-					<h5 class="center brown-text">
-					Method Level Anaysis
-					</h5>				
-
+				<div class="row" style="font-size: 19px">
+					<h4 class="center brown-text">
+						Summary
+					</h4>
+					<p>
+						We tried to find out the effect of reducing the size of tampering on tampering detection. We want to see the effect on the current methods used to detect tampering. Also we would like to notice the variance in patch size across datasets and whether they handle small tampered regions.
+					</p>
+					<p>
+						We observed that Yashas' method performed the best for small tamperings, this is because it takes 64x64 patches of the images and checks if it has at least 20% region tampered(which corresponds to about 820 pixels). JPEG artifacts fails when the tampered region is less than 1500 pixels. CMFD fails when the tampered region is less than 3000 pixels. Splicebuster/Noiseprint fail when the tampered region is less than 4096 pixels. Therefore, we can see that all methods perform well when the tampering region is more than about 0.001 of the total number of pixels in the image.
+					</p>
+					<p>
+						We also observe that the payslip dataset has the smallest tampered regions(tampered region of 3 pixels), followed by the CASIA and Find-it challenge(around 100 or 400 pixels respectively). IEEE dataset has tampering regions larger than 1000 pixels(0.002 of the Area). 
+					</p>
+				</div>
+				<div class="row" style="font-size: 19px">
+					<h5 class="center brown-text"> Method Level Anaysis </h5>
 					<div class="row">
-						<div class="col s6">
-							<ul class="collapsible">
+						<ul class="collapsible">
 							<li>
-								<div class="collapsible-header">1.<a href="https://www.researchgate.net/publication/329314523_Augment_and_Adapt_A_Simple_Approach_to_Image_Tampering_Detection"> CNN</a>, Yashas Anandani, ICPR 2018  </div>
+								<div class="collapsible-header">1. Yashas's Method(CNN)</div>
 								<div class="collapsible-body">
-									Here we are only comparing Yashas' Architecture. He divides image into 64x64 patches. For each patch to be the classified as tampered it must have atleast 20% region tampered. 
+									<p> Here we are only comparing Yashas' Architecture. He divides image into 64x64 patches. For each patch to be the classified as tampered it must have atleast 20% region tampered(about 820 pixels). </p>
+									Link: <a href="https://www.researchgate.net/publication/329314523_Augment_and_Adapt_A_Simple_Approach_to_Image_Tampering_Detection"> Yashas Anandani, ICPR 2018 </a>
 								</div>
 							</li>
-							</ul>
-						</div>
-
-						<div class="col s6">
-							<ul class="collapsible">
 							<li>
-								<div class="collapsible-header">2. <a href="https://www.researchgate.net/publication/220735718_Improved_DCT_coefficient_analysis_for_forgery_localization_in_JPEG_images">Jpeg Artifacts </a>, A.Piva(University of Florence
-,Italy), ICASSP 2011</div>
+								<div class="collapsible-header">2. Jpeg Artifacts</div>
 								<div class="collapsible-body">
-									Jpeg Artifacts show considerable results on JPEG images. But they fail to show results on tampering smaller than 0.0018% area or more precisely pixels less than 1500 pixels in HD
+									<p> Jpeg Artifacts show considerable results on JPEG images. But they fail to show results on tampering smaller than 0.0018% area or more precisely pixels less than 1500 pixels in HD.</p>
+									Link: <a href="https://www.researchgate.net/publication/220735718_Improved_DCT_coefficient_analysis_for_forgery_localization_in_JPEG_images">A.Piva(University of Florence, Italy), ICASSP 2011 </a>
 								</div>
 							</li>
-							</ul>
-						</div>
+							<li>
+								<div class="collapsible-header">3. CMFD</div>
+								<div class="collapsible-body">
+									<p> CMFD show considerable results on Copy move base forgery. But they fail to show results on tampering smaller than 0.0037% area or more precisely pixels area less than 3000 pixels. </p>
+									Link: <a href="https://www.researchgate.net/publication/279916389_Efficient_Dense-Field_Copy-Move_Forgery_Detection"> L.Verdoliva & D.Cozzolino(GRIP,Naples,Italy),ICIP 2015</a>
+								</div>
+							</li>
+							<li>
+								<div class="collapsible-header">4. Noise Features</div>
+								<div class="collapsible-body">
+									<p> Methods like splicebuster or noiseprint require large patches regions to correctly identify tampering. They take 64x64 patches to compute noise features. Over which they can train an SVM. Hence they can't detect tampering below 4096 pixels in HD image. </p>
+									Link: <a href="https://www.researchgate.net/publication/284350985_Splicebuster_A_new_blind_image_splicing_detector"> L.Verdoliva & D.Cozzolino(GRIP,Naples, Italy),WIFS 2015 </a>
+								</div>
+							</li>
+						</ul>
 					</div>
-
+					<div class="row" style="font-size: 19px">
+					<h5 class="center brown-text"> Dataset Level Anaysis </h5>
 					<div class="row">
-						<div class="col s6">
-							<ul class="collapsible">
+						<ul class="collapsible">
 							<li>
-								<div class="collapsible-header">3. <a href="">CMFD</a>
-								L.Verdoliva & D.Cozzolino(GRIP,Naples,Italy),ICIP 2015  </div>
-
-								<div class="collapsible-body">									 			CMFD show considerable results on Copy move base forgery. But they fail to show results on tampering smaller than 0.0037% area or more precisely pixels area less than 3000 pixels 
-								</div>
-							</li>
-							</ul>
-						</div>
-
-						<div class="col s6">
-							<ul class="collapsible">
-							<li>
-								<div class="collapsible-header">4. <a href="">Noise Features</a> 
-								L.Verdoliva & D.Cozzolino(GRIP,Naples, Italy),WIFS 2015  </div>
-								<div class="collapsible-body">
-									Methods like splicebuster or noiseprint require large patches regions to correctly identify tampering. They take 64x64 patches to compute noise features. Over which they can train an SVM. Hence they can't detect tampering below 4096 pixels in HD image.  
-								</div>
-							</li>
-							</ul>
-						</div>
-					</div>
-
-					<h5 class="center brown-text">
-					Dataset Level Anaysis
-					</h5>
-					<div class="row">
-						<div class="col s6">
-							<ul class="collapsible">
-							<li>
-								<div class="collapsible-header">1. <a href="http://ifc.recod.ic.unicamp.br/fc.website/index.py" > IEEE</a> </div>
+								<div class="collapsible-header">1. IEEE</div>
 								<div class="collapsible-body">
 									<p> Released in 2013. Contains 451 fake images and 1000 pristine images. Resolution 780x1024.  </p>
-									<img style="width: 40%;" src="./images/IEEE1.png" > 
-									<img style="width: 40%" src="./images/IEEE2.png" > 
+									<p><a href="http://ifc.recod.ic.unicamp.br/fc.website/index.py"> Link to the dataset </a></p>
+									<img style="width: 48%;" src="./images/IEEE1.png" > 
+									<img style="width: 48%" src="./images/IEEE2.png" >
+									<img style="width: 100%;" src="./images/IEEE_dataset_patch_size.png" >
 								</div>
 							</li>
-							</ul>
-
-
-						<img style="width: 100%;" src="./images/IEEE_dataset_patch_size.png" > 
-						</div>
-	
-						<div class="col s6">
-							<ul class="collapsible">
 							<li>
-								<div class="collapsible-header">2. <a href="https://www.kaggle.com/sophatvathana/casia-dataset" > CASIA V2</a> </div>
+								<div class="collapsible-header">2. CASIA V2</div>
 								<div class="collapsible-body">
 									<p> Contains 5000 fake images and 7000 pristine images. Resolution 256x400.  </p>
+									<p><a href="https://www.kaggle.com/sophatvathana/casia-dataset"> Link to the dataset </a></p>
+									<img style="width: 48%;" src="./images/casia1.jpg" >
+									<img style="width: 48%" src="./images/casia2.jpg" >
+									<img style="width: 100%;" src="./images/CASIA_dataset_patch_size.png" >
+								</div>
+							</li>
+							<li>
+								<div class="collapsible-header">3. ICPR 2018 Find-it Challenge</div>
+								<div class="collapsible-body">
+									<p> The dataset is released by Mickaël Coustaty, University of La Rochelle,France. It was released as an ICPR challenge in 2018. Contains 200 fake images and 1800 pristine images. Resolution varying image sizes in HD resolution.  <a href="https://ieeexplore.ieee.org/document/8545428"> Report on challenge</a> </p>
+									<p><a href="http://findit.univ-lr.fr/"> Link to the dataset </a></p>
+									<img style="width: 48%" src="./images/augment1.jpg" >
+									<img style="width: 48%" src="./images/augment2.jpg" >
+									<img style="width: 100%;" src="./images/ICPR_dataset_patch_size.png" >
+								</div>
+							</li>
+							<li>
+								<div class="collapsible-header">4. Payslip Dataset</div>
+								<div class="collapsible-body">
+									<p> The dataset is released by Mickaël Coustaty, University of La Rochelle,France. The dataset contains 3 types of tampering. Copy Paste Intra, Copy Paste Inter & Imitation.</p>
+									<p><a href="https://ieeexplore.ieee.org/document/8090394"> Link to the dataset </a></p>
+									<img style="width: 48%" src="./images/PaySlip_Arial_10_1b-f_1.char.png" >
+									<img style="width: 48%" src="./images/PaySlip_Arial_10_1b-f_2.word.png" >
+									<img style="width: 100%;" src="./images/payslip_dataset_patch_size.png" >
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container" id="results">
+			<div class="section">
+				<p><b>Work done between: [19/03/19 -> 26/03/19]</b></p>
+				<!--   Icon Section   -->
+				<div class="row" style="font-size: 19px">
+					<h4 class="center brown-text">Results</h4>
+					<h6 class="center brown-text">The tables below compare the f1 score and accuracy of different methods across various datasets </h6>
+					<table>
+						<tr>
+							<th>F1 Score</th>
+							<th>ICPR Challenge</th>
+							<th>Casia V2</th>
+							<th>IEEE Forensic</th>
+						</tr>
+						<tr>
+							<td>Yashas</td>
+							<td>0.32</td>
+							<td>0.76</td>
+							<td>0.86</td>
+						</tr>
+						<tr>
+							<td>Fusion</td>
+							<td>0.89</td>
+							<td>0.43</td>
+							<td> - </td>
+						</tr>
+						<tr>
+							<td>CMFD</td>
+							<td>0.36</td>
+							<td>0.42</td>
+							<td>0.55</td>
+						</tr>
+						<tr>
+							<td>Splicebuster</td>
+							<td>0.65</td>
+							<td>0.53</td>
+							<td>0.72</td>
+						</tr>
+						<tr>
+							<td>Fusion + CMFD + Splicebuster</td>
+							<td>0.954</td>
+							<td>0.67</td>
+							<td>0.87</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="row" style="font-size: 19px">
+				<table>
+					<tr>
+						<th>Accuracy</th>
+						<th>ICPR Challenge</th>
+						<th>Casia V2</th>
+						<th>IEEE Forensic</th>
+					</tr>
+					<tr>
+						<td>Yashas</td>
+						<td>0.84</td>
+						<td>0.75</td>
+						<td>0.87</td>
+					</tr>
+					<tr>
+						<td>Fusion</td>
+						<td>0.88</td>
+						<td>0.67</td>
+						<td> - </td>
+					</tr>
+					<tr>
+						<td>CMFD</td>
+						<td>0.84</td>
+						<td>0.69</td>
+						<td>0.80</td>
+					</tr>
+					<tr>
+						<td>Splicebuster</td>
+						<td>0.803</td>
+						<td>0.57</td>
+						<td>0.86</td>
+					</tr>
+					<tr>
+						<td>Fusion + CMFD + Splicebuster</td>
+						<td>0.982</td>
+						<td>0.79</td>
+						<td>0.91</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		</div>
+		<div class="container" id="worktimeline">
+			<div class="section">
+				<!--   Icon Section   -->
+				<div class="row" style="font-size: 19px">
+					<!-- 						<p class="light" style="margin: 0em"><b>[26:03:19]</b> Completed running CMFD, Fusion & Splicebuster on CASIA and IEEE forensic dataset. <br> Created website to display results. </p> -->
+					<p class="light" style="margin: 0em"><b>Work done between: [12/03/19 -> 19/03/19]</b> Completed Experiments on Findit Dataset using Yashas' Method. <br> Researched about companies, labs, and people working in forensic. More this can be found in the Slides <a href="https://docs.google.com/presentation/d/1eG0hI_Z87aTTkho180T98dQQnNvNpnmybB-vsJp2rCQ/edit?usp=sharing"> here</a> </p>
+					<br>
+					<br>
+					<br>
+					<p class="light" style="margin: 0em"><b>Work done between: [02/03/19 -> 12/03/19]</b>  Thoroughly understood of the concepts used in ICPR challenge. </p>
+					<br>
+					<br>
+					<br>
+					<p class="light" style="margin: 0em"><b> Work done between: [24/02/19 -> 12/03/19]</b> Created slides for the detailed research meeting.</b> <br> Researched about various techniques in document tampering detection and available datasets. Reasearched about print & scan based forgery, fake receipt templates and printer identification. More on this can be found in slides <a href="https://docs.google.com/presentation/d/1MkR6xVPS2QP4dQjPj2hM8nxWwozhSb3y13MEw7d6RB8/edit?usp=sharing"> here</a> </p>
+					<br>
+					<br>
+					<br>	
+					<p class="light" style="margin: 0em">
+						<b>Work done between: [17/02/19 -> 24/03/19]</b> Completed creating poster and website for the R&D showcase. <a href="http://preon.iiit.ac.in:9090/">Link to website</a>
+						<br>
+						<br>
+						<br>	
+						<!-- 						<p class="light" style="margin: 0em"><b>[17:02:19]</b> Started working on R&D showcase. Created a demo to show to sir. <br> Implemented Fusion(paper for double jpeg artifacts) and acheived decent accuracy in Findit challenge.</p> -->
+					<p class="light" style="margin: 0em"><b>Work done between: [01/01/19 -> 10/02/19]</b> Completed Experiments on Findit Dataset using Yashas' Method. Results can be found <a href="https://docs.google.com/presentation/d/19Bqw8Gi-_KCZqPFfU4QYq8iDeFov1cxm5Aylq1H5c3Y/edit?usp=sharing"> here </a> </p>
+				</div>
+			</div>
+		</div>
+		<div class="container" id="references">
+			<div class="section">
+				<!-- By Method -->			
+				<!-- By Group -->
+				<!-- By Date -->
+			</div>
+		</div>
+		<div class="container" id="introduction">
+			<div class="section">
+				<!--   Icon Section   -->
+				<div class="row" style="font-size: 19px">
+					<h2 class="center teal-text">Introduction</h2>
+					<p class="center light" style="margin: 0em">Image Tampering can be defined as manipulating an digital image. Image Tampering detection is the task to identify if the image was tampered or not. Currently we focus on using 4 methods which are described below:</p>
+				</div>
+			</div>
+		</div>
+		<div class="container" id="dataset">
+			<div class="section">
+				<!--   Icon Section   -->
+				<div class="row" style="font-size: 19px">
+					<h4 class="center teal-text">Datasets</h4>
+					<div class="row">
+						<p class="center light" style="margin: 0em">3 Datasets Findit,CASIA-V2 and IEEE Forencis are used </p>
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header">1. Findit</div>
+								<div class="collapsible-body">
+									<p> 260 tampered receipts and 1740 genuine receipts. </p>
+									<img style="width: 40%;" src="./images/findit1.jpg" > 
+									<img style="width: 40%" src="./images/findit2.jpg" > 
+								</div>
+							</li>
+							<li>
+								<div class="collapsible-header">2. CASIA</div>
+								<div class="collapsible-body">
+									<p> 5000 fake images and 7000 pristine images. </p>
 									<img style="width: 40%;" src="./images/casia1.jpg" > 
 									<img style="width: 40%" src="./images/casia2.jpg" > 
 								</div>
 							</li>
-							</ul>
-
-							<img style="width: 100%;" src="./images/CASIA_dataset_patch_size.png" > 
-						
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col s6">
-							<ul class="collapsible">
 							<li>
-								<div class="collapsible-header">3. <a href="http://findit.univ-lr.fr/" > ICPR 2018 Find-it Challenge</a> </div>
+								<div class="collapsible-header">3. IEEE</div>
 								<div class="collapsible-body">
-									<p> The dataset is released by Mickaël Coustaty, University of La Rochelle,France. It was released as an ICPR challenge in 2018. Contains 200 fake images and 1800 pristine images. Resolution varying image sizes in HD resolution.  <a href="https://ieeexplore.ieee.org/document/8545428"> Report on challenge</a> </p>
-									<img style="width: 40%" src="./images/augment1.jpg" > 
-									<img style="width: 40%" src="./images/augment2.jpg" > 
+									<p> 451 fake images and 1000 pristine images. </p>
+									<img style="width: 40%;" src="./images/IEEE1.png" > 
+									<img style="width: 40%" src="./images/IEEE1_mask.png" >
+									<img style="width: 40%" src="./images/IEEE2.png" > 
+									<img style="width: 40%" src="./images/IEEE2_mask.png" > 
 								</div>
 							</li>
-							</ul>
-						<h6 class="center brown-text">
-							
-						</h6>
-						<img style="width: 100%;" src="./images/ICPR_dataset_patch_size.png" > 
-						</div>
-	
-						<div class="col s6">
-
-							<ul class="collapsible">
-							<li>
-								<div class="collapsible-header">4. <a href="https://ieeexplore.ieee.org/document/8090394" > Payslip Dataset</a> </div>
-								<div class="collapsible-body">
-									<p> The dataset is released by Mickaël Coustaty, University of La Rochelle,France. The dataset contains 3 types of tampering. Copy Paste Intra, Copy Paste Inter & Imitation.</p>
-									<img style="width: 40%" src="./images/PaySlip_Arial_10_1b-f_1.char.png" > 
-									<img style="width: 40%" src="./images/PaySlip_Arial_10_1b-f_2.word.png" > 
-								</div>
-							</li>
-							</ul>
-
-
-							<img style="width: 100%;" src="./images/payslip_dataset_patch_size.png" > 
-						
-						</div>
+						</ul>
 					</div>
-
+				</div>
 			</div>
 		</div>
-	</div>
-
-	<div class="container" id="results">
-		<div class="section">
-			<p><b>Work done between: [19/03/19 -> 26/03/19]</b></p>
-
-			<!--   Icon Section   -->
-			<div class="row" style="font-size: 19px">
-				<h4 class="center brown-text">Results</h4>
-				<h6 class="center brown-text">The tables below compare the f1 score and accuracy of different methods across various datasets </h6>
-				<table>
-			<tr>
-				<th>F1 Score</th>
-				<th>ICPR Challenge</th>
-				<th>Casia V2</th>
-				<th>IEEE Forensic</th>
-		
-			</tr>
-			<tr>
-				<td>Yashas</td>
-				<td>0.32</td>
-				<td>0.76</td>
-				<td>0.86</td>
-			</tr>
-			<tr>
-				<td>Fusion</td>
-				<td>0.89</td>
-				<td>0.43</td>
-				<td> - </td>
-			</tr>
-			<tr>
-				<td>CMFD</td>
-				<td>0.36</td>
-				<td>0.42</td>
-				<td>0.55</td>
-			</tr>
-			<tr>
-				<td>Splicebuster</td>
-				<td>0.65</td>
-				<td>0.53</td>
-				<td>0.72</td>
-			</tr>
-			<tr>
-				<td>Fusion + CMFD + Splicebuster</td>
-				<td>0.954</td>
-				<td>0.67</td>
-				<td>0.87</td>
-			</tr>
-
-		</table>
-			</div>
-		</div>
-
-
-		<div class="row" style="font-size: 19px">
-				<table>
-			<tr>
-				<th>Accuracy</th>
-				<th>ICPR Challenge</th>
-				<th>Casia V2</th>
-				<th>IEEE Forensic</th>
- 
-		
-			</tr>
-			<tr>
-				<td>Yashas</td>
-				<td>0.84</td>
-				<td>0.75</td>
-				<td>0.87</td>
- 
- 
-			</tr>
-			<tr>
-				<td>Fusion</td>
-				<td>0.88</td>
-				<td>0.67</td>
-				<td> - </td>
- 
- 
-			</tr>
-			<tr>
-				<td>CMFD</td>
-				<td>0.84</td>
-				<td>0.69</td>
-				<td>0.80</td>
- 
- 
-			</tr>
-			<tr>
-				<td>Splicebuster</td>
-				<td>0.803</td>
-				<td>0.57</td>
-				<td>0.86</td>
- 
- 
-			</tr>
-			<tr>
-				<td>Fusion + CMFD + Splicebuster</td>
-				<td>0.982</td>
-				<td>0.79</td>
-				<td>0.91</td>
- 
- 
-			</tr>
-
-		</table>
-			</div>
-		</div>
-
-	</div>
-
-
-	<div class="container" id="worktimeline">
-		<div class="section">
-
-			<!--   Icon Section   -->
-			<div class="row" style="font-size: 19px">
-<!-- 						<p class="light" style="margin: 0em"><b>[26:03:19]</b> Completed running CMFD, Fusion & Splicebuster on CASIA and IEEE forensic dataset. <br> Created website to display results. </p> -->
-						<p class="light" style="margin: 0em"><b>Work done between: [12/03/19 -> 19/03/19]</b> Completed Experiments on Findit Dataset using Yashas' Method. <br> Researched about companies, labs, and people working in forensic. More this can be found in the Slides <a href="https://docs.google.com/presentation/d/1eG0hI_Z87aTTkho180T98dQQnNvNpnmybB-vsJp2rCQ/edit?usp=sharing"> here</a> </p>
-
-						<br>
-						<br>
-						<br>
-
-						<p class="light" style="margin: 0em"><b>Work done between: [02/03/19 -> 12/03/19]</b>  Thoroughly understood of the concepts used in ICPR challenge. </p>
-
-						<br>
-						<br>
-						<br>
-
-						<p class="light" style="margin: 0em"><b> Work done between: [24/02/19 -> 12/03/19]</b> Created slides for the detailed research meeting.</b> <br> Researched about various techniques in document tampering detection and available datasets. Reasearched about print & scan based forgery, fake receipt templates and printer identification. More on this can be found in slides <a href="https://docs.google.com/presentation/d/1MkR6xVPS2QP4dQjPj2hM8nxWwozhSb3y13MEw7d6RB8/edit?usp=sharing"> here</a> </p>
-
-						<br>
-						<br>
-						<br>	
-
-						<p class="light" style="margin: 0em"><b>Work done between: [17/02/19 -> 24/03/19]</b> Completed creating poster and website for the R&D showcase. <a href="http://preon.iiit.ac.in:9090/">Link to website</a>
-
-						<br>
-						<br>
-						<br>	
-
-<!-- 						<p class="light" style="margin: 0em"><b>[17:02:19]</b> Started working on R&D showcase. Created a demo to show to sir. <br> Implemented Fusion(paper for double jpeg artifacts) and acheived decent accuracy in Findit challenge.</p> -->
-						<p class="light" style="margin: 0em"><b>Work done between: [01/01/19 -> 10/02/19]</b> Completed Experiments on Findit Dataset using Yashas' Method. Results can be found <a href="https://docs.google.com/presentation/d/19Bqw8Gi-_KCZqPFfU4QYq8iDeFov1cxm5Aylq1H5c3Y/edit?usp=sharing"> here </a> </p>
-			</div>
-		</div>
-	</div>
-
-	<div class="container" id="references">
-		<div class="section">
-
-			<!-- By Method -->			
-
-			<!-- By Group -->
-
-			<!-- By Date -->
-
-
-
-
-		</div>
-	</div>
-
-	<div class="container" id="introduction">
-		<div class="section">
-
-			<!--   Icon Section   -->
-			<div class="row" style="font-size: 19px">
-				<h2 class="center teal-text">Introduction</h2>
-						<p class="center light" style="margin: 0em">Image Tampering can be defined as manipulating an digital image. Image Tampering detection is the task to identify if the image was tampered or not. Currently we focus on using 4 methods which are described below:</p>
-			</div>
-		</div>
-	</div>
-	
-
-	<div class="container" id="dataset">
-		<div class="section">
-
-	<!--   Icon Section   -->
-	<div class="row" style="font-size: 19px">
-		<h4 class="center teal-text">Datasets</h4>
-			<div class="row">
-					<p class="center light" style="margin: 0em">3 Datasets Findit,CASIA-V2 and IEEE Forencis are used </p>
-					<ul class="collapsible">
-						<li>
-							<div class="collapsible-header">1. Findit</div>
-							<div class="collapsible-body">
-								<p> 260 tampered receipts and 1740 genuine receipts. </p>
-								<img style="width: 40%;" src="./images/findit1.jpg" > 
-								<img style="width: 40%" src="./images/findit2.jpg" > 
-							</div>
-						</li>
-						<li>
-							<div class="collapsible-header">2. CASIA</div>
-							<div class="collapsible-body">
-								<p> 5000 fake images and 7000 pristine images. </p>
-								<img style="width: 40%;" src="./images/casia1.jpg" > 
-								<img style="width: 40%" src="./images/casia2.jpg" > 
-							</div>
-						</li>
-						<li>
-							<div class="collapsible-header">3. IEEE</div>
-							<div class="collapsible-body">
-								<p> 451 fake images and 1000 pristine images. </p>
-								<img style="width: 40%;" src="./images/IEEE1.png" > 
-								<img style="width: 40%" src="./images/IEEE1_mask.png" >
-								<img style="width: 40%" src="./images/IEEE2.png" > 
-								<img style="width: 40%" src="./images/IEEE2_mask.png" > 
-							</div>
-						</li>
-					</ul>
-		</div>
-	</div>
-			</div>
-	</div>  
-
-
-
-	<div class="container" id="method">
-
+		<div class="container" id="method">
 			<!--   Icon Section   -->
 			<div class="row" style="font-size: 19px">
 				<h4 class="center teal-text">1. Yashas Method</h4>
 				<h5 class="center brown-text">Augment and Adapt: A Simple Approach to Image Tampering Detection</h5>
 				<h5 class="center brown-text"> Yashas Annadani, C.V. Jawahar, ICPR</h5>
-					
-					<div class="row">
-						<p class="center light"> 
+				<div class="row">
+					<p class="center light"> 
 						Convolution networks provide good results on detection of tampering but these network require large amount of training data.In this work, a simple method is proposed to address this problem by augmenting data using inpainting and compositing schemes.Domain Adaptation technique is used to reduce domain shift between augmented data and real datasetReults are shown on 2 image tamepring datasets. 
 						(IEEE and CASIAv2)
-
-							Images are coverted to 64x64 patches. Using the mask provided by the dataset we determine is the patch was tampered or not. If the tampered region is more than 20% of the patch, it is considered tampered.
-							<br>
-							<img src="./images/model.png">
-							<br>
-							The model comprises of 5 conv layers followed by 3 fully connected layers(including output layer)
-							For detection on augmented and the target dataset, the conv layers and the first fully connected layer are shared. Other layers are forked and classification is provided separatly on both datasets.  
-						</p>
-					</div>
-
-					<div class="row">
-					<h5 class="center black-text">Augmenting Data<h5>
-							<ul class="collapsible">
-								<li>
-									<div class="collapsible-header">1. Instance Removal</div>
-									<div class="collapsible-body">
-										<p>1. For each image a patch is taken and is set to 0 using a mask.</p>
-										<p>2. We are using inpainting algorithms provided by opencv ( cv.INPAINT_TELEA.)</p>
-										<div class="row">
-											<div class="col s6">
-												<p>Patch Inpainting: Random Patch is taken with area > 30% of image and is inpainted.</p>
-												<br/>
-												<img style="width: 45%;" src="./images/COCO_train2014_000000001527.png" > 
-												<img style="width: 45%;" src="./images/COCO_train2014_000000002693.png" > 
-												<img style="width: 45%;" src="./images/COCO_train2014_000000003048.png" > 
-												<img style="width: 45%;" src="./images/COCO_train2014_000000003118.png" >
-											</div>
-											<div class="col s6">
-												<p>Semantic Inpainting: Very similiar to patch impainting but the mask is already provided to us. Coco dataset is used to get the semantic mask</p>
-												<img style="width: 45%" src="./images/COCO_train2014_000000005198.png" > 
-												<img style="width: 45%" src="./images/COCO_train2014_000000004714.png" > 
-												<img style="width: 45%" src="./images/COCO_train2014_000000005083.png" > 
-												<img style="width: 45%" src="./images/COCO_train2014_000000005165.png" >
-											</div>
-										</div>
+						Images are coverted to 64x64 patches. Using the mask provided by the dataset we determine is the patch was tampered or not. If the tampered region is more than 20% of the patch, it is considered tampered.
+						<br>
+						<img src="./images/model.png">
+						<br>
+						The model comprises of 5 conv layers followed by 3 fully connected layers(including output layer)
+						For detection on augmented and the target dataset, the conv layers and the first fully connected layer are shared. Other layers are forked and classification is provided separatly on both datasets.  
+					</p>
+				</div>
+				<div class="row">
+					<h5 class="center black-text">
+					Augmenting Data
+					<h5>
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header">1. Instance Removal</div>
+							<div class="collapsible-body">
+								<p>1. For each image a patch is taken and is set to 0 using a mask.</p>
+								<p>2. We are using inpainting algorithms provided by opencv ( cv.INPAINT_TELEA.)</p>
+								<div class="row">
+									<div class="col s6">
+										<p>Patch Inpainting: Random Patch is taken with area > 30% of image and is inpainted.</p>
+										<br/>
+										<img style="width: 45%;" src="./images/COCO_train2014_000000001527.png" > 
+										<img style="width: 45%;" src="./images/COCO_train2014_000000002693.png" > 
+										<img style="width: 45%;" src="./images/COCO_train2014_000000003048.png" > 
+										<img style="width: 45%;" src="./images/COCO_train2014_000000003118.png" >
 									</div>
-								</li>
-								<li>
-									<div class="collapsible-header">2. Copy paste and Splicing</div>
-									<div class="collapsible-body">
-										<p>Feathering: We feather an image over another image. Feathering is carried out by I = α · F + (1 − α) · B. Where F in the foreground image and the B is the background image.  </p>
-										<img style="width: 15%;" src="./images/035A4302_51.png" > 
-										<img style="width: 15%" src="./images/035A4302_52.png" >
-										<img style="width: 25%" src="./images/035A4340_9.png" > 
-										<img style="width: 20%" src="./images/035A4340_10.png" > 
+									<div class="col s6">
+										<p>Semantic Inpainting: Very similiar to patch impainting but the mask is already provided to us. Coco dataset is used to get the semantic mask</p>
+										<img style="width: 45%" src="./images/COCO_train2014_000000005198.png" > 
+										<img style="width: 45%" src="./images/COCO_train2014_000000004714.png" > 
+										<img style="width: 45%" src="./images/COCO_train2014_000000005083.png" > 
+										<img style="width: 45%" src="./images/COCO_train2014_000000005165.png" >
 									</div>
-								</li>
-							</ul>
-
-					</div>
-
-					<div class="row">
-					<h5 class="center black-text">Domian Adaptation<h5>
-
-						<p class="center light" style="margin: 0em">Cues present in one dataset are very different then the one provided by some another dataset. Hence the augmented and the synthetic data can be of different domains. To take in account of discrepancy, domain adaption is performed using Maximum Mean Discrepancy.MMD loss is defined as:
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header">2. Copy paste and Splicing</div>
+							<div class="collapsible-body">
+								<p>Feathering: We feather an image over another image. Feathering is carried out by I = α · F + (1 − α) · B. Where F in the foreground image and the B is the background image.  </p>
+								<img style="width: 15%;" src="./images/035A4302_51.png" > 
+								<img style="width: 15%" src="./images/035A4302_52.png" >
+								<img style="width: 25%" src="./images/035A4340_9.png" > 
+								<img style="width: 20%" src="./images/035A4340_10.png" > 
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="row">
+					<h5 class="center black-text">
+					Domian Adaptation
+					<h5>
+					<p class="center light" style="margin: 0em">Cues present in one dataset are very different then the one provided by some another dataset. Hence the augmented and the synthetic data can be of different domains. To take in account of discrepancy, domain adaption is performed using Maximum Mean Discrepancy.MMD loss is defined as:
 						<img align="center" src="./images/mmd.png">
-							<br>
-						Let the features for image patches obtained from source domain data Xs be X̂s and the target domain Xt be X̂t. Here Φ(x̂) is a RKBF kernel used to convert the features to gaussian to calculate similiarity. </p>
-					</div>
-
+						<br>
+						Let the features for image patches obtained from source domain data Xs be X̂s and the target domain Xt be X̂t. Here Φ(x̂) is a RKBF kernel used to convert the features to gaussian to calculate similiarity. 
+					</p>
+				</div>
 				<div>
-				<!-- Losses -->
+					<!-- Losses -->
 					<div class="row">
 						<h5 class="center black-text">Losses</h5>
-						<p class="center light" style="margin: 0em"> Adam Optimizer is used with weight decay at 0.0005</p>          
+						<p class="center light" style="margin: 0em"> Adam Optimizer is used with weight decay at 0.0005</p>
 						<p class="center light" style="margin: 0em"> We use 3 losses. 2 Cross entropy losses for source and targer (L1&L2) and 1 MMD Loss defined above L. Parameter for each loss is λ1:0.3 λ2:0.7 λ3:0.001. 
-								<br>
-								L =  λ1*Lcs +λ2*Lct + λ3*LM </p>
+							<br>
+							L =  λ1*Lcs +λ2*Lct + λ3*LM 
+						</p>
 					</div>
-					</div>
-
-			<div class="row" style="font-size: 19px">
-
+				</div>
 				<div class="row" style="font-size: 19px">
+					<div class="row" style="font-size: 19px">
+						<div class="row">
+							<h4 class="center brown-text">Results (Findit)</h4>
+							<p> We carried out the experiments multiple number of times. On training the patches, we are able to reach a decent amout of accuracy. But during testing we have there are too many false positives.</p>
+						</div>
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header"> Augmentation </div>
+								<div class="collapsible-body">
+									<img style="width: 40%" src="./images/augment1.jpg" > 
+									<img style="width: 40%" src="./images/augment2.jpg" >
+									<img style="width: 40%" src="./images/augment3.png" > 
+									<img style="width: 40%" src="./images/augment4.png" > 
+								</div>
+							</li>
+							<li>
+								<div class="collapsible-header"> Results </div>
+								<div class="collapsible-body">
+									<img style="width: 100%" src="./images/findit_yashas1.png" > 
+									<img style="width: 100%" src="./images/findit_yashas2.png" >
+									<img style="width: 100%" src="./images/findit_yashas3.png" > 
+									<img style="width: 100%" src="./images/findit_yashas4.png" > 
+								</div>
+							</li>
+						</ul>
+					</div>
 					<div class="row">
-						<h4 class="center brown-text">Results (Findit)</h4>
-						<p> We carried out the experiments multiple number of times. On training the patches, we are able to reach a decent amout of accuracy. But during testing we have there are too many false positives.</p>
+						<h4 class="center brown-text">Results (CASIA)</h4>
+						<div class="col s6">
+							<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>
+							<img src="./images/CASIA_2.png">
+						</div>
+						<div class="col s6">
+							<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>
+							<img src="./images/CASIA_1.png">
+						</div>
 					</div>
-
-					<ul class="collapsible">
-						<li>
-							<div class="collapsible-header"> Augmentation </div>
-							<div class="collapsible-body">
-								<img style="width: 40%" src="./images/augment1.jpg" > 
-								<img style="width: 40%" src="./images/augment2.jpg" >
-								<img style="width: 40%" src="./images/augment3.png" > 
-								<img style="width: 40%" src="./images/augment4.png" > 
-							</div>
-						</li>
-						<li>
-							<div class="collapsible-header"> Results </div>
-							<div class="collapsible-body">
-								<img style="width: 100%" src="./images/findit_yashas1.png" > 
-								<img style="width: 100%" src="./images/findit_yashas2.png" >
-								<img style="width: 100%" src="./images/findit_yashas3.png" > 
-								<img style="width: 100%" src="./images/findit_yashas4.png" > 
-							</div>
-						</li>
-					</ul>
-				</div>
-
-				<div class="row">
-					<h4 class="center brown-text">Results (CASIA)</h4>
-					<div class="col s6"> 
-						<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
-						<img src="./images/CASIA_2.png">
+					<div class="row">
+						<div class="col s6">
+							<h6 class="black-text">Confusion Matrix (Patch Level)</h6>
+							<img  src="./images/casia_acc_patches.png" >
+							<p class="light" style="margin: 0em">Accuracy:  0.875 </p>
+							<p class="light" style="margin: 0em">Precision: 0.8618 </p>
+							<p class="light" style="margin: 0em">Recall: 0.6598 </p>
+							<p class="light" style="margin: 0em">F1 score: 0.7473 </p>
+						</div>
+						<div class="col s6">
+							<h6 class="black-text">Confusion Matrix </h6>
+							<img  src="./images/casia_xxx_images.png" >
+							<p class="light" style="margin: 0em">Accuracy: 0.75135 </p>
+							<p class="light" style="margin: 0em">Precision: 0.939 </p>
+							<p class="light" style="margin: 0em">Recall: 0.736 </p>
+							<p class="light" style="margin: 0em">F1 score: 0.831 </p>
+						</div>
 					</div>
-
-					<div class="col s6"> 
-						<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
-						<img src="./images/CASIA_1.png">
+					<div class="row">
+						<h4 class="center black-text">Visual Results</h4>
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header"> True Negative </div>
+								<div class="collapsible-body">
+									<img style="width: 100%;" src="./images/CASIAtn1.png" > 
+									<img style="width: 100%" src="./images/CASIAtn2.png" >
+									<img style="width: 100%" src="./images/CASIAtn4.png" > 
+									<img style="width: 100%" src="./images/CASIAtn5.png" > 
+								</div>
+							</li>
+							<li>
+								<div class="collapsible-header"> False Negative</div>
+								<div class="collapsible-body">
+									<img style="width: 100%" src="./images/CASIAfn2.png" >
+									<img style="width: 100%" src="./images/CASIAfn3.png" > 
+								</div>
+							</li>
+						</ul>
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header">True Postive</div>
+								<div class="collapsible-body">
+									<img style="width: 100%;" src="./images/CASIAtp1.png" > 
+									<img style="width: 100%" src="./images/CASIAtp2.png" >
+									<img style="width: 100%" src="./images/CASIAtp3.png" > 
+									<img style="width: 100%" src="./images/CASIAtp4.png" > 
+									<img style="width: 100%" src="./images/CASIAtp5.png" > 
+								</div>
+							</li>
+							<li>
+								<div class="collapsible-header">False Positive</div>
+								<div class="collapsible-body">
+									<img style="width: 100%" src="./images/CASIAfp2.png" >
+									<img style="width: 100%" src="./images/CASIAfp3.png" > 
+									<img style="width: 100%" src="./images/CASIAfp4.png" > 
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="row">
+						<h4 class="center brown-text">Results (IEEE)</h4>
+						<div class="col s6">
+							<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>
+							<img src="./images/rel_acc_patches.png">
+						</div>
+						<div class="col s6">
+							<h5 class="center black-text">Accuracy Chart(Image Level) </h5>
+							<img src="./images/rel_acc_image.png">
+						</div>
+					</div>
+					<h4 class="black-text">Confusion Matrix (Patch Level)</h4>
+					<p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
+					<div class="row">
+						<div class="col s6">
+							<h6 class="black-text">Confusion Matrix (Patch Level)</h6>
+							<img  src="./images/ieee_conf_matrix_patches.png" >
+							<p class="light" style="margin: 0em">Accuracy:  0.864 </p>
+							<p class="light" style="margin: 0em">Precision: 0.8618 </p>
+							<p class="light" style="margin: 0em">Recall: 0.6598 </p>
+							<p class="light" style="margin: 0em">F1 score: 0.7473 </p>
+						</div>
+						<div class="col s6">
+							<h6 class="black-text">Confusion Matrix </h6>
+							<img  src="./images/IEEE_acc_images.png" >
+							<p class="light" style="margin: 0em">Accuracy:  0.8742 </p>
+							<p class="light" style="margin: 0em">Precision: 0.9057 </p>
+							<p class="light" style="margin: 0em">Recall: 0.8397 </p>
+							<p class="light" style="margin: 0em">F1 score: 0.862 </p>
+						</div>
+					</div>
+					<div class="row">
+						<h4 class="center black-text">Visual Results</h4>
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header"> True Negative </div>
+								<div class="collapsible-body">
+									<img style="width: 100%;" src="./images/IEEEtn1.png" > 
+									<img style="width: 100%" src="./images/IEEEtn2.png" >
+									<img style="width: 100%" src="./images/IEEEtn3.png" > 
+									<img style="width: 100%" src="./images/IEEEtn4.png" > 
+									<img style="width: 100%" src="./images/IEEEtn5.png" > 
+									<img style="width: 100%" src="./images/IEEEtn6.png" > 
+								</div>
+							</li>
+							<li>
+								<div class="collapsible-header"> False Negative</div>
+								<div class="collapsible-body">
+									<img style="width: 100%;" src="./images/IEEEfn1.png" > 
+									<img style="width: 100%" src="./images/IEEEfn2.png" >
+									<img style="width: 100%" src="./images/IEEEfn3.png" > 
+									<img style="width: 100%" src="./images/IEEEfn4.png" > 
+								</div>
+							</li>
+						</ul>
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header">True Postive</div>
+								<div class="collapsible-body">
+									<img style="width: 100%;" src="./images/IEEEtp1.png" > 
+									<img style="width: 100%" src="./images/IEEEtp2.png" >
+									<img style="width: 100%" src="./images/IEEEtp3.png" > 
+									<img style="width: 100%" src="./images/IEEEtp4.png" > 
+									<img style="width: 100%" src="./images/IEEEtp5.png" > 
+									<img style="width: 100%" src="./images/IEEEtp6.png" > 
+									<img style="width: 100%" src="./images/IEEEtp7.png" > 
+								</div>
+							</li>
+							<li>
+								<div class="collapsible-header">False Positive</div>
+								<div class="collapsible-body">
+									<img style="width: 100%;" src="./images/IEEEfp1.png" > 
+									<img style="width: 100%" src="./images/IEEEfp2.png" >
+									<img style="width: 100%" src="./images/IEEEfp3.png" > 
+									<img style="width: 100%" src="./images/IEEEfp4.png" > 
+								</div>
+							</li>
+						</ul>
 					</div>
 				</div>
-				
-				<div class="row">
-					<div class="col s6">
-						<h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
-						<img  src="./images/casia_acc_patches.png" >
-						<p class="light" style="margin: 0em">Accuracy:  0.875 </p>
-						<p class="light" style="margin: 0em">Precision: 0.8618 </p>
-						<p class="light" style="margin: 0em">Recall: 0.6598 </p>
-						<p class="light" style="margin: 0em">F1 score: 0.7473 </p>
-					</div>
-
-					<div class="col s6">
-						<h6 class="black-text">Confusion Matrix </h6>        
-						<img  src="./images/casia_xxx_images.png" >
-						<p class="light" style="margin: 0em">Accuracy: 0.75135 </p>
-						<p class="light" style="margin: 0em">Precision: 0.939 </p>
-						<p class="light" style="margin: 0em">Recall: 0.736 </p>
-						<p class="light" style="margin: 0em">F1 score: 0.831 </p>
-					</div>
-
-				</div>
-
-				<div class="row">
-					<h4 class="center black-text">Visual Results</h4>        
-					<ul class="collapsible">
-						<li>
-							<div class="collapsible-header"> True Negative </div>
-							<div class="collapsible-body">
-								<img style="width: 100%;" src="./images/CASIAtn1.png" > 
-								<img style="width: 100%" src="./images/CASIAtn2.png" >
-								<img style="width: 100%" src="./images/CASIAtn4.png" > 
-								<img style="width: 100%" src="./images/CASIAtn5.png" > 
-							</div>
-						</li>
-						<li>
-							<div class="collapsible-header"> False Negative</div>
-							<div class="collapsible-body">
-								<img style="width: 100%" src="./images/CASIAfn2.png" >
-								<img style="width: 100%" src="./images/CASIAfn3.png" > 
-							</div>
-						</li>
-					</ul>
-					
-					<ul class="collapsible">
-						<li>
-							<div class="collapsible-header">True Postive</div>
-							<div class="collapsible-body">
-								<img style="width: 100%;" src="./images/CASIAtp1.png" > 
-								<img style="width: 100%" src="./images/CASIAtp2.png" >
-								<img style="width: 100%" src="./images/CASIAtp3.png" > 
-								<img style="width: 100%" src="./images/CASIAtp4.png" > 
-								<img style="width: 100%" src="./images/CASIAtp5.png" > 
-							</div>
-						</li>
-						<li>
-							<div class="collapsible-header">False Positive</div>
-							<div class="collapsible-body">
-								<img style="width: 100%" src="./images/CASIAfp2.png" >
-								<img style="width: 100%" src="./images/CASIAfp3.png" > 
-								<img style="width: 100%" src="./images/CASIAfp4.png" > 
-							</div>
-						</li>
-					</ul>
-
-				</div>
-
-				<div class="row">
-					<h4 class="center brown-text">Results (IEEE)</h4>
-					<div class="col s6"> 
-						<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>        
-						<img src="./images/rel_acc_patches.png">
-					</div>
-
-					<div class="col s6"> 
-						<h5 class="center black-text">Accuracy Chart(Image Level) </h5>        
-						<img src="./images/rel_acc_image.png">
-					</div>
-				</div>
-				<h4 class="black-text">Confusion Matrix (Patch Level)</h4>
-				<p class="light" style="margin: 0em">Results are on using augmentation and pretraining on augmented data</p>
-				
-				<div class="row">
-					<div class="col s6">
-						<h6 class="black-text">Confusion Matrix (Patch Level)</h6>        
-						<img  src="./images/ieee_conf_matrix_patches.png" >
-						<p class="light" style="margin: 0em">Accuracy:  0.864 </p>
-						<p class="light" style="margin: 0em">Precision: 0.8618 </p>
-						<p class="light" style="margin: 0em">Recall: 0.6598 </p>
-						<p class="light" style="margin: 0em">F1 score: 0.7473 </p>
-					</div>
-
-				<div class="col s6">
-					<h6 class="black-text">Confusion Matrix </h6>        
-					<img  src="./images/IEEE_acc_images.png" >
-					<p class="light" style="margin: 0em">Accuracy:  0.8742 </p>
-					<p class="light" style="margin: 0em">Precision: 0.9057 </p>
-					<p class="light" style="margin: 0em">Recall: 0.8397 </p>
-					<p class="light" style="margin: 0em">F1 score: 0.862 </p>
-				</div>
-
-				</div>
-
-				<div class="row">
-					<h4 class="center black-text">Visual Results</h4>        
-					<ul class="collapsible">
-						<li>
-							<div class="collapsible-header"> True Negative </div>
-							<div class="collapsible-body">
-								<img style="width: 100%;" src="./images/IEEEtn1.png" > 
-								<img style="width: 100%" src="./images/IEEEtn2.png" >
-								<img style="width: 100%" src="./images/IEEEtn3.png" > 
-								<img style="width: 100%" src="./images/IEEEtn4.png" > 
-								<img style="width: 100%" src="./images/IEEEtn5.png" > 
-								<img style="width: 100%" src="./images/IEEEtn6.png" > 
-							</div>
-						</li>
-						<li>
-							<div class="collapsible-header"> False Negative</div>
-							<div class="collapsible-body">
-								<img style="width: 100%;" src="./images/IEEEfn1.png" > 
-								<img style="width: 100%" src="./images/IEEEfn2.png" >
-								<img style="width: 100%" src="./images/IEEEfn3.png" > 
-								<img style="width: 100%" src="./images/IEEEfn4.png" > 
-							</div>
-						</li>
-					</ul>
-					
-					<ul class="collapsible">
-						<li>
-							<div class="collapsible-header">True Postive</div>
-							<div class="collapsible-body">
-								<img style="width: 100%;" src="./images/IEEEtp1.png" > 
-								<img style="width: 100%" src="./images/IEEEtp2.png" >
-								<img style="width: 100%" src="./images/IEEEtp3.png" > 
-								<img style="width: 100%" src="./images/IEEEtp4.png" > 
-								<img style="width: 100%" src="./images/IEEEtp5.png" > 
-								<img style="width: 100%" src="./images/IEEEtp6.png" > 
-								<img style="width: 100%" src="./images/IEEEtp7.png" > 
-							</div>
-						</li>
-						<li>
-							<div class="collapsible-header">False Positive</div>
-							<div class="collapsible-body">
-								<img style="width: 100%;" src="./images/IEEEfp1.png" > 
-								<img style="width: 100%" src="./images/IEEEfp2.png" >
-								<img style="width: 100%" src="./images/IEEEfp3.png" > 
-								<img style="width: 100%" src="./images/IEEEfp4.png" > 
-							</div>
-						</li>
-					</ul>
-
-				</div>
-
-				</div>
-
-
-
 			</div>
-
 			<div class="row" style="font-size: 19px">
 				<h4 class="center teal-text">CMFD (Copy Paste Move Forgery Detector)</h4>
 				<h5 class="center brown-text">Cozzolino, Davide & Poggi, Giovanni & Verdoliva, Luisa, ICIP 2014</h5>
-						<p class="center light" style="margin: 0em">Used to detect copy-paste from same document. 
-							Patch Match algorithm finds correspondences between small square regions (or patches) of an image. It is extremely robust to rotation. Also it is faster than other methods(due to the random nature of the algorithm).  
-							Patch Match works by defining a NNF(nearest neighbour field) f: R2 -> R2  for pixel to an offset. Two regions in image with high correspondence can be concluded to be originated from the same patch. (one patch is copied to another location)  </p>
+				<p class="center light" style="margin: 0em">Used to detect copy-paste from same document. 
+					Patch Match algorithm finds correspondences between small square regions (or patches) of an image. It is extremely robust to rotation. Also it is faster than other methods(due to the random nature of the algorithm).  
+					Patch Match works by defining a NNF(nearest neighbour field) f: R2 -> R2  for pixel to an offset. Two regions in image with high correspondence can be concluded to be originated from the same patch. (one patch is copied to another location)  
+				</p>
 			</div>
-
-
 			<div class="row" style="font-size: 19px">
 				<h4 class="center teal-text">Improved dct coefficient analysis for forgery localization in jpeg images</h4>
 				<h5 class="center brown-text">T. Bianchi, A. D. Rosa, and A. Piva, ICASSP, 2011</h5>
-						<p class="center light" style="margin: 0em">The method tries to detect forgery double jpeg artifacts in an image. It is used to detect Jpeg images that have and were compressed twice with 2 different quantizations , hence this method is used to find CPO(copy paste from other document) and imitation based on forgery. </p>
-
+				<p class="center light" style="margin: 0em">The method tries to detect forgery double jpeg artifacts in an image. It is used to detect Jpeg images that have and were compressed twice with 2 different quantizations , hence this method is used to find CPO(copy paste from other document) and imitation based on forgery. </p>
 				<h5 class="center brown-text"> What are double jpeg artifacts ?</h5>
-					<p class="light" style="margin: 0em">1. Let us take an image I, if D00 was first lossy compression with q1 as quantization for the first compression. </p>
-					<p class="light" style="margin: 0em">2. After compression if we tamper it and compress it again with a D01 as your second loss compression with quantization as q2. </p>
-
-					<p class="light" style="margin: 0em"> Hence we can write a 8x8 double quantized region as:</p> 
-					<!-- Equation -->
-					<img align="center" src="./images/double_qaunt_equation.png">
-					
-					<p class="light" style="margin: 0em"> Upon plotting an histogram of both single quantized and double quantized image. We noitice a periodic pattern. This is helpful for estimating the first quantization.</p> 
-
-					<img align="center" style="width: 50%" src="./images/double_quant_dist.png">
-
-					<p class="light" style="margin: 0em">It has been shown that the difference significantly varies between the quantization using q1 and  q2 vs quantization using only q2. (See figure). 
+				<p class="light" style="margin: 0em">1. Let us take an image I, if D00 was first lossy compression with q1 as quantization for the first compression. </p>
+				<p class="light" style="margin: 0em">2. After compression if we tamper it and compress it again with a D01 as your second loss compression with quantization as q2. </p>
+				<p class="light" style="margin: 0em"> Hence we can write a 8x8 double quantized region as:</p>
+				<!-- Equation -->
+				<img align="center" src="./images/double_qaunt_equation.png">
+				<p class="light" style="margin: 0em"> Upon plotting an histogram of both single quantized and double quantized image. We noitice a periodic pattern. This is helpful for estimating the first quantization.</p>
+				<img align="center" style="width: 50%" src="./images/double_quant_dist.png">
+				<p class="light" style="margin: 0em">It has been shown that the difference significantly varies between the quantization using q1 and  q2 vs quantization using only q2. (See figure). 
 					<br />
 					<img align="center" src="./images/double_jpeg_artifacts.png">
-					</p>
-
+				</p>
 				<h5 class="center brown-text"> Work Flow </h5>
-			<p class="light" style="margin: 0em">1. Let Q1 and Q2 quantization steps used in the first and second compression. </p>
-			<p class="light" style="margin: 0em">2. To estimate Q1, minimize the difference between 2 histograms of DCT coefficients, one created from the image h(x) and one predicted by using Q1 and Q2. Lets call it p(x). </p>
-			<p class="light" style="margin: 0em">3. Double jpeg artifacts cause a periodic shift in the DCT coefficient of the doubled quantized region with a period Q1/gcd(Q1, Q2). Let the periodic function be n(x).  </p>
-			<p class="light" style="margin: 0em">4. Estimate the histogram as a mixture model of single compressed region (H1) and double compressed regions (H0). Hence p(x; Q1 , α) = α · n(x; Q1 ) · h̃(x | H1) + (1 − α) · h̃(x | H1) </p>
-			<p class="light" style="margin: 0em">5. To estimate Q1, minimize the difference between 2 histogram of DCT coefficients. </p>
-			<p class="light" style="margin: 0em">6. h̃(x|H1) is histogram calculated by using only Q2 , h̃(x|H0) is calculated as h̃(x|H0 ) = n(x, Q1) · h̃(x|H1) </p>        
-			<p class="light" style="margin: 0em">7. Estimation of Q1 using L2 loss : Q̂1 = argmin sum([h(x) − p(x; Q1 , α )])2 </p>
-			<p class="light" style="margin: 0em">8. After estimating Q1 the probability of a 8x8 block being double compressed can be written as "p". "p" is given by joint distribution over all coefficients </p>
-			<img src="./images/fusion_prob_equation.png" />
+				<p class="light" style="margin: 0em">1. Let Q1 and Q2 quantization steps used in the first and second compression. </p>
+				<p class="light" style="margin: 0em">2. To estimate Q1, minimize the difference between 2 histograms of DCT coefficients, one created from the image h(x) and one predicted by using Q1 and Q2. Lets call it p(x). </p>
+				<p class="light" style="margin: 0em">3. Double jpeg artifacts cause a periodic shift in the DCT coefficient of the doubled quantized region with a period Q1/gcd(Q1, Q2). Let the periodic function be n(x).  </p>
+				<p class="light" style="margin: 0em">4. Estimate the histogram as a mixture model of single compressed region (H1) and double compressed regions (H0). Hence p(x; Q1 , α) = α · n(x; Q1 ) · h̃(x | H1) + (1 − α) · h̃(x | H1) </p>
+				<p class="light" style="margin: 0em">5. To estimate Q1, minimize the difference between 2 histogram of DCT coefficients. </p>
+				<p class="light" style="margin: 0em">6. h̃(x|H1) is histogram calculated by using only Q2 , h̃(x|H0) is calculated as h̃(x|H0 ) = n(x, Q1) · h̃(x|H1) </p>
+				<p class="light" style="margin: 0em">7. Estimation of Q1 using L2 loss : Q̂1 = argmin sum([h(x) − p(x; Q1 , α )])2 </p>
+				<p class="light" style="margin: 0em">8. After estimating Q1 the probability of a 8x8 block being double compressed can be written as "p". "p" is given by joint distribution over all coefficients </p>
+				<img src="./images/fusion_prob_equation.png" />
 			</div>
-
-		<div class="row" style="font-size: 19px">
+			<div class="row" style="font-size: 19px">
 				<h4 class="center teal-text">Splicebuster</h4>
 				<h5 class="center brown-text">D. Cozzolino, G. Poggi and L. Verdoliva, 2015 IEEE International Workshop on Information Forensics and Security (WIFS), 2015</h5>
-						<p class=" light" style="margin: 0em">Feature-based algorithm to detect image splicings without any prior information. Splicing and host images are assumed to be characterized by different parameters.</p>
+				<p class=" light" style="margin: 0em">Feature-based algorithm to detect image splicings without any prior information. Splicing and host images are assumed to be characterized by different parameters.</p>
 				<h5 class="center brown-text">Work flow</h5>
-					<p class="light">1. For splice detection, the high level noise is more important than the image content. </p>
-			<p class="light">2. Linear high pass filters is used to create “residue”. </p>
-			<p class="light">3. Co-occurrence matrix is calculated for residue. This matrix is used as features for the gaussian mixture model/SVM. </p>
-			<p class="light">4. This co-occurrence matrix is then used as a feature for GMM. </p>
-			<p class="light">5. Using expectation-maximization we can cluster pixels into 2 classes, forged or background. </p>
-
-			<div class="row" style="font-size: 19px">
+				<p class="light">1. For splice detection, the high level noise is more important than the image content. </p>
+				<p class="light">2. Linear high pass filters is used to create “residue”. </p>
+				<p class="light">3. Co-occurrence matrix is calculated for residue. This matrix is used as features for the gaussian mixture model/SVM. </p>
+				<p class="light">4. This co-occurrence matrix is then used as a feature for GMM. </p>
+				<p class="light">5. Using expectation-maximization we can cluster pixels into 2 classes, forged or background. </p>
+				<div class="row" style="font-size: 19px">
 					<h4 class="center brown-text">Results (CMFD + Splicebuster + Fusion)</h4>
-
 					<div class="row">
 						<h4 class="center brown-text">Findit</h4>
 					</div>
-
-
-		
-				<p class="light" style="margin: 0em">Accuracy: 0.982 </p>
-				<p class="light" style="margin: 0em">Precision: 0.972 </p>
-				<p class="light" style="margin: 0em">Recall: 0.938 </p>
-				<p class="light" style="margin: 0em">F1 score: 0.954 </p>
-
-				<ul class="collapsible">
-					<li>
-						<div class="collapsible-header">True Postive</div>
-						<div class="collapsible-body">
-							<img style="width: 100%;" src="./images/all_findit_tp1.png" > 
-							<img style="width: 100%;" src="./images/all_findit_tp2.png" > 
-							<img style="width: 100%;" src="./images/all_findit_tp3.png" > 
-						</div>
-					</li>
-					<li>
-						<div class="collapsible-header">False Positive</div>
-						<div class="collapsible-body">
-							<img style="width: 100%;" src="./images/all_findit_fp1.png" > 
-							<img style="width: 100%;" src="./images/all_find_fp2.png" > 
-						</div>
-					</li>
-				</ul>
-
-
-				<ul class="collapsible">
-					<li>
-						<div class="collapsible-header"> True Negative </div>
-						<div class="collapsible-body">
-							<img style="width: 100%;" src="./images/all_findit_tn1.png" > 
-							<img style="width: 100%;" src="./images/all_findit_tn2.png" > 
-						</div>
-					</li>
-					<li>
-						<div class="collapsible-header"> False Negative</div>
-						<div class="collapsible-body">
-							<img style="width: 100%;" src="./images/all_findit_fn1.png" > 
-						</div>
-					</li>
-				</ul>
-
-			</div>
-
-			<div class="row">
-				<h4 class="center brown-text">CASIA </h4>
-			
-
-				<p class="light" style="margin: 0em">Accuracy: 0.79 </p>
-				<p class="light" style="margin: 0em">Precision: 0.939 </p>
-				<p class="light" style="margin: 0em">Recall: 0.548 </p>
-				<p class="light" style="margin: 0em">F1 score: 0.67 </p>
-
-			</div>
-
-			<div class="row">
-				<h4 class="center black-text">Visual Results</h4>        
-				<ul class="collapsible">
-					<li>
-						<div class="collapsible-header">True Postive</div>
-						<div class="collapsible-body">
-							<img style="width: 100%;" src="./images/all_casia_tp1.png" > 
-							<img style="width: 100%" src="./images/all_casia_tp2.png" >
-							<img style="width: 100%" src="./images/all_casia_tp3.png" > 
-						</div>
-					</li>
-					<li>
-						<div class="collapsible-header">False Positive</div>
-						<div class="collapsible-body">
-							<img style="width: 100%" src="./images/all_casia_fp1.png" >
-							<img style="width: 100%" src="./images/all_casia_fp2.png" > 
-						</div>
-					</li>
-				</ul>
-				<ul class="collapsible">
-					<li>
-						<div class="collapsible-header"> True Negative </div>
-						<div class="collapsible-body">
-							<img style="width: 100%;" src="./images/all_casia_tn1.png" > 
-							<img style="width: 100%" src="./images/all_casia_tn2.png" >
-						</div>
-					</li>
-					<li>
-						<div class="collapsible-header"> False Negative</div>
-						<div class="collapsible-body">
-							<img style="width: 100%" src="./images/all_casia_fn1.png" >
-							<img style="width: 100%" src="./images/all_casia_fn2.png" > 
-							<img style="width: 100%" src="./images/all_casia_fn3.png" > 
-						</div>
-					</li>
-				</ul>
-				
-				
-
-			</div>
-
-			<div class="row">
-				<h4 class="center brown-text">IEEE</h4>
-			</div>
-
-			
-			<div class="row">        
-				<p class="light" style="margin: 0em">Accuracy:  0.9133 </p>
-				<p class="light" style="margin: 0em">Precision: 0.9057 </p>
-				<p class="light" style="margin: 0em">Recall: 0.842 </p>
-				<p class="light" style="margin: 0em">F1 score: 0.873 </p>
-
-			</div>
-
-			<div class="row">
-				<h4 class="center black-text">Visual Results</h4>        
-				
-				<ul class="collapsible">
-					<li>
-						<div class="collapsible-header">True Postive</div>
-						<div class="collapsible-body">
-							<p> More images at: </p>
-							<img style="width: 100%;" src="./images/all_IEEE_tp1.png" > 
-							<img style="width: 100%;" src="./images/all_IEEE_tp2.png" > 
-							<img style="width: 100%;" src="./images/all_IEEE_tp3.png" > 
-						</div>
-					</li>
-					<li>
-						<div class="collapsible-header">False Positive</div>
-						<div class="collapsible-body">
-							<p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
-							<img style="width: 100%;" src="./images/all_IEEE_fp1.png" > 
-							<img style="width: 100%;" src="./images/all_IEEE_fp2.png" > 
-
-						</div>
-					</li>
-				</ul>
-
-				<ul class="collapsible">
-					<li>
-						<div class="collapsible-header"> True Negative </div>
-						<div class="collapsible-body">
-							<p> More images at:  </p>
-							<img style="width: 100%;" src="./images/all_IEEE_tn1.png" > 
-							<img style="width: 100%;" src="./images/all_IEEE_tn2.png" >  
-						</div>
-					</li>
-					<li>
-						<div class="collapsible-header"> False Negative</div>
-						<div class="collapsible-body">
-							<p> More images at: </p>
-							<img style="width: 100%;" src="./images/all_IEEE_fn1.png" >  
-							<img style="width: 100%;" src="./images/all_IEEE_fn2.png" >  
-						</div>
-					</li>
-				</ul>
-				
-
-			</div>
-
-			</div>
-
-
-
-
-
-		</div>
-			<br>
-			<br>
-			<br>
-			<div class="row" style="font-size: 19px">
-				<h6 class="center brown-text">A detailed presentation of these methods on Findit Challenge can be found here:
-			<a class="center" href="https://docs.google.com/presentation/d/19Bqw8Gi-_KCZqPFfU4QYq8iDeFov1cxm5Aylq1H5c3Y/edit?usp=sharing"> Link</a>
-				</h6>
-
-				<h6 class="center brown-text">Previous SRM meeting slides:
-			<a class="center" href="https://docs.google.com/presentation/d/1eG0hI_Z87aTTkho180T98dQQnNvNpnmybB-vsJp2rCQ/edit?usp=sharing"> Link</a>
-				</h6>
-
-				<h6 class="center brown-text">DRM meeting slides:
-			<a class="center" href="https://docs.google.com/presentation/d/1eG0hI_Z87aTTkho180T98dQQnNvNpnmybB-vsJp2rCQ/edit?usp=sharing"> Link</a>
-				</h6>
-				
-
-			</div>
-
-	</div>
-
-
-	
-
-
-
-
-
-	<footer class="page-footer teal">
-		<div class="container">
-			<div class="row">
-				<div class="col l6 s12">
-					<h5 class="white-text">References</h5>
-					<p class="grey-text text-lighten-4">We would like to thank Yashas Anandani and Rudrabha for their inputs</p>
+					<p class="light" style="margin: 0em">Accuracy: 0.982 </p>
+					<p class="light" style="margin: 0em">Precision: 0.972 </p>
+					<p class="light" style="margin: 0em">Recall: 0.938 </p>
+					<p class="light" style="margin: 0em">F1 score: 0.954 </p>
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header">True Postive</div>
+							<div class="collapsible-body">
+								<img style="width: 100%;" src="./images/all_findit_tp1.png" > 
+								<img style="width: 100%;" src="./images/all_findit_tp2.png" > 
+								<img style="width: 100%;" src="./images/all_findit_tp3.png" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header">False Positive</div>
+							<div class="collapsible-body">
+								<img style="width: 100%;" src="./images/all_findit_fp1.png" > 
+								<img style="width: 100%;" src="./images/all_find_fp2.png" > 
+							</div>
+						</li>
+					</ul>
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header"> True Negative </div>
+							<div class="collapsible-body">
+								<img style="width: 100%;" src="./images/all_findit_tn1.png" > 
+								<img style="width: 100%;" src="./images/all_findit_tn2.png" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header"> False Negative</div>
+							<div class="collapsible-body">
+								<img style="width: 100%;" src="./images/all_findit_fn1.png" > 
+							</div>
+						</li>
+					</ul>
 				</div>
-				<div class="col l6 s12">
-					<p>
-						Augment and Adapt: A Simple Approach to Image Tampering Detection
-						<br>
-						Y Annadani, CV Jawahar
-						<br>
-						2018 24th International Conference on Pattern Recognition (ICPR), 2983-2988 2018
-					</p>
+				<div class="row">
+					<h4 class="center brown-text">CASIA </h4>
+					<p class="light" style="margin: 0em">Accuracy: 0.79 </p>
+					<p class="light" style="margin: 0em">Precision: 0.939 </p>
+					<p class="light" style="margin: 0em">Recall: 0.548 </p>
+					<p class="light" style="margin: 0em">F1 score: 0.67 </p>
+				</div>
+				<div class="row">
+					<h4 class="center black-text">Visual Results</h4>
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header">True Postive</div>
+							<div class="collapsible-body">
+								<img style="width: 100%;" src="./images/all_casia_tp1.png" > 
+								<img style="width: 100%" src="./images/all_casia_tp2.png" >
+								<img style="width: 100%" src="./images/all_casia_tp3.png" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header">False Positive</div>
+							<div class="collapsible-body">
+								<img style="width: 100%" src="./images/all_casia_fp1.png" >
+								<img style="width: 100%" src="./images/all_casia_fp2.png" > 
+							</div>
+						</li>
+					</ul>
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header"> True Negative </div>
+							<div class="collapsible-body">
+								<img style="width: 100%;" src="./images/all_casia_tn1.png" > 
+								<img style="width: 100%" src="./images/all_casia_tn2.png" >
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header"> False Negative</div>
+							<div class="collapsible-body">
+								<img style="width: 100%" src="./images/all_casia_fn1.png" >
+								<img style="width: 100%" src="./images/all_casia_fn2.png" > 
+								<img style="width: 100%" src="./images/all_casia_fn3.png" > 
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="row">
+					<h4 class="center brown-text">IEEE</h4>
+				</div>
+				<div class="row">
+					<p class="light" style="margin: 0em">Accuracy:  0.9133 </p>
+					<p class="light" style="margin: 0em">Precision: 0.9057 </p>
+					<p class="light" style="margin: 0em">Recall: 0.842 </p>
+					<p class="light" style="margin: 0em">F1 score: 0.873 </p>
+				</div>
+				<div class="row">
+					<h4 class="center black-text">Visual Results</h4>
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header">True Postive</div>
+							<div class="collapsible-body">
+								<p> More images at: </p>
+								<img style="width: 100%;" src="./images/all_IEEE_tp1.png" > 
+								<img style="width: 100%;" src="./images/all_IEEE_tp2.png" > 
+								<img style="width: 100%;" src="./images/all_IEEE_tp3.png" > 
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header">False Positive</div>
+							<div class="collapsible-body">
+								<p> We are using 451 fake image and only 50 pristine image. Other wise we get stuck due to class imbalance  </p>
+								<img style="width: 100%;" src="./images/all_IEEE_fp1.png" > 
+								<img style="width: 100%;" src="./images/all_IEEE_fp2.png" > 
+							</div>
+						</li>
+					</ul>
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header"> True Negative </div>
+							<div class="collapsible-body">
+								<p> More images at:  </p>
+								<img style="width: 100%;" src="./images/all_IEEE_tn1.png" > 
+								<img style="width: 100%;" src="./images/all_IEEE_tn2.png" >  
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header"> False Negative</div>
+							<div class="collapsible-body">
+								<p> More images at: </p>
+								<img style="width: 100%;" src="./images/all_IEEE_fn1.png" >  
+								<img style="width: 100%;" src="./images/all_IEEE_fn2.png" >  
+							</div>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
-		<div class="footer-copyright">
+		<br>
+		<br>
+		<br>
+		<div class="row" style="font-size: 19px">
+			<h6 class="center brown-text">A detailed presentation of these methods on Findit Challenge can be found here:
+				<a class="center" href="https://docs.google.com/presentation/d/19Bqw8Gi-_KCZqPFfU4QYq8iDeFov1cxm5Aylq1H5c3Y/edit?usp=sharing"> Link</a>
+			</h6>
+			<h6 class="center brown-text">Previous SRM meeting slides:
+				<a class="center" href="https://docs.google.com/presentation/d/1eG0hI_Z87aTTkho180T98dQQnNvNpnmybB-vsJp2rCQ/edit?usp=sharing"> Link</a>
+			</h6>
+			<h6 class="center brown-text">DRM meeting slides:
+				<a class="center" href="https://docs.google.com/presentation/d/1eG0hI_Z87aTTkho180T98dQQnNvNpnmybB-vsJp2rCQ/edit?usp=sharing"> Link</a>
+			</h6>
+		</div>
+		</div>
+		<footer class="page-footer teal">
 			<div class="container">
-			Made by <a class="brown-text text-lighten-3" href="#">Shubh and Devansh</a>
+				<div class="row">
+					<div class="col l6 s12">
+						<h5 class="white-text">References</h5>
+						<p class="grey-text text-lighten-4">We would like to thank Yashas Anandani and Rudrabha for their inputs</p>
+					</div>
+					<div class="col l6 s12">
+						<p>
+							Augment and Adapt: A Simple Approach to Image Tampering Detection
+							<br>
+							Y Annadani, CV Jawahar
+							<br>
+							2018 24th International Conference on Pattern Recognition (ICPR), 2983-2988 2018
+						</p>
+					</div>
+				</div>
 			</div>
-		</div>
-	</footer>
-
-
-	<!--  Scripts-->
-	<script src="js/materialize.js"></script>
-	<script src="js/init.js"></script>
-
+			<div class="footer-copyright">
+				<div class="container">
+					Made by <a class="brown-text text-lighten-3" href="#">Shubh and Devansh</a>
+				</div>
+			</div>
+		</footer>
+		<!--  Scripts-->
+		<script src="js/materialize.js"></script>
+		<script src="js/init.js"></script>
 	</body>
 </html>

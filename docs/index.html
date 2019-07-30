@@ -3,6 +3,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		 <!-- <meta http-equiv="refresh" content="5" /> -->
+
 		<title>Image Tampering</title>
 		<!-- CSS  -->
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -19,63 +21,53 @@
 		<div class="hide-on-large-only">
 			<h2>Image Tampering Detection</h2>
 		</div>
+
+		<div class="container" id="Summary">
+		<div class="section" style="font-size: 19px">
+			<h4 class="center brown-text">
+				Summary
+			</h4>
+			<p class="center">Document Tampering detection is the task to identify if the digital document image was tampered or not. Previously we looked into various techniques used to identify document tampering.</p>
+			<p class="center">In the last meeting, we surveyed various datasets on the distribution of the pixel area that was tampered. Also, we looked into the threshold pixel area below which the detection methods completely failed. Please look at the section below for further details.</p>
+		</div>
+
+		</div>	
 		<div class="container" id="patch_analysis">
 			<div class="section">
 				<p><b>Work done between: [02/04/19 -> 16/04/19]</b></p>
 				<div class="row" style="font-size: 19px">
 					<h4 class="center brown-text">
-						Summary
+						Tamapered Area Analysis 
 					</h4>
+					<h5 class="center brown-text">
+						Effect on detection on decrease in patch area 
+					</h5>
 					<p>
-						We tried to find out the effect of reducing the size of tampering on tampering detection. We want to see the effect on the current methods used to detect tampering. Also we would like to notice the variance in patch size across datasets and whether they handle small tampered regions.
+						We tried to find out the effect of reducing the size of tampering on tampering detection. We want to see the effect on the current methods used to detect tampering.
 					</p>
+					<img class="center" alt="" style="width: 100%;" src="./images/Bar_plot_method_threshold.png" > 
+					<p class="center"> In the bar plot above, we want to show the number of pixels below which each method start to fail. Hence if the area of the patch is smaller than the threshold each method fails to detect the tampering. General image contains between 40000(200x200) to 1048576(1024x1024) pixels.</p>
+
+					<br>
 					<p>
-						In Yashas' architecture, image is converted to 64x64 patches and is checked if it has at least 20% region tampered(which corresponds to about 820 pixels). JPEG artifacts fails when the tampered region is less than 1500 pixels. CMFD fails when the tampered region is less than 3000 pixels. Splicebuster/Noiseprint fail when the tampered region is less than 4096 pixels. Therefore, we can see that all methods perform well when the tampering region is more than about 0.005 of the total number of pixels in an HD image or the tampered region has more than 4000 pixels.
-					</p>
-					<p>
-						We also observe that the payslip dataset has the smallest tampered regions(tampered region of 3 pixels), followed by the CASIA and Find-it challenge(around 100 or 400 pixels respectively). IEEE dataset has tampering regions larger than 1000 pixels(0.002 of the Area). 
-					</p>
-					<p>
-						We have attached analysis for each method and dataset individually below:
+						<strong><a href="#yashas">1. In Yashas' architecture [1]</a></strong>, image is converted to 64x64 patches and is checked if it has at least 20% region tampered(which corresponds to about 820 pixels). 
+						<br>
+						<strong><a href="#JPEG_method">2.JPEG artifacts [2]</a></strong> fails when the tampered region is less than 1500 pixels. 
+						<br>
+						<strong><a href="#CMFD_method">3.CMFD [3]</a></strong> fails when the tampered region is less than 3000 pixels.
+						<br> 
+						<strong><a href="#noise_method">4.Splicebuster/Noiseprint [4]</a></strong> fail when the tampered region is less than 4096 pixels. Therefore, we can see that all methods perform well when the tampering region is more than about 0.005 of the total number of pixels in an HD image or the tampered region has more than 4000 pixels.
 					</p>
 				</div>
 				<div class="row" style="font-size: 19px">
-					<h5 class="center brown-text"> Method Level Anaysis </h5>
-					<div class="row">
-						<ul class="collapsible">
-							<li>
-								<div class="collapsible-header">1. Yashas's Method(CNN)</div>
-								<div class="collapsible-body">
-									<p> In Yashas' Architecture. He divides image into 64x64 patches. For each patch to be the classified as tampered it must have atleast 20% region tampered(about 820 pixels). </p>
-									Link: <a href="https://www.researchgate.net/publication/329314523_Augment_and_Adapt_A_Simple_Approach_to_Image_Tampering_Detection"> Yashas Anandani, ICPR 2018 </a>
-								</div>
-							</li>
-							<li>
-								<div class="collapsible-header">2. Jpeg Artifacts</div>
-								<div class="collapsible-body">
-									<p> Jpeg Artifacts show considerable results on JPEG images. But they fail to show results on tampering smaller than 0.0018 area or more precisely pixels less than 1500 pixels in HD.</p>
-									Link: <a href="https://www.researchgate.net/publication/220735718_Improved_DCT_coefficient_analysis_for_forgery_localization_in_JPEG_images">A.Piva(University of Florence, Italy), ICASSP 2011 </a>
-								</div>
-							</li>
-							<li>
-								<div class="collapsible-header">3. CMFD</div>
-								<div class="collapsible-body">
-									<p> CMFD show considerable results on Copy move base forgery. But they fail to show results on tampering smaller than 0.0037 area or more precisely pixels area less than 3000 pixels. </p>
-									Link: <a href="https://www.researchgate.net/publication/279916389_Efficient_Dense-Field_Copy-Move_Forgery_Detection"> L.Verdoliva & D.Cozzolino(GRIP,Naples,Italy),ICIP 2015</a>
-								</div>
-							</li>
-							<li>
-								<div class="collapsible-header">4. Noise Features</div>
-								<div class="collapsible-body">
-									<p> Methods like splicebuster or noiseprint require large patches regions to correctly identify tampering. They take 64x64 patches to compute noise features. Over which they can train an SVM. Hence they can't detect tampering below 4096 pixels in HD image. </p>
-									Link: <a href="https://www.researchgate.net/publication/284350985_Splicebuster_A_new_blind_image_splicing_detector"> L.Verdoliva & D.Cozzolino(GRIP,Naples, Italy),WIFS 2015 </a>
-								</div>
-							</li>
-						</ul>
-					</div>
 					<div class="row" style="font-size: 19px">
 					<h5 class="center brown-text"> Dataset Level Anaysis </h5>
 					<h6 class="center brown-text"> For each dataset below we explain the dataset & show the distribuition of patch size in the dataset. </h6>
+					<p> Below we show the distribuition in patch sizes across datasets and whether they contain  small tampered regions. We also observe that the payslip dataset has the smallest tampered regions(tampered region of 3 pixels), followed by the CASIA and Find-it challenge(100 or 400 pixels respectively). IEEE dataset has tampering regions larger than 1000 pixels.
+					</p>
+
+					<br>
+					<p> Click on the box below to open each dataset</p>
 					<div class="row">
 						<ul class="collapsible">
 							<li>
@@ -301,10 +293,11 @@
 		</div>
 		<div class="container" id="method">
 			<!--   Icon Section   -->
-			<div class="row" style="font-size: 19px">
+			<div class="row" style="font-size: 19px" id="yashas">
 				<h4 class="center teal-text">1. Yashas Method</h4>
 				<h5 class="center brown-text">Augment and Adapt: A Simple Approach to Image Tampering Detection</h5>
 				<h5 class="center brown-text"> Yashas Annadani, C.V. Jawahar, ICPR</h5>
+				<p class="center"><a href="https://www.researchgate.net/publication/329314523_Augment_and_Adapt_A_Simple_Approach_to_Image_Tampering_Detection"> Link to paper</a></p>
 				<div class="row">
 					<p class="center light"> 
 						Convolution networks provide good results on detection of tampering but these network require large amount of training data.In this work, a simple method is proposed to address this problem by augmenting data using inpainting and compositing schemes.Domain Adaptation technique is used to reduce domain shift between augmented data and real datasetReults are shown on 2 image tamepring datasets. 
@@ -557,17 +550,19 @@
 					</div>
 				</div>
 			</div>
-			<div class="row" style="font-size: 19px">
+			<div class="row" style="font-size: 19px" id="CMFD_method">
 				<h4 class="center teal-text">CMFD (Copy Paste Move Forgery Detector)</h4>
 				<h5 class="center brown-text">Cozzolino, Davide & Poggi, Giovanni & Verdoliva, Luisa, ICIP 2014</h5>
+				<p class="center"> <a href="https://www.researchgate.net/publication/279916389_Efficient_Dense-Field_Copy-Move_Forgery_Detection"> Link to paper </a></p>
 				<p class="center light" style="margin: 0em">Used to detect copy-paste from same document. 
 					Patch Match algorithm finds correspondences between small square regions (or patches) of an image. It is extremely robust to rotation. Also it is faster than other methods(due to the random nature of the algorithm).  
 					Patch Match works by defining a NNF(nearest neighbour field) f: R2 -> R2  for pixel to an offset. Two regions in image with high correspondence can be concluded to be originated from the same patch. (one patch is copied to another location)  
 				</p>
 			</div>
-			<div class="row" style="font-size: 19px">
+			<div class="row" style="font-size: 19px" id="JPEG_method">
 				<h4 class="center teal-text">Improved dct coefficient analysis for forgery localization in jpeg images</h4>
 				<h5 class="center brown-text">T. Bianchi, A. D. Rosa, and A. Piva, ICASSP, 2011</h5>
+				<p class="center"> <a href="https://www.researchgate.net/publication/220735718_Improved_DCT_coefficient_analysis_for_forgery_localization_in_JPEG_images">Link to paper </a></p>
 				<p class="center light" style="margin: 0em">The method tries to detect forgery double jpeg artifacts in an image. It is used to detect Jpeg images that have and were compressed twice with 2 different quantizations , hence this method is used to find CPO(copy paste from other document) and imitation based on forgery. </p>
 				<h5 class="center brown-text"> What are double jpeg artifacts ?</h5>
 				<p class="light" style="margin: 0em">1. Let us take an image I, if D00 was first lossy compression with q1 as quantization for the first compression. </p>
@@ -592,9 +587,10 @@
 				<p class="light" style="margin: 0em">8. After estimating Q1 the probability of a 8x8 block being double compressed can be written as "p". "p" is given by joint distribution over all coefficients </p>
 				<img alt="" src="./images/fusion_prob_equation.png" />
 			</div>
-			<div class="row" style="font-size: 19px">
+			<div class="row" style="font-size: 19px" id="noise_method">
 				<h4 class="center teal-text">Splicebuster</h4>
 				<h5 class="center brown-text">D. Cozzolino, G. Poggi and L. Verdoliva, 2015 IEEE International Workshop on Information Forensics and Security (WIFS), 2015</h5>
+				<p class="center"> <a href="https://www.researchgate.net/publication/284350985_Splicebuster_A_new_blind_image_splicing_detector"> Link to paper </a></p>
 				<p class=" light" style="margin: 0em">Feature-based algorithm to detect image splicings without any prior information. Splicing and host images are assumed to be characterized by different parameters.</p>
 				<h5 class="center brown-text">Work flow</h5>
 				<p class="light">1. For splice detection, the high level noise is more important than the image content. </p>

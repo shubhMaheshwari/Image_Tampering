@@ -82,7 +82,7 @@
 		<div class="container" id="method">
 			<!--   Icon Section   -->
 			<div class="row" style="font-size: 19px" id="yashas">
-				<h4 class="center teal-text">1. Yashas Method</h4>
+				<h4 class="center teal-text">1. Conv Nets </h4>
 				<h5 class="center brown-text">Augment and Adapt: A Simple Approach to Image Tampering Detection</h5>
 				<h5 class="center brown-text"> Yashas Annadani, C.V. Jawahar, ICPR</h5>
 				<p class="center"><a href="https://www.researchgate.net/publication/329314523_Augment_and_Adapt_A_Simple_Approach_to_Image_Tampering_Detection"> Link to paper</a></p>
@@ -160,13 +160,112 @@
 						</p>
 					</div>
 				</div>
+
+			<div class="row" style="font-size: 19px" id="CMFD_method">
+				<h4 class="center teal-text">2. Statistical Methods </h4>
+				<h4 class="center teal-text">2.1 CMFD (Copy Paste Move Forgery Detector)</h4>
+				<h5 class="center brown-text">Cozzolino, Davide & Poggi, Giovanni & Verdoliva, Luisa, ICIP 2014</h5>
+				<p class="center"> <a href="https://www.researchgate.net/publication/279916389_Efficient_Dense-Field_Copy-Move_Forgery_Detection"> Link to paper </a></p>
+				<p class="center light" style="margin: 0em">Used to detect copy-paste from same document. 
+					Patch Match algorithm finds correspondences between small square regions (or patches) of an image. It is extremely robust to rotation. Also it is faster than other methods(due to the random nature of the algorithm).  
+					Patch Match works by defining a NNF(nearest neighbour field) f: R2 -> R2  for pixel to an offset. Two regions in image with high correspondence can be concluded to be originated from the same patch. (one patch is copied to another location)  
+				</p>
+			</div>
+			<div class="row" style="font-size: 19px" id="JPEG_method">
+				<h4 class="center teal-text">2.2 Improved dct coefficient analysis for forgery localization in jpeg images</h4>
+				<h5 class="center brown-text">T. Bianchi, A. D. Rosa, and A. Piva, ICASSP, 2011</h5>
+				<p class="center"> <a href="https://www.researchgate.net/publication/220735718_Improved_DCT_coefficient_analysis_for_forgery_localization_in_JPEG_images">Link to paper </a></p>
+				<p class="center light" style="margin: 0em">The method tries to detect forgery double jpeg artifacts in an image. It is used to detect Jpeg images that have and were compressed twice with 2 different quantizations , hence this method is used to find CPO(copy paste from other document) and imitation based on forgery. </p>
+				<h5 class="center brown-text"> What are double jpeg artifacts ?</h5>
+				<p class="light" style="margin: 0em">1. Let us take an image I, if D00 was first lossy compression with q1 as quantization for the first compression. </p>
+				<p class="light" style="margin: 0em">2. After compression if we tamper it and compress it again with a D01 as your second loss compression with quantization as q2. </p>
+				<p class="light" style="margin: 0em"> Hence we can write a 8x8 double quantized region as:</p>
+				<!-- Equation -->
+				<img alt="" align="center" src="./images/double_qaunt_equation.png">
+				<p class="light" style="margin: 0em"> Upon plotting an histogram of both single quantized and double quantized image. We notice a periodic pattern. This is helpful for estimating the first quantization.</p>
+				<img alt="" align="center" style="width: 50%" src="./images/double_quant_dist.png">
+				<p class="light" style="margin: 0em">It has been shown that the difference significantly varies between the quantization using q1 and  q2 vs quantization using only q2. (See figure). 
+					<br />
+					<img alt="" align="center" src="./images/double_jpeg_artifacts.png">
+				</p>
+				<h5 class="center brown-text"> Work Flow </h5>
+				<p class="light" style="margin: 0em">1. Let Q1 and Q2 quantization steps used in the first and second compression. </p>
+				<p class="light" style="margin: 0em">2. To estimate Q1, minimize the difference between 2 histograms of DCT coefficients, one created from the image h(x) and one predicted by using Q1 and Q2. Lets call it p(x). </p>
+				<p class="light" style="margin: 0em">3. Double jpeg artifacts cause a periodic shift in the DCT coefficient of the doubled quantized region with a period Q1/gcd(Q1, Q2). Let the periodic function be n(x).  </p>
+				<p class="light" style="margin: 0em">4. Estimate the histogram as a mixture model of single compressed region (H1) and double compressed regions (H0). Hence p(x; Q1 , α) = α · n(x; Q1 ) · h̃(x | H1) + (1 − α) · h̃(x | H1) </p>
+				<p class="light" style="margin: 0em">5. To estimate Q1, minimize the difference between 2 histogram of DCT coefficients. </p>
+				<p class="light" style="margin: 0em">6. h̃(x|H1) is histogram calculated by using only Q2 , h̃(x|H0) is calculated as h̃(x|H0 ) = n(x, Q1) · h̃(x|H1) </p>
+				<p class="light" style="margin: 0em">7. Estimation of Q1 using L2 loss : Q̂1 = argmin sum([h(x) − p(x; Q1 , α )])2 </p>
+				<p class="light" style="margin: 0em">8. After estimating Q1 the probability of a 8x8 block being double compressed can be written as "p". "p" is given by joint distribution over all coefficients </p>
+				<img alt="" src="./images/fusion_prob_equation.png" />
+			</div>
+			<div class="row" style="font-size: 19px" id="noise_method">
+				<h4 class="center teal-text">2.3 Splicebuster</h4>
+				<h5 class="center brown-text">D. Cozzolino, G. Poggi and L. Verdoliva, 2015 IEEE International Workshop on Information Forensics and Security (WIFS), 2015</h5>
+				<p class="center"> <a href="https://www.researchgate.net/publication/284350985_Splicebuster_A_new_blind_image_splicing_detector"> Link to paper </a></p>
+				<p class=" light" style="margin: 0em">Feature-based algorithm to detect image splicings without any prior information. Splicing and host images are assumed to be characterized by different parameters.</p>
+				<h5 class="center brown-text">Work flow</h5>
+				<p class="light">1. For splice detection, the high level noise is more important than the image content. </p>
+				<p class="light">2. Linear high pass filters is used to create “residue”. </p>
+				<p class="light">3. Co-occurrence matrix is calculated for residue. This matrix is used as features for the gaussian mixture model/SVM. </p>
+				<p class="light">4. This co-occurrence matrix is then used as a feature for GMM. </p>
+				<p class="light">5. Using expectation-maximization we can cluster pixels into 2 classes, forged or background. </p>
+			</div>				
+
+
+
 				<div class="row" style="font-size: 19px">
 					<div class="row" style="font-size: 19px">
+					
+					<div class="row" style="font-size: 19px">
+							<h4 class="center brown-text">Results</h4>
+							<h6 class="center brown-text">The tables below compare the f1 score and accuracy of different methods across various datasets </h6>
+							<table>
+								<tr>
+									<th>F1 Score</th>
+									<th>ICPR Challenge</th>
+									<th>Casia V2</th>
+									<th>IEEE Forensic</th>
+								</tr>
+								<tr>
+									<td>Yashas</td>
+									<td>0.32</td>
+									<td>0.76</td>
+									<td>0.86</td>
+								</tr>
+								<tr>
+									<td>Fusion</td>
+									<td>0.89</td>
+									<td>0.43</td>
+									<td> - </td>
+								</tr>
+								<tr>
+									<td>CMFD</td>
+									<td>0.36</td>
+									<td>0.42</td>
+									<td>0.55</td>
+								</tr>
+								<tr>
+									<td>Splicebuster</td>
+									<td>0.65</td>
+									<td>0.53</td>
+									<td>0.72</td>
+								</tr>
+								<tr>
+									<td>Fusion + CMFD + Splicebuster</td>
+									<td>0.95</td>
+									<td>0.67</td>
+									<td>0.87</td>
+								</tr>
+							</table>
+						</div>
+
 						<div class="row">
-							<h4 class="center brown-text">Results (Findit)</h4>
+							<h4 class="center brown-text">Results (Conv Net)</h4>
+							<h4 class="center brown-text">Findit</h4>
 							<p> We carried out the experiments multiple number of times. On training the patches, we are able to reach a decent amout of accuracy. But during testing we have there are too many false positives.</p>
 						</div>
-						<ul class="collapsible">
+<!-- 						<ul class="collapsible">
 							<li>
 								<div class="collapsible-header"> Augmentation </div>
 								<div class="collapsible-body">
@@ -186,15 +285,15 @@
 								</div>
 							</li>
 						</ul>
-					</div>
+ -->					</div>
 					<div class="row">
-						<h4 class="center brown-text">Results (CASIA)</h4>
+						<h4 class="center brown-text">CASIA</h4>
 						<div class="col s6">
 							<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>
 							<img alt="" src="./images/CASIA_2.png">
 						</div>
 						<div class="col s6">
-							<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>
+							<h5 class="center black-text">Accuracy Chart(Image Level) </h5>
 							<img alt="" src="./images/CASIA_1.png">
 						</div>
 					</div>
@@ -211,9 +310,9 @@
 							<h6 class="black-text">Confusion Matrix </h6>
 							<img alt=""  src="./images/casia_xxx_images.png" >
 							<p class="light" style="margin: 0em">Accuracy: 0.75135 </p>
-							<p class="light" style="margin: 0em">Precision: 0.939 </p>
+							<p class="light" style="margin: 0em">Precision: 0.786 </p>
 							<p class="light" style="margin: 0em">Recall: 0.736 </p>
-							<p class="light" style="margin: 0em">F1 score: 0.831 </p>
+							<p class="light" style="margin: 0em">F1 score: 0.76 </p>
 						</div>
 					</div>
 					<div class="row">
@@ -258,7 +357,7 @@
 						</ul>
 					</div>
 					<div class="row">
-						<h4 class="center brown-text">Results (IEEE)</h4>
+						<h4 class="center brown-text">IEEE</h4>
 						<div class="col s6">
 							<h5 class="center black-text">Accuracy Chart(Patch Level) </h5>
 							<img alt="" src="./images/rel_acc_patches.png">
@@ -338,54 +437,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row" style="font-size: 19px" id="CMFD_method">
-				<h4 class="center teal-text">CMFD (Copy Paste Move Forgery Detector)</h4>
-				<h5 class="center brown-text">Cozzolino, Davide & Poggi, Giovanni & Verdoliva, Luisa, ICIP 2014</h5>
-				<p class="center"> <a href="https://www.researchgate.net/publication/279916389_Efficient_Dense-Field_Copy-Move_Forgery_Detection"> Link to paper </a></p>
-				<p class="center light" style="margin: 0em">Used to detect copy-paste from same document. 
-					Patch Match algorithm finds correspondences between small square regions (or patches) of an image. It is extremely robust to rotation. Also it is faster than other methods(due to the random nature of the algorithm).  
-					Patch Match works by defining a NNF(nearest neighbour field) f: R2 -> R2  for pixel to an offset. Two regions in image with high correspondence can be concluded to be originated from the same patch. (one patch is copied to another location)  
-				</p>
-			</div>
-			<div class="row" style="font-size: 19px" id="JPEG_method">
-				<h4 class="center teal-text">Improved dct coefficient analysis for forgery localization in jpeg images</h4>
-				<h5 class="center brown-text">T. Bianchi, A. D. Rosa, and A. Piva, ICASSP, 2011</h5>
-				<p class="center"> <a href="https://www.researchgate.net/publication/220735718_Improved_DCT_coefficient_analysis_for_forgery_localization_in_JPEG_images">Link to paper </a></p>
-				<p class="center light" style="margin: 0em">The method tries to detect forgery double jpeg artifacts in an image. It is used to detect Jpeg images that have and were compressed twice with 2 different quantizations , hence this method is used to find CPO(copy paste from other document) and imitation based on forgery. </p>
-				<h5 class="center brown-text"> What are double jpeg artifacts ?</h5>
-				<p class="light" style="margin: 0em">1. Let us take an image I, if D00 was first lossy compression with q1 as quantization for the first compression. </p>
-				<p class="light" style="margin: 0em">2. After compression if we tamper it and compress it again with a D01 as your second loss compression with quantization as q2. </p>
-				<p class="light" style="margin: 0em"> Hence we can write a 8x8 double quantized region as:</p>
-				<!-- Equation -->
-				<img alt="" align="center" src="./images/double_qaunt_equation.png">
-				<p class="light" style="margin: 0em"> Upon plotting an histogram of both single quantized and double quantized image. We notice a periodic pattern. This is helpful for estimating the first quantization.</p>
-				<img alt="" align="center" style="width: 50%" src="./images/double_quant_dist.png">
-				<p class="light" style="margin: 0em">It has been shown that the difference significantly varies between the quantization using q1 and  q2 vs quantization using only q2. (See figure). 
-					<br />
-					<img alt="" align="center" src="./images/double_jpeg_artifacts.png">
-				</p>
-				<h5 class="center brown-text"> Work Flow </h5>
-				<p class="light" style="margin: 0em">1. Let Q1 and Q2 quantization steps used in the first and second compression. </p>
-				<p class="light" style="margin: 0em">2. To estimate Q1, minimize the difference between 2 histograms of DCT coefficients, one created from the image h(x) and one predicted by using Q1 and Q2. Lets call it p(x). </p>
-				<p class="light" style="margin: 0em">3. Double jpeg artifacts cause a periodic shift in the DCT coefficient of the doubled quantized region with a period Q1/gcd(Q1, Q2). Let the periodic function be n(x).  </p>
-				<p class="light" style="margin: 0em">4. Estimate the histogram as a mixture model of single compressed region (H1) and double compressed regions (H0). Hence p(x; Q1 , α) = α · n(x; Q1 ) · h̃(x | H1) + (1 − α) · h̃(x | H1) </p>
-				<p class="light" style="margin: 0em">5. To estimate Q1, minimize the difference between 2 histogram of DCT coefficients. </p>
-				<p class="light" style="margin: 0em">6. h̃(x|H1) is histogram calculated by using only Q2 , h̃(x|H0) is calculated as h̃(x|H0 ) = n(x, Q1) · h̃(x|H1) </p>
-				<p class="light" style="margin: 0em">7. Estimation of Q1 using L2 loss : Q̂1 = argmin sum([h(x) − p(x; Q1 , α )])2 </p>
-				<p class="light" style="margin: 0em">8. After estimating Q1 the probability of a 8x8 block being double compressed can be written as "p". "p" is given by joint distribution over all coefficients </p>
-				<img alt="" src="./images/fusion_prob_equation.png" />
-			</div>
-			<div class="row" style="font-size: 19px" id="noise_method">
-				<h4 class="center teal-text">Splicebuster</h4>
-				<h5 class="center brown-text">D. Cozzolino, G. Poggi and L. Verdoliva, 2015 IEEE International Workshop on Information Forensics and Security (WIFS), 2015</h5>
-				<p class="center"> <a href="https://www.researchgate.net/publication/284350985_Splicebuster_A_new_blind_image_splicing_detector"> Link to paper </a></p>
-				<p class=" light" style="margin: 0em">Feature-based algorithm to detect image splicings without any prior information. Splicing and host images are assumed to be characterized by different parameters.</p>
-				<h5 class="center brown-text">Work flow</h5>
-				<p class="light">1. For splice detection, the high level noise is more important than the image content. </p>
-				<p class="light">2. Linear high pass filters is used to create “residue”. </p>
-				<p class="light">3. Co-occurrence matrix is calculated for residue. This matrix is used as features for the gaussian mixture model/SVM. </p>
-				<p class="light">4. This co-occurrence matrix is then used as a feature for GMM. </p>
-				<p class="light">5. Using expectation-maximization we can cluster pixels into 2 classes, forged or background. </p>
+			<div class="row" style="font-size: 19px">
 				<div class="row" style="font-size: 19px">
 					<h4 class="center brown-text">Results (CMFD + Splicebuster + Fusion)</h4>
 					<div class="row">

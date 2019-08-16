@@ -18,231 +18,19 @@
 				<a href="#" class="brand-logo">Image Tampering Detection</a>
 			</div>
 		</nav>
-		<div class="hide-on-large-only">
-			<h2>Image Tampering Detection</h2>
+
+		<div class="container">
+			<img style="" class="materialboxed" src="./images/teaser2.png" >
 		</div>
 
-		<div class="container" id="Summary">
-		<div class="section" style="font-size: 19px">
-			<h4 class="center brown-text">
-				Summary
-			</h4>
-			<p class="center">Document Tampering detection is the task to identify if the digital document image was tampered or not. Previously we looked into various techniques used to identify document tampering.</p>
-			<p class="center">In the last meeting, we surveyed various datasets on the distribution of the pixel area that was tampered. Also, we looked into the threshold pixel area below which the detection methods completely failed. Please look at the section below for further details.</p>
+		<div style="margin:4%" class="container">
+			<div style="padding-left:40%" class="row">
+				<div class="col s4"><a class="waves-effect waves-light btn" href="http://preon.iiit.ac.in:9090/">Live Demo</a></div>
+				<div class="col s4"><a class="waves-effect waves-light btn" href="#introduction">Overview</a></div>
+				<div class="col s4"><a class="waves-effect waves-light btn" href="./weekly_report.html" >Weekly Updates</a></div>
+			</div>
 		</div>
 
-		</div>	
-		<div class="container" id="patch_analysis">
-			<div class="section">
-				<p><b>Work done between: [02/04/19 -> 16/04/19]</b></p>
-				<div class="row" style="font-size: 19px">
-					<h4 class="center brown-text">
-						Tamapered Area Analysis 
-					</h4>
-					<h5 class="center brown-text">
-						Effect on detection on decrease in patch area 
-					</h5>
-					<p>
-						We tried to find out the effect of reducing the size of tampering on tampering detection. We show the effect on the current methods used to detect tampering.
-					</p>
-					<img class="center" alt="" style="width: 100%;" src="./images/Bar_plot_method_threshold.png" > 
-					<p class="center"> In the bar plot above, we show the number of pixels below which each method start to fail. Hence if the area of the patch is smaller than the threshold the particular method fails to detect the tampering. For comparision, generally images contains between about 40000(200x200) to 1048576(1024x1024) pixels.</p>
-
-					<br>
-					<p>
-						<strong><a href="#yashas">1. In Yashas' architecture [1]</a></strong>, image is converted to 64x64 patches and is checked if it has at least 20% region tampered(which corresponds to about 820 pixels). 
-						<br>
-						<strong><a href="#JPEG_method">2.JPEG artifacts [2]</a></strong> fails when the tampered region is less than 1500 pixels. 
-						<br>
-						<strong><a href="#CMFD_method">3.CMFD [3]</a></strong> fails when the tampered region is less than 3000 pixels.
-						<br> 
-						<strong><a href="#noise_method">4.Splicebuster/Noiseprint [4]</a></strong> fail when the tampered region is less than 4096 pixels.
-					</p>
-				</div>
-				<div class="row" style="font-size: 19px">
-					<div class="row" style="font-size: 19px">
-					<h5 class="center brown-text"> Dataset Level Anaysis </h5>
-					<h6 class="center brown-text"> For each dataset below we explain the dataset & show the distribuition of patch size in the dataset. </h6>
-					<p> Below we show the distribuition in patch sizes across datasets and whether they contain  small tampered regions. We also observe that the payslip dataset has the smallest tampered regions(tampered region of 3 pixels), followed by the CASIA and Find-it challenge(100 or 400 pixels respectively). IEEE dataset has tampering regions larger than 1000 pixels.
-					</p>
-
-					<br>
-					<p> Click on the box below to open each dataset</p>
-					<div class="row">
-						<ul class="collapsible">
-							<li>
-								<div class="collapsible-header">1. IEEE</div>
-								<div class="collapsible-body">
-									<p> Released in 2013. Contains 451 fake images and 1000 pristine images. Resolution 780x1024.  </p>
-									<p><a href="http://ifc.recod.ic.unicamp.br/fc.website/index.py"> Link to the dataset </a></p>
-									<img alt="" style="width: 48%;" src="./images/IEEE1.png" > 
-									<img alt="" style="width: 48%" src="./images/IEEE2.png" >
-									<img alt="" style="width: 100%;" src="./images/IEEE_dataset_patch_size.png" >
-								</div>
-							</li>
-							<li>
-								<div class="collapsible-header">2. CASIA V2</div>
-								<div class="collapsible-body">
-									<p> Contains 5000 fake images and 7000 pristine images. Resolution 256x400.  </p>
-									<p><a href="https://www.kaggle.com/sophatvathana/casia-dataset"> Link to the dataset </a></p>
-									<img alt="" style="width: 48%;" src="./images/casia1.jpg" >
-									<img alt="" style="width: 48%" src="./images/casia2.jpg" >
-									<img alt="" style="width: 100%;" src="./images/CASIA_dataset_patch_size.png" >
-								</div>
-							</li>
-							<li>
-								<div class="collapsible-header">3. ICPR 2018 Find-it Challenge</div>
-								<div class="collapsible-body">
-									<p> The dataset is released by Mickaël Coustaty, University of La Rochelle,France. It was released as an ICPR challenge in 2018. Contains 200 fake images and 1800 pristine images. Resolution varying image sizes in HD resolution.  <a href="https://ieeexplore.ieee.org/document/8545428"> Report on challenge</a> </p>
-									<p><a href="http://findit.univ-lr.fr/"> Link to the dataset </a></p>
-									<img alt="" style="width: 48%" src="./images/augment1.jpg" >
-									<img alt="" style="width: 48%" src="./images/augment2.jpg" >
-									<img alt="" style="width: 100%;" src="./images/ICPR_dataset_patch_size.png" >
-								</div>
-							</li>
-							<li>
-								<div class="collapsible-header">4. Payslip Dataset</div>
-								<div class="collapsible-body">
-									<p> The dataset is released by Mickaël Coustaty, University of La Rochelle,France. The dataset contains 3 types of tampering. Copy Paste Intra, Copy Paste Inter & Imitation.</p>
-									<p><a href="https://ieeexplore.ieee.org/document/8090394"> Link to the dataset </a></p>
-									<img alt="" style="width: 48%" src="./images/PaySlip_Arial_10_1b-f_1.char.png" >
-									<img alt="" style="width: 48%" src="./images/PaySlip_Arial_10_1b-f_2.word.png" >
-									<img alt="" style="width: 100%;" src="./images/payslip_dataset_patch_size.png" >
-								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		</div>
-		<div class="container" id="results">
-			<div class="section">
-				<p><b>Work done between: [19/03/19 -> 26/03/19]</b></p>
-				<!--   Icon Section   -->
-				<div class="row" style="font-size: 19px">
-					<h4 class="center brown-text">Results</h4>
-					<h6 class="center brown-text">The tables below compare the f1 score and accuracy of different methods across various datasets </h6>
-					<table>
-						<tr>
-							<th>F1 Score</th>
-							<th>ICPR Challenge</th>
-							<th>Casia V2</th>
-							<th>IEEE Forensic</th>
-						</tr>
-						<tr>
-							<td>Yashas</td>
-							<td>0.32</td>
-							<td>0.76</td>
-							<td>0.86</td>
-						</tr>
-						<tr>
-							<td>Fusion</td>
-							<td>0.89</td>
-							<td>0.43</td>
-							<td> - </td>
-						</tr>
-						<tr>
-							<td>CMFD</td>
-							<td>0.36</td>
-							<td>0.42</td>
-							<td>0.55</td>
-						</tr>
-						<tr>
-							<td>Splicebuster</td>
-							<td>0.65</td>
-							<td>0.53</td>
-							<td>0.72</td>
-						</tr>
-						<tr>
-							<td>Fusion + CMFD + Splicebuster</td>
-							<td>0.954</td>
-							<td>0.67</td>
-							<td>0.87</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-			<div class="row" style="font-size: 19px">
-				<table>
-					<tr>
-						<th>Accuracy</th>
-						<th>ICPR Challenge</th>
-						<th>Casia V2</th>
-						<th>IEEE Forensic</th>
-					</tr>
-					<tr>
-						<td>Yashas</td>
-						<td>0.84</td>
-						<td>0.75</td>
-						<td>0.87</td>
-					</tr>
-					<tr>
-						<td>Fusion</td>
-						<td>0.88</td>
-						<td>0.67</td>
-						<td> - </td>
-					</tr>
-					<tr>
-						<td>CMFD</td>
-						<td>0.84</td>
-						<td>0.69</td>
-						<td>0.80</td>
-					</tr>
-					<tr>
-						<td>Splicebuster</td>
-						<td>0.803</td>
-						<td>0.57</td>
-						<td>0.86</td>
-					</tr>
-					<tr>
-						<td>Fusion + CMFD + Splicebuster</td>
-						<td>0.982</td>
-						<td>0.79</td>
-						<td>0.91</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		<div class="container" id="worktimeline">
-			<div class="section">
-				<!--   Icon Section   -->
-				<p><b>Work done between: [12/03/19 -> 19/03/19]</b></p>
-				<div class="row" style="font-size: 19px">
-					<!-- 						<p class="light" style="margin: 0em"><b>[26:03:19]</b> Completed running CMFD, Fusion & Splicebuster on CASIA and IEEE forensic dataset. <br> Created website to display results. </p> -->
-					<p class="light" style="margin: 0em"> Completed Experiments on Findit Dataset using Yashas' Method. <br> Researched about companies, labs, and people working in forensic. More this can be found in the Slides <a href="https://docs.google.com/presentation/d/1eG0hI_Z87aTTkho180T98dQQnNvNpnmybB-vsJp2rCQ/edit?usp=sharing"> here</a> </p>
-					<br>
-					<br>
-					<br>
-					<p style="font-size: 15px"><b>Work done between: [02/03/19 -> 12/03/19]</b></p>
-					<p class="light" style="margin: 0em">Thoroughly understood of the concepts used in ICPR challenge. </p>
-					<br>
-					<br>
-					<br>
-					<p style="font-size: 15px"><b>Work done between: [24/02/19 -> 12/03/19]</b></p>
-					<p class="light" style="margin: 0em"> Created slides for the detailed research meeting. <br> Researched about various techniques in document tampering detection and available datasets. Reasearched about print & scan based forgery, fake receipt templates and printer identification. More on this can be found in slides <a href="https://docs.google.com/presentation/d/1MkR6xVPS2QP4dQjPj2hM8nxWwozhSb3y13MEw7d6RB8/edit?usp=sharing"> here</a> </p>
-					<br>
-					<br>
-					<br>	
-					<p class="light" style="margin: 0em">
-						<p style="font-size: 15px"><b>Work done between: [17/02/19 -> 24/03/19]</b></p>
-						Completed creating poster and website for the R&D showcase. <a href="http://preon.iiit.ac.in:9090/">Link to website</a>
-						<br>
-						<br>
-						<br>	
-						<!-- 						<p class="light" style="margin: 0em"><b>[17:02:19]</b> Started working on R&D showcase. Created a demo to show to sir. <br> Implemented Fusion(paper for double jpeg artifacts) and acheived decent accuracy in Findit challenge.</p> -->
-					<p style="font-size: 15px"><b>Work done between: [01/01/19 -> 10/02/19]</b></p>
-					<p class="light" style="margin: 0em">Completed Experiments on Findit Dataset using Yashas' Method. Results can be found <a href="https://docs.google.com/presentation/d/19Bqw8Gi-_KCZqPFfU4QYq8iDeFov1cxm5Aylq1H5c3Y/edit?usp=sharing"> here </a> </p>
-				</div>
-			</div>
-		</div>
-		<div class="container" id="references">
-			<div class="section">
-				<!-- By Method -->			
-				<!-- By Group -->
-				<!-- By Date -->
-			</div>
-		</div>
 		<div class="container" id="introduction">
 			<div class="section">
 				<!--   Icon Section   -->
@@ -570,7 +358,7 @@
 				<p class="light" style="margin: 0em"> Hence we can write a 8x8 double quantized region as:</p>
 				<!-- Equation -->
 				<img alt="" align="center" src="./images/double_qaunt_equation.png">
-				<p class="light" style="margin: 0em"> Upon plotting an histogram of both single quantized and double quantized image. We noitice a periodic pattern. This is helpful for estimating the first quantization.</p>
+				<p class="light" style="margin: 0em"> Upon plotting an histogram of both single quantized and double quantized image. We notice a periodic pattern. This is helpful for estimating the first quantization.</p>
 				<img alt="" align="center" style="width: 50%" src="./images/double_quant_dist.png">
 				<p class="light" style="margin: 0em">It has been shown that the difference significantly varies between the quantization using q1 and  q2 vs quantization using only q2. (See figure). 
 					<br />
